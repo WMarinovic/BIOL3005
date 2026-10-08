@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 11: Judgement, Decisions and Reasoning | Cognition: An open textbook for BIOL3005</title>
+<style>:root{--ink:#2B142D;--muted:#6B5A70;--line:#E3DAE7;--tint:#F6F2F8;--purple:#663366;--orange:#E07B00;--amber:#FFF4E6;--deep:#2B142D}
+*{box-sizing:border-box}
+html{scroll-padding-top:70px}
+body{margin:0;color:var(--ink);background:#fff;font-family:Charter,"Bitstream Charter","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;font-size:18px;line-height:1.65}
+a{color:var(--purple)}
+.skip{position:absolute;left:-999px}.skip:focus{left:10px;top:10px;background:#fff;padding:6px 10px;z-index:20}
+.top{position:sticky;top:0;z-index:10;background:var(--deep);color:#fff;font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif}
+.topin{max-width:1240px;margin:0 auto;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:1.05rem}.brand span{font-weight:400;opacity:.75;font-size:.9rem;margin-left:6px}
+.toplinks a{color:#fff;text-decoration:none;margin-left:16px;font-size:.92rem;opacity:.9}.toplinks a:hover{opacity:1;text-decoration:underline}
+.layout{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:270px minmax(0,1fr);gap:40px;padding:0 20px}
+.side{position:sticky;top:58px;align-self:start;max-height:calc(100vh - 70px);overflow:auto;padding:24px 0;font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;font-size:.86rem}
+.side summary{font-weight:700;color:var(--purple);cursor:pointer;margin:6px 0}
+.side ol{list-style:none;padding:0;margin:0 0 14px}.side li{margin:2px 0}
+.side a{display:block;padding:4px 8px;border-radius:5px;text-decoration:none;color:var(--ink);line-height:1.35}
+.side a:hover,.side a[aria-current]{background:var(--tint);color:var(--purple)}
+main{max-width:46rem;padding:28px 0 60px}
+h1,h2,h3,h4,h5,.chnum,.boxtitle,figcaption,.pager,footer,.tablewrap,.chcard{font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif}
+.chnum{color:var(--orange);font-weight:700;letter-spacing:.04em;text-transform:uppercase;font-size:.85rem;margin:8px 0 0}
+h1{font-size:2.3rem;line-height:1.15;color:var(--purple);margin:.2rem 0 1.2rem}
+h2{font-size:1.5rem;color:var(--purple);margin:2.4rem 0 .6rem;line-height:1.25}
+h3{font-size:1.15rem;margin:1.8rem 0 .4rem}h4,h5{font-size:1rem;margin:1.4rem 0 .3rem}
+p{margin:.5rem 0 1rem}
+.lede{font-size:1.1rem}
+.box{border-radius:8px;padding:14px 20px;margin:1.5rem 0;font-size:.97rem}
+.box p:last-child{margin-bottom:.2rem}
+.boxtitle{font-weight:700;margin:0 0 .4rem!important;font-size:.95rem}
+.box.objectives{background:var(--tint);border-left:5px solid var(--purple)}.box.objectives .boxtitle{color:var(--purple)}
+.box.think{background:var(--amber);border-left:5px solid var(--orange)}.box.think .boxtitle{color:#9A5200}
+.box.why{background:var(--deep);color:#fff}.box.why .boxtitle{color:#FFC27A}.box.why a{color:#FFC27A}
+.box.note{background:var(--tint);border:1px solid var(--line)}
+figure{margin:1.8rem 0;text-align:center}
+figure img{max-width:100%;height:auto;border-radius:4px}
+figcaption{font-size:.86rem;color:var(--muted);text-align:left;margin-top:.5rem;line-height:1.45}
+.tablewrap{overflow-x:auto;margin:1.4rem 0;font-size:.88rem}
+.tablewrap table{border-collapse:collapse;width:100%}
+.tablewrap td,.tablewrap th{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+.tablewrap thead th,.tablewrap tr:first-child th{background:var(--purple);color:#fff}
+.tablecaption{font-size:.86rem;color:var(--muted);font-family:"Segoe UI",system-ui,Arial,sans-serif}
+a.xref{text-decoration:none;border-bottom:1px dotted var(--purple)}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line)}
+.pager a{font-weight:600;text-decoration:none;border:2px solid var(--purple);border-radius:6px;padding:6px 12px}
+footer{margin-top:2rem;font-size:.8rem;color:var(--muted)}
+.chcards{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.chcard{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.chcard a{display:flex;gap:10px;align-items:baseline;text-decoration:none;font-weight:700;color:var(--purple)}
+.chcard .n{color:var(--orange);font-size:1.4rem}
+.chcard p{font-size:.8rem;color:var(--muted);margin:.4rem 0 0;line-height:1.4}
+@media (max-width:900px){.layout{grid-template-columns:1fr;gap:0}.side{position:static;max-height:none;padding:12px 0 0;border-bottom:1px solid var(--line)}.side details{margin-bottom:6px}body{font-size:17px}h1{font-size:1.9rem}.brand span{display:none}}
+@media print{.top,.side,.pager{display:none}.layout{display:block}main{max-width:none}body{font-size:11pt}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="topin">
+  <a class="brand" href="index.html">Cognition <span>An open textbook for BIOL3005</span></a>
+  <nav class="toplinks"><a href="index.html">Contents</a><a href="BIOL3005_Cognition_textbook.pdf">PDF</a><a href="../index.html">Tutorials</a></nav>
+</div></header>
+<div class="layout">
+<aside class="side"><details open><summary>In this chapter</summary><ol class="sectoc"><li><a href="#reasoning-and-deciding">11.1 Reasoning and deciding</a></li><li><a href="#inductive-reasoning">11.2 Inductive reasoning</a></li><li><a href="#deductive-reasoning-and-syllogisms">11.3 Deductive reasoning and syllogisms</a></li><li><a href="#heuristics-and-biases">11.4 Heuristics and biases</a></li><li><a href="#models-of-decision-making">11.5 Models of decision-making</a></li><li><a href="#emotion-in-decision-making">11.6 Emotion in decision-making</a></li><li><a href="#the-neuroscience-of-deciding">11.7 The neuroscience of deciding</a></li><li><a href="#are-we-really-that-irrational">11.8 Are we really that irrational?</a></li><li><a href="#chapter-summary-10">Chapter summary</a></li><li><a href="#self-check-questions-10">Self-check questions</a></li><li><a href="#attribution-and-licence-10">Attribution and licence</a></li><li><a href="#references-10">References</a></li></ol></details>
+<details><summary>All chapters</summary><ol class="chlist"><li><a href="ch01.html">Introduction &amp; Cognitive Neuroscience</a></li><li><a href="ch02.html">Attention</a></li><li><a href="ch03.html">Short-Term and Working Memory</a></li><li><a href="ch04.html">Long-Term Memory: Structure</a></li><li><a href="ch05.html">Long-Term Memory: Encoding, Retrieval and Consolidation</a></li><li><a href="ch06.html">Everyday Memory and Memory Errors</a></li><li><a href="ch07.html">Conceptual Knowledge</a></li><li><a href="ch08.html">Visual Imagery</a></li><li><a href="ch09.html">Language</a></li><li><a href="ch10.html">Problem Solving and Creativity</a></li><li><a href="ch11.html" aria-current="page">Judgement, Decisions and Reasoning</a></li><li><a href="ch12.html">Drugs, Disorders and the Cognitive Brain</a></li></ol></details></aside>
+<main id="main">
+<p class="chnum">Chapter 11</p>
+<h1>Judgement, Decisions and Reasoning</h1>
+<h3 id="where-this-chapter-sits-10">Where this chapter sits</h3>
+<p>The previous chapter was about solving problems: closing the gap
+between where you are and where you want to be. This chapter is about
+the two cognitive activities that sit either side of a solution.
+Reasoning is the process of drawing conclusions from what you already
+know or observe. Deciding is the process of choosing among alternatives.
+The two are intertwined, because we usually reason our way towards a
+decision, but they are not the same.</p>
+<p>Two threads from the problem-solving chapter carry straight over. The
+barriers to insight met there, mental set and functional fixedness, were
+the mind defaulting to a familiar approach rather than the correct one;
+the heuristics and biases in this chapter are the same tendency at work
+in judgement. And the distinction between the sudden unconscious insight
+and the slow deliberate search of a problem space is the distinction
+that organises this whole chapter: the split between fast automatic
+thinking and slow effortful thinking, which Kahneman calls System 1 and
+System 2, and which this book has been calling the Elephant and the
+Rider.</p>
+<p>A warning that runs through the chapter. Much of the evidence shows
+people reasoning and deciding badly, in systematic and predictable ways.
+That is genuinely informative, because the pattern of the errors is a
+window onto the machinery. But it is easy to over-read, and <a class="xref" href="#are-we-really-that-irrational">§11.8</a> takes
+up a serious challenge to the whole “humans are irrational” story. Keep
+some scepticism in reserve as you go, because this chapter is where the
+habit of asking what exactly was measured gets turned on the literature
+itself.</p>
+<h3 id="learning-objectives-10">Learning objectives</h3>
+<aside class="box objectives"><p class="boxtitle">By the end of this chapter you should be able to</p>
+<ol type="1">
+<li><p>Distinguish judgement, decision-making and reasoning, and
+distinguish inductive from deductive reasoning.</p></li>
+<li><p>Explain the key heuristics and biases (availability,
+representativeness and base-rate neglect, the conjunction fallacy,
+anchoring, myside and confirmation bias, and belief bias) and how they
+produce systematic errors.</p></li>
+<li><p>Explain deductive reasoning through categorical and conditional
+syllogisms, distinguish validity from truth, and describe the Wason
+selection task.</p></li>
+<li><p>Compare models of decision-making: expected utility theory and
+its limits, and the dual-system account.</p></li>
+<li><p>Describe the role of emotion in choice, including expected and
+incidental emotions, framing, choice architecture, and the neuroeconomic
+evidence.</p></li>
+<li><p>Explain how feelings can carry information that improves choice,
+rather than only distorting it.</p></li>
+<li><p>Evaluate the heuristics-and-biases programme itself, including
+ecological rationality and the replication picture, and say what follows
+for the claim that people are irrational.</p></li>
+</ol></aside>
+<h2 id="reasoning-and-deciding">11.1 Reasoning and deciding</h2>
+<p>Two definitions to fix at the outset. Reasoning is the process of
+drawing conclusions from premises: you take information you already have
+and infer something that goes beyond it. Decision-making is the process
+of choosing among alternatives. In everyday life the two run together,
+because reaching a decision usually means reasoning about the options
+first, but you can have one without the other. You can reason to a
+conclusion you never act on, and you can decide on impulse with no
+reasoning at all.</p>
+<p>Reasoning itself comes in two kinds, and the distinction matters for
+everything that follows. In deductive reasoning you start from general
+premises and derive a conclusion guaranteed to follow if the premises
+are true. In inductive reasoning you start from specific observations
+and generalise to a conclusion that is probable but never guaranteed. As
+a rule of thumb, deduction moves from the general to the particular with
+certainty and induction from the particular to the general with
+probability, though the defining difference is certainty, not direction.
+Science and everyday life lean heavily on induction, because we almost
+never have premises that are certainly true in all cases.</p>
+<h2 id="inductive-reasoning">11.2 Inductive reasoning</h2>
+<p>Inductive reasoning reaches a general conclusion from particular
+observations. Having seen the sun rise every morning of your life, you
+conclude that it will rise again tomorrow. The conclusion is not
+certain, only very probable, and that is the defining feature of
+induction: the premises support the conclusion without guaranteeing it.
+A single black swan overturns “all swans are white”, however many white
+ones you have seen.</p>
+<p>Because inductive conclusions are only probable, it is worth asking
+what makes one inductive argument stronger than another. Three
+properties of the observations do the work. The representativeness of
+the observations: are the cases you have seen typical of the whole, or a
+skewed sample? The number of observations: more cases, other things
+equal, give firmer footing. And the quality of the evidence:
+observations that are precise, well controlled and drawn from good
+sources count for more than casual impressions.</p>
+<p>Seeing black crows in one garden is weak evidence that all crows are
+black; seeing them across many countries, at all times of day, and
+adding a genetic reason why they must be black, is strong. Induction is
+indispensable precisely because the certainty of deduction is so rarely
+available, but its dependence on the sample is also where it goes wrong,
+as the heuristics later in the chapter will show. Notice that the first
+of the three factors, representativeness of the sample, is about to
+reappear as the name of a heuristic. That is not a coincidence: the
+heuristic is the mind using resemblance where it should be using
+frequency.</p>
+<h2 id="deductive-reasoning-and-syllogisms">11.3 Deductive reasoning and syllogisms</h2>
+<p>Deductive reasoning is studied mostly through the syllogism: two
+premises and a conclusion. The single most important idea here is the
+distinction between validity and truth, and it is worth stating
+carefully because it is so easily muddled. A syllogism is valid if the
+conclusion follows logically from the premises, regardless of whether
+the premises are actually true. Validity is about form, not content.</p>
+<p>Consider: all flowers are animals; all animals can jump; therefore
+all flowers can jump. Both premises are false and the conclusion is
+absurd, yet the syllogism is perfectly valid, because if the premises
+were true the conclusion would have to be true. Truth is a separate
+question about whether the premises actually hold.</p>
+<h3 id="categorical-syllogisms">Categorical syllogisms</h3>
+<p>A categorical syllogism relates two categories using all, no, or
+some. “All mammals are animals; all dogs are mammals; therefore all dogs
+are animals” is valid, and you can see why by nesting the categories
+(Figure 11.1, left). Now compare: all mammals are animals; all dogs are
+animals; therefore all dogs are mammals. This is invalid, even though
+the conclusion happens to be true, because the premises place both dogs
+and mammals inside animals without establishing any relationship between
+dogs and mammals themselves.</p>
+<figure><img alt="Euler circles for a valid and an invalid categorical syllogism. On the left, nesting dogs inside mammals inside animals makes the conclusion unavoidable. On the right, the premises are equally consistent with dogs sitting entirely outside mammals, so the conclusion does not follow. Original diagram · CC BY-NC-SA 4.0." loading="lazy" src="media/ch11_image1.png"/><figcaption><em>Figure 11.1 Euler circles for a valid and an invalid categorical
+syllogism. On the left, nesting dogs inside mammals inside animals makes
+the conclusion unavoidable. On the right, the premises are equally
+consistent with dogs sitting entirely outside mammals, so the conclusion
+does not follow. Original diagram · CC BY-NC-SA 4.0.</em></figcaption></figure>
+<p>The right-hand panel of Figure 11.1 is the argument. To show a
+syllogism invalid you do not have to show the conclusion false; you only
+have to find one arrangement consistent with the premises in which the
+conclusion fails. Dogs really are mammals, so the conclusion is true. It
+just does not follow.</p>
+<h3 id="conditional-syllogisms">Conditional syllogisms</h3>
+<p>A conditional syllogism has a first premise of the form “if p then
+q”. Two forms are valid and two are not, and telling them apart is the
+crux. Modus ponens is valid: if it rains the street gets wet; it is
+raining; therefore the street is wet. Modus tollens is also valid though
+harder to see: if it rains the street gets wet; the street is not wet;
+therefore it is not raining.</p>
+<p>The two invalid forms trip most people. Affirming the consequent
+reasons “the street is wet, therefore it is raining”, which is invalid
+because the street could be wet for other reasons. Denying the
+antecedent reasons “it is not raining, therefore the street is not wet”,
+invalid for the same reason. Only around 40 per cent of people judge
+these last two correctly.</p>
+<p>People do not reason about syllogisms in a vacuum; content leaks in.
+The atmosphere effect is the tendency to accept a conclusion that merely
+matches the mood of the premises, so that if both premises say “all”, an
+“all” conclusion feels right whether or not it follows. More powerful is
+belief bias: we judge a syllogism valid when its conclusion is
+believable and invalid when it is not, regardless of the logic. Given
+“some bananas are fruits; all fruits are pink; therefore some bananas
+are pink”, many people reject the valid conclusion, because it is
+unbelievable. Belief bias is the clearest demonstration that we evaluate
+arguments by their content when we are supposed to be evaluating their
+form.</p>
+<aside class="box why"><p class="boxtitle">Why this matters</p>
+<p>Validity and truth come apart, and that gap is not a technicality. A
+conclusion can be validly derived from false premises, as with the
+jumping flowers, and a true conclusion can rest on invalid reasoning, as
+with dogs and mammals.</p>
+<p>So evaluating any argument requires two independent questions: are
+the premises true, and does the conclusion actually follow? Persuasion,
+advertising and bad science routinely exploit the fact that people
+collapse the two, accepting reasoning because they like where it lands.
+Belief bias is that error with a name, and it is the reason a conclusion
+you agree with deserves more scrutiny rather than less.</p></aside>
+<h3 id="the-wason-selection-task">The Wason selection task</h3>
+<p>The most famous demonstration of conditional-reasoning failure is the
+Wason selection task (Wason, 1966). Four cards each have a letter on one
+side and a number on the other; you see E, K, 4 and 7. The rule to test
+is “if there is a vowel on one side, then there is an even number on the
+other”. Which cards must you turn?</p>
+<p>The logically correct answer is E and 7: E to check the rule holds,
+and 7 because a vowel on its back would break the rule, which is the
+modus tollens move. Most people pick E and 4. The 4 is useless, since
+the rule says nothing about what is behind even numbers, and the crucial
+7 is neglected. Only around 4 per cent get it right (Figure 11.2,
+left).</p>
+<figure><img alt="The Wason selection task. In the abstract version most people fail to select the two logically necessary cards; in a thematic version with the same logical structure, most people succeed. Original diagram · CC BY-NC-SA 4.0." loading="lazy" src="media/ch11_image2.png"/><figcaption><em>Figure 11.2 The Wason selection task. In the abstract version
+most people fail to select the two logically necessary cards; in a
+thematic version with the same logical structure, most people succeed.
+Original diagram · CC BY-NC-SA 4.0.</em></figcaption></figure>
+<p>The striking part is what happens when the identical logical problem
+is dressed in real-world content. Griggs and Cox (1982) used the rule
+“if a person is drinking beer, they must be over the legal age”, with
+cards reading beer, cola, and two ages. Now around three-quarters of
+people correctly turn the beer card and the under-age card (Figure 11.2,
+right). The logic is unchanged; only the content differs.</p>
+<p>Two explanations compete. One is the permission schema: we have a
+lifetime of practice with rules of the form “to do X you must satisfy
+Y”, and that learned schema guides the search. The other is
+evolutionary: humans may have a specialised cheater-detection ability
+tuned to spotting people who take a benefit without meeting the cost,
+which the drinking-age rule engages and the letters-and-numbers version
+does not. The contrast is the reasoning-chapter twin of the analogical
+paradox from Chapter 10: abstract laboratory versions are hard,
+meaningful real-world versions are easy. Hold that thought, because
+<a class="xref" href="#are-we-really-that-irrational">§11.8</a> makes it the basis of a much broader argument.</p>
+<h2 id="heuristics-and-biases">11.4 Heuristics and biases</h2>
+<p>When we reason inductively under time pressure or uncertainty, we
+lean on heuristics: mental shortcuts that usually deliver a good-enough
+answer quickly. Heuristics are not the problem; they are mostly
+adaptive. But they produce cognitive biases, systematic and predictable
+errors, in the cases where the shortcut misfires. Amos Tversky and
+Daniel Kahneman built a research programme, and Kahneman a Nobel Prize,
+out of cataloguing these, following Herbert Simon's earlier idea of
+bounded rationality (Simon, 1955): we are rational within the limits of
+our information, time and cognitive capacity, and so we tend to settle
+for options that are good enough rather than optimal. The key move is
+that a bias is not random noise. Its direction is predictable, and that
+regularity is what makes it scientifically useful.</p>
+<h3 id="the-availability-heuristic">The availability heuristic</h3>
+<p>We judge how likely or frequent something is by how easily examples
+come to mind (Tversky &amp; Kahneman, 1973). Usually this works, because
+common things are easier to recall. But ease of recall tracks other
+things too, especially vividness and media coverage. People judge
+dramatic causes of death as more frequent than mundane ones, homicide
+over diabetes or stomach cancer and tornado over asthma, because the
+dramatic ones are more memorable rather than more common (Lichtenstein
+et al., 1978). People fear dying in a plane crash more than in a car
+crash, though the car is far more dangerous. The same mechanism feeds
+illusory correlations and, through them, prejudice: a few memorable
+instances make a spurious link between a group and a trait feel
+real.</p>
+<aside class="box think"><p class="boxtitle">Think about</p>
+<p>Which is deadlier in Australia: snakes, or choking on food? Most
+people say snakes, because snakebite is vivid, dramatic and makes the
+news. In fact choking kills far more Australians each year.</p>
+<p>Notice what your mind did. It answered a hard question, which is more
+frequent, by substituting an easy one, which comes to mind more readily.
+That substitution is the availability heuristic in a sentence, and it is
+worth noticing that the substitution itself was invisible: you did not
+experience choosing to answer a different question.</p></aside>
+<h3 id="representativeness-and-base-rate-neglect">Representativeness and base-rate neglect</h3>
+<p>We judge how probable it is that something belongs to a category by
+how much it resembles our stereotype of that category (Tversky &amp;
+Kahneman, 1974). Told that Steve is very shy and withdrawn, meek and
+tidy, with a need for order and detail, most people say he is more
+likely a librarian than a farmer, because he matches the librarian
+stereotype. But this ignores the base rate: there are vastly more
+farmers than librarians, so a random quiet man is still probably a
+farmer. Resemblance swamps the background frequencies that ought to
+dominate. Base-rate neglect is the representativeness heuristic's most
+consequential failure, and it recurs everywhere from medical diagnosis
+to hiring.</p>
+<p>Representativeness also produces the conjunction fallacy (Tversky
+&amp; Kahneman, 1983). The conjunction rule of probability is airtight:
+the probability of two things being true together can never exceed the
+probability of either one alone. Yet told about a woman deeply engaged
+with social justice, people rate “she is a bank teller and a feminist”
+as more probable than “she is a bank teller”, because the fuller
+description resembles the person described. Adding detail can raise
+resemblance, but it can never raise probability, and that is the whole
+error in one line (Figure 11.3).</p>
+<figure><img alt="The conjunction fallacy. Feminist bank tellers are a subset of bank tellers, so the conjunction can never be more probable than the single category, yet a resemblant description leads people to rank it higher. Original diagram · CC BY-NC-SA 4.0." loading="lazy" src="media/ch11_image3.png"/><figcaption><em>Figure 11.3 The conjunction fallacy. Feminist bank tellers are a
+subset of bank tellers, so the conjunction can never be more probable
+than the single category, yet a resemblant description leads people to
+rank it higher. Original diagram · CC BY-NC-SA 4.0.</em></figcaption></figure>
+<h3 id="anchoring-myside-and-confirmation-bias">Anchoring, myside and confirmation bias</h3>
+<p>Several further biases round out the picture. Anchoring: an initial
+value, even an arbitrary one, drags subsequent estimates towards it, and
+we adjust away from it insufficiently. Ask whether executive fraud
+occurs in more than 10 firms per thousand and people estimate low; ask
+relative to 200 per thousand and the same people estimate far
+higher.</p>
+<p>Myside bias is the tendency to generate and evaluate evidence in a
+way slanted towards our own prior opinions; confirmation bias is the
+closely related tendency to seek information that fits our hypothesis
+and overlook what contradicts it. Andrew Wakefield's 1998 paper linking
+the MMR vaccine to autism, later found to be fraudulent and retracted in
+2010, shows where these biases do their damage. The paper itself was a
+matter of misconduct rather than bias, but the scare it started persists
+despite overwhelming contrary evidence, because people who already
+distrust vaccines seek out and credit reports that fit that view and
+discount the large studies that do not. A related error, overconfidence,
+means our stated confidence routinely outruns our accuracy: asked for
+ranges we are 98 per cent sure contain the truth, most of us capture it
+far less often.</p>
+<h2 id="models-of-decision-making">11.5 Models of decision-making</h2>
+<p>How should decisions be made, and how are they actually made? The
+classical answer from economics is expected utility theory. It assumes a
+rational chooser who, given all relevant information, selects the option
+with the maximum expected utility. Utility is whatever the person
+values, which need not be money, since people value time, family, health
+and fun, so choosing the smaller cash payoff is not automatically
+irrational. The theory is normative: it says what an ideal reasoner
+ought to do, and it is genuinely useful for thinking about gambles and
+trade-offs.</p>
+<p>The trouble is that people systematically depart from it, and not
+only because they value non-monetary things. Denes-Raj and Epstein
+(1994) offered people a prize for drawing a red jelly bean from one of
+two bowls: a small bowl with 1 red among 10, a 10 per cent chance, or a
+large bowl with 7 red among 100, a 7 per cent chance. Many chose the
+worse bowl, and when the large bowl held 9 red beans, a majority
+did.</p>
+<p>What makes the result telling rather than merely odd is what
+participants said afterwards. They knew the probabilities were against
+them, and reported that they nonetheless felt they had a better chance
+when more winning beans were in view. This is the ratio bias, or
+denominator neglect, and it is not a failure of understanding: the
+arithmetic was understood and overridden anyway. That is strong evidence
+that two different processes are competing for the decision, which is
+harder to explain away than an error someone simply did not notice.</p>
+<p>That competition is the dual-system account, made famous by Kahneman
+(2011). System 1 is fast, automatic, intuitive, effortless, largely
+nonconscious and emotional. System 2 is slow, deliberate, conscious,
+effortful and logical (Figure 11.4). Most of daily life runs on System
+1, sensibly, because deliberating over every choice would be paralysing;
+System 2 takes over for the decisions that warrant the effort, or at
+least should. Almost every heuristic and bias in this chapter is System
+1 producing a quick answer that System 2 fails to catch and correct.</p>
+<figure><img alt="The dual-system account. System 1 (the Elephant) is fast, automatic and intuitive; System 2 (the Rider) is slow, deliberate and controlled. The two normally cooperate, but the biases in this chapter are System 1 answers that System 2 does not override. Original diagram · CC BY-NC-SA 4.0." loading="lazy" src="media/ch11_image4.png"/><figcaption><em>Figure 11.4 The dual-system account. System 1 (the Elephant) is
+fast, automatic and intuitive; System 2 (the Rider) is slow, deliberate
+and controlled. The two normally cooperate, but the biases in this
+chapter are System 1 answers that System 2 does not override. Original
+diagram · CC BY-NC-SA 4.0.</em></figcaption></figure>
+<h2 id="emotion-in-decision-making">11.6 Emotion in decision-making</h2>
+<p>Expected utility theory has no place for feelings, yet emotion
+pervades real choice. It helps to separate two kinds. Expected emotions
+are the feelings we predict an outcome will produce; incidental emotions
+are feelings we happen to be in that have nothing to do with the
+decision, such as mood, the weather or a bad night's sleep, but that
+colour it anyway.</p>
+<p>Both distort choice, and expected emotions do so in a more surprising
+way than it might seem. Kermer, Driver-Linn, Wilson and Gilbert (2006)
+had some participants forecast how they would feel after winning or
+losing a gamble, and others actually play it. Forecasters were loss
+averse: they predicted that losing would hurt more than an equivalent
+win would please. They were wrong. Loss forecasters significantly
+overestimated how unhappy they would be, and, crucially, those who
+actually lost were no less happy than those who actually won.</p>
+<p>That is stronger than the usual textbook statement, so it is worth
+pausing on. The asymmetry between losses and gains showed up in the
+predictions and not in the experience. A second study made the test
+harder by using a favourable gamble, a 50 per cent chance of winning $5
+against a 50 per cent chance of losing $3, and participants still
+predicted the smaller loss would outweigh the larger gain, and still
+showed no such asymmetry when it happened. Gain forecasters
+overestimated their happiness too, though more marginally, so the error
+is not confined to losses; it is simply larger for them.</p>
+<p>The mechanism the authors identify explains why the error persists.
+People failed to anticipate how readily they would rationalise a loss:
+having been given $5 and lost $3, participants could easily reframe it
+as “I still made $2”, and did not anticipate that they would. We
+overestimate how much we will dwell on a bad outcome and underestimate
+how quickly we will make peace with it. The paper's title states the
+conclusion plainly: loss aversion is an affective forecasting error.
+That matters for what follows, because it suggests that loss aversion,
+the asymmetry prospect theory builds into its value function, operates
+on anticipated losses rather than felt ones.</p>
+<h3 id="the-framing-effect">The framing effect</h3>
+<p>The best-known demonstration that gains and losses are treated
+differently is the framing effect (Tversky &amp; Kahneman, 1981): the
+same choice, described differently, produces different decisions. In the
+classic version, a disease is expected to kill 600 people. Told that
+Program A saves 200 versus Program B's gamble, most people choose the
+sure saving; told the objectively identical Program C lets 400 die
+versus the same gamble, most people now take the gamble. The pattern is
+systematic: framed as gains, people are risk-averse and lock in the sure
+thing; framed as losses, they become risk-seeking to avoid the certain
+loss (Figure 11.5). That reversal comes from the curvature of the value
+function rather than from loss aversion; loss aversion, the separate
+finding that losses loom larger than equivalent gains, shows up most
+clearly when people refuse a 50-50 gamble to win or lose the same
+amount. A related form, attribute framing, works on single descriptions:
+a product labelled 90 per cent fat-free sounds healthier than one
+labelled 10 per cent fat, though the two describe the same thing.</p>
+<figure><img alt="A value function of the kind that captures framing and loss aversion. It is concave for gains, producing risk aversion, and convex and steeper for losses, producing risk seeking, so a loss hurts more than an equal gain pleases. Illustrative of the shape rather than plotted from data; original diagram · CC BY-NC-SA 4.0." loading="lazy" src="media/ch11_image5.png"/><figcaption><em>Figure 11.5 A value function of the kind that captures framing
+and loss aversion. It is concave for gains, producing risk aversion, and
+convex and steeper for losses, producing risk seeking, so a loss hurts
+more than an equal gain pleases. Illustrative of the shape rather than
+plotted from data; original diagram · CC BY-NC-SA 4.0.</em></figcaption></figure>
+<p>Because framing and the surrounding defaults shape choice, the way
+options are presented, the choice architecture, has real consequences.
+Organ-donation rates differ enormously between countries with an opt-in
+system, where you must actively register, and an opt-out system, where
+you are a donor unless you decline, not because people care differently
+but because of status-quo bias, the tendency to stick with the default
+and do nothing. Setting the default is therefore a policy lever, and the
+same logic runs through pension enrolment, medical consent and countless
+commercial choices. Presenting options is never neutral.</p>
+<h3 id="feelings-as-information">Feelings as information</h3>
+<p>Everything so far treats emotion as something that happens to a
+decision, distorting an otherwise clean calculation. That is one side of
+the story and it is incomplete, because it cannot explain why we have
+feelings about outcomes at all.</p>
+<p>The other side begins from a biological observation. Every living
+thing, from a single cell upwards, must keep its internal state within
+the narrow range that sustains life, a requirement called homeostasis.
+On this account emotions are the bodily responses that serve that
+regulation, changes in heart rate, gut and posture, while feelings are
+the conscious perception of how that regulation is going. A feeling is a
+report on the state of the organism (Damasio, 2018).</p>
+<p>If that is what feelings are, they are not noise. They are data.
+Because feelings track whether things are going well or badly for the
+body, they attach a value to experiences and to anticipated outcomes, a
+rough tag of good-for-me or bad-for-me, and that tag lets us evaluate
+options quickly without computing each one through. This is why damage
+to the brain regions that integrate bodily signals with decision-making
+tends to produce not coolly rational choosers but people who decide
+badly.</p>
+<p>Bechara, Damasio, Damasio and Anderson (1994) showed this with a card
+task now known as the Iowa Gambling Task. Two of four decks give large
+immediate rewards but larger occasional penalties, and so lose money
+over time; the other two give smaller rewards and come out ahead.
+Controls learned to favour the profitable decks. Patients with damage to
+the ventromedial prefrontal cortex did not, despite otherwise preserved
+intellect, and the authors' summary of why is the useful part: they were
+oblivious to the future consequences of their actions and seemed to be
+guided by immediate prospects only. The same pattern runs through their
+lives, where they decide against their own interests repeatedly and
+without learning from it. Removing the feelings does not reveal a hidden
+logician underneath; it removes the value signal that made the future
+weigh on the present.</p>
+<p>Hold both readings together, because the chapter needs both. Feelings
+can mislead, as affective forecasting and framing show. They also carry
+information that makes fast, mostly adequate choice possible at all.
+Those are not competing claims; they are the same mechanism described
+from its failures and from its function. <a class="xref" href="#the-neuroscience-of-deciding">§11.7</a> shows the mechanism in
+tissue, and <a class="xref" href="#are-we-really-that-irrational">§11.8</a> turns the same point on the whole
+heuristics-and-biases programme.</p>
+<h2 id="the-neuroscience-of-deciding">11.7 The neuroscience of deciding</h2>
+<p>If emotion is doing real work in decisions, it should be visible in
+the brain, and this is the province of neuroeconomics. The signature
+study is Sanfey and colleagues' (2003) use of the ultimatum game. One
+player proposes how to split a sum of money; the second either accepts,
+in which case both are paid as proposed, or rejects, in which case
+neither gets anything. A purely rational responder should accept any
+non-zero offer, since something beats nothing. In fact people routinely
+reject unfair offers, paying to punish the proposer.</p>
+<p>Scanning responders with fMRI, Sanfey found that unfair offers
+activated the anterior insula, a region tied to negative emotional
+states such as disgust, alongside the dorsolateral prefrontal cortex,
+tied to cognitive control, and the anterior cingulate, tied to conflict
+detection. The telling result is that the stronger the anterior-insula
+response to an unfair offer, the more likely the person was to reject
+it: insula activity biased towards rejection, prefrontal activity
+towards accepting the money (Figure 11.6).</p>
+<figure><img alt="The ultimatum game. A rational responder should accept any non-zero offer, but unfair offers provoke rejection, and the likelihood of rejection tracks anterior-insula activity. Original diagram · CC BY-NC-SA 4.0." loading="lazy" src="media/ch11_image6.png"/><figcaption><em>Figure 11.6 The ultimatum game. A rational responder should
+accept any non-zero offer, but unfair offers provoke rejection, and the
+likelihood of rejection tracks anterior-insula activity. Original
+diagram · CC BY-NC-SA 4.0.</em></figcaption></figure>
+<p>The decision looks like a contest between an emotional response to
+unfairness and a cognitive pull towards the payoff, which is System 1
+and System 2 made visible in tissue. Two things are worth drawing out.
+The insula is also central to interoception, the sensing of the body's
+internal state, which is exactly the mechanism <a class="xref" href="#emotion-in-decision-making">§11.6</a> described: the
+signal biasing the choice is a bodily one. And rejecting an unfair offer
+is only irrational if the payoff is the whole story. In a world of
+repeated interactions, a reputation for refusing to be exploited is
+worth something, which is the first hint that behaviour looking
+irrational in a laboratory may be well adapted outside it.</p>
+<h2 id="are-we-really-that-irrational">11.8 Are we really that irrational?</h2>
+<p>This chapter has catalogued a long list of ways people reason and
+decide badly. It would be easy to leave with the conclusion that human
+judgement is fundamentally broken and in need of expert correction. That
+conclusion is too strong, and the case against it is the right note on
+which to end the chapter.</p>
+<h3 id="ecological-rationality">Ecological rationality</h3>
+<p>Gerd Gigerenzer's challenge to the heuristics-and-biases programme
+runs as follows. Heuristics are not bugs to be corrected; they are fast
+and frugal tools tuned to the environments in which they evolved and are
+used (Gigerenzer et al., 1999). Judged against a formal standard in the
+abstract, they look like failures. Judged by whether they produce good
+decisions quickly in the world, with limited information and limited
+time, they often do very well, and simple rules can match or beat
+complex statistical models on real problems.</p>
+<p>There is also a specific and telling result. Many classic biases
+shrink or disappear when the same problem is posed in natural
+frequencies rather than probabilities (Gigerenzer &amp; Hoffrage, 1995).
+Base-rate neglect in medical diagnosis is the best example: presented as
+“10 out of every 1,000 women” rather than “a probability of 0.01”,
+performance improves markedly, and later work showed the same gain in
+practising doctors (Hoffrage &amp; Gigerenzer, 1998). That matters
+because it relocates the fault. If the error depends on the format of
+the question, then it is partly a property of the format and not only of
+the mind, and the mind may be well suited to the format it actually
+evolved with, which is frequencies of observed events rather than
+decimal probabilities.</p>
+<p>You have met the shape of this argument twice already, once in the
+previous chapter and once in this one. It is the analogical paradox from
+<a class="xref" href="ch10.html#problem-solving-by-analogy">§10.7</a>, where transfer is fragile in the laboratory and fluent in the
+real world, and it is the Wason selection task from <a class="xref" href="#deductive-reasoning-and-syllogisms">§11.3</a>, where an
+abstract rule defeats almost everyone and a drinking-age rule with
+identical logic is easy. In all three cases performance depends on the
+fit between the problem's presentation and the machinery brought to it.
+Rationality on this view is not a fixed quantity a person has more or
+less of; it is a relation between a mind and an environment.</p>
+<h3 id="which-biases-hold-up">Which biases hold up?</h3>
+<p>There is a second, methodological challenge, and it is one this unit
+has been preparing you for since Chapter 5. Most classic findings come
+from undergraduates answering artificial word problems, and several have
+proved hard to replicate at their original effect sizes. It is worth
+knowing which parts of this chapter rest on firm ground, and Table 11.1
+sorts them.</p>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 50%"/>
+<col style="width: 50%"/>
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Robust and well replicated</strong></th>
+<th><strong>Mixed, or smaller than first claimed</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Framing effects (gain versus loss)</td>
+<td>Loss aversion: contested. Its size depends heavily on how it is
+measured, and Kermer et al. (2006) found it in forecasts rather than
+experience (see text)</td>
+</tr>
+<tr class="even">
+<td>Base-rate neglect and the conjunction fallacy</td>
+<td>Ego depletion, or willpower as a depletable resource: failed to
+replicate in a multi-laboratory pre-registered test (Hagger et al.,
+2016)</td>
+</tr>
+<tr class="odd">
+<td>Belief bias in syllogistic reasoning</td>
+<td>Many social-priming effects, such as cleanliness cues altering moral
+judgement</td>
+</tr>
+<tr class="even">
+<td>Confirmation and myside bias</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Anchoring, in its classic form (Klein et al., 2014), though
+incidental anchors are weaker</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p class="tablecaption"><em>Table 11.1 The replication picture for the effects in this
+chapter and the surrounding literature. Most are real; several are
+smaller and more context-dependent than the textbook headlines
+suggest.</em></p>
+<p>The ego-depletion entry deserves a closer look, because it shows what
+a serious negative result looks like. Hagger and colleagues (2016) had
+23 laboratories run the same pre-registered protocol, based on one by
+Sripada and colleagues (2014), on a combined sample of 2,141
+participants. They found an effect of d = 0.04, with a 95 per cent
+confidence interval running from −0.07 to 0.15. Note what that is and is
+not. It is not a failure to find an effect for want of power, which
+would produce a wide interval spanning large values in both directions.
+It is a tight interval centred on almost nothing, which is the much
+stronger claim that if any effect exists it is too small to matter, and
+it stands against an earlier literature reporting a medium-sized one. An
+underpowered null and a well-powered near-zero look alike if you read
+only the p value, and they are entirely different pieces of
+evidence.</p>
+<p>Loss aversion is the entry most likely to surprise you, since it is
+often presented as the bedrock of behavioural economics. Gal and Rucker
+(2018) argue that many apparent demonstrations of it have other
+explanations, such as status-quo bias or inertia, and that losses do not
+reliably loom larger than gains. Defenders reply that the effect is real
+but has moderators, appearing at larger stakes and shrinking or
+vanishing at small ones (Mrkva et al., 2020). You have already met a
+third position in <a class="xref" href="#emotion-in-decision-making">§11.6</a>: Kermer and colleagues found the asymmetry in
+people's forecasts but not in their experience. The defensible summary
+is that people often choose as if losses loom larger, while the size,
+generality and source of that asymmetry are still being argued over.</p>
+<p>Read Table 11.1 carefully, because the honest summary is neither “it
+was all overblown” nor “nothing has changed”. The core phenomena of this
+chapter are robust. What has been revised downward are magnitudes, the
+generality of some effects, and in a few cases, notably ego depletion
+and several social-priming results, the existence of the effect at all.
+Notice which kind of finding survived: the ones with a clear mechanism
+and a large, replicable behavioural signature, such as framing and
+belief bias. The ones that shrank tend to be those where the effect was
+inferred from a small difference in a single measure.</p>
+<p>So what should you take from the chapter? Three things. The biases
+are real and worth knowing, because their direction is predictable and
+that is what makes them correctable. They are smaller and more
+situation-dependent than the popular literature suggests, so a confident
+claim that some nudge will reliably change behaviour deserves the
+scepticism you would apply to any other effect. And the underlying
+machinery is not defective. It is a system built to decide quickly and
+adequately with incomplete information, which is the problem it actually
+faces, and which it mostly solves.</p>
+<aside class="box think"><p class="boxtitle">Think about: Monty Hall</p>
+<p>You are shown three doors. Behind one is a prize. You pick door 1.
+The host, who knows where the prize is, opens door 3 to reveal nothing,
+then offers you the chance to switch to door 2. Should you?</p>
+<p>Almost everyone says it makes no difference: two doors remain, so it
+must be even. In fact switching wins two-thirds of the time. Your first
+pick had a one-in-three chance of being right, which means there was a
+two-in-three chance the prize was behind one of the other two doors, and
+the host has now told you which of those two it is not.</p>
+<p>If that still feels wrong, scale it up. Imagine ten doors. You pick
+one, with a one-in-ten chance. The host then opens eight empty doors and
+offers you the last remaining one. Now the intuition usually flips,
+because it becomes obvious that the host's choices carried information
+about where the prize was.</p>
+<p>Two questions. First, which system is producing the “it must be
+50-50” answer, and what exactly is it responding to? Second, and harder:
+is this a failure of rationality, or a failure of the problem to present
+its information in a form the mind handles well? Relate your answer to
+the natural-frequencies argument in <a class="xref" href="#are-we-really-that-irrational">§11.8</a>.</p><p><strong>The Rider and the Elephant</strong></p>
+<p>Throughout this unit we use one image for the divide between
+automatic and deliberate processing. The Elephant is our unconscious
+processing: powerful, automatic, fast, and tireless. The Rider is our
+conscious processing: deliberate, controlled, slow, and short-lived.</p>
+<p>This chapter is where the analogy does its main work, and where the
+fair verdict on it arrives. The heuristics in <a class="xref" href="#heuristics-and-biases">§11.4</a> are the Elephant
+supplying fast answers based on resemblance, ease of recall or whatever
+number happens to be in view. Framing and the ultimatum-game rejection
+are the Elephant responding to how a choice feels rather than to its
+arithmetic. The Rider can override these, but it is slow, easily tired,
+and much of the time simply endorses whatever the Elephant has already
+produced.</p>
+<p>But <a class="xref" href="#are-we-really-that-irrational">§11.8</a> should stop you concluding that the Rider is the competent
+one and the Elephant the liability. The Elephant makes almost every
+decision you take, mostly well, on partial information and in far less
+time than deliberation would need. Good reasoning is not a matter of
+silencing it, which is neither possible nor desirable, but of learning
+the specific situations where it reliably misleads and deliberately
+engaging the Rider there. That is a more modest and more useful
+conclusion than “think harder”, and it is the one the evidence actually
+supports.</p></aside>
+<h2 id="chapter-summary-10">Chapter summary</h2>
+<ul>
+<li><p>Reasoning is drawing conclusions; decision-making is choosing
+among alternatives. Deductive reasoning moves from general premises to a
+guaranteed conclusion; inductive reasoning moves from specific
+observations to a probable one, its strength set by the
+representativeness, number and quality of the observations.</p></li>
+<li><p>In deduction, validity (does the conclusion follow?) is separate
+from truth (are the premises actually true?). To show a syllogism
+invalid it is enough to find one arrangement consistent with the
+premises in which the conclusion fails.</p></li>
+<li><p>Categorical syllogisms relate categories with all, no and some.
+Conditional syllogisms are valid as modus ponens and modus tollens but
+not as affirming the consequent or denying the antecedent. Belief bias
+makes us judge validity by believability, which is the clearest evidence
+that we assess form by content.</p></li>
+<li><p>The Wason selection task shows people fail abstract conditional
+reasoning but succeed with thematic content, explained by permission
+schemas or cheater detection.</p></li>
+<li><p>Heuristics are useful shortcuts that produce systematic biases:
+availability (ease of recall), representativeness and base-rate neglect,
+the conjunction fallacy, anchoring, confirmation and myside bias, and
+overconfidence. A bias is not noise; its direction is
+predictable.</p></li>
+<li><p>Expected utility theory describes an ideal rational chooser.
+People depart from it, as the jelly-bean ratio bias shows, and crucially
+they do so while understanding the arithmetic, which is why the
+dual-system account (System 1 fast and intuitive, System 2 slow and
+deliberate) is needed: biases are uncorrected System 1 outputs.</p></li>
+<li><p>Emotion is built into choice. Kermer and colleagues (2006) found
+the loss-gain asymmetry in people's forecasts but not in their
+experience, because they failed to anticipate how readily they would
+rationalise a loss, so loss aversion is at least partly an affective
+forecasting error. We are also swayed by framing (risk-averse for gains,
+risk-seeking for losses), and defaults shape decisions through
+status-quo bias.</p></li>
+<li><p>Feelings are not only distorting. On a homeostatic account,
+emotions are bodily responses serving internal regulation and feelings
+are the perception of how that regulation is going, so feelings tag
+options with value and make fast evaluation possible. Patients with
+ventromedial prefrontal damage retain intellect but are insensitive to
+future consequences and guided by immediate prospects (Bechara et al.,
+1994), so damage to these systems impairs decision-making rather than
+purifying it.</p></li>
+<li><p>Neuroeconomics makes the contest visible: in Sanfey and
+colleagues' ultimatum game, anterior-insula activity to unfair offers
+predicts rejection while prefrontal activity favours accepting the
+payoff. The insula is also central to interoception, so the signal
+biasing the choice is a bodily one.</p></li>
+<li><p>Gigerenzer's ecological rationality holds that heuristics are
+fast and frugal tools suited to real environments, and many biases
+shrink when problems are posed in natural frequencies rather than
+probabilities, which relocates part of the fault to the format of the
+question.</p></li>
+<li><p>The replication picture is mixed but not devastating: framing,
+base-rate neglect, the conjunction fallacy, belief bias, confirmation
+bias and classic anchoring are robust; loss aversion is contested; ego
+depletion and many social-priming effects have not held up. Most effects
+are real, smaller and more context-dependent than the headlines
+suggest.</p></li>
+<li><p>Rationality is therefore not all-or-nothing. It depends on the
+fit between the mind and the environment it is operating in, which is
+the same lesson the analogical paradox and the Wason task taught in
+different words.</p></li>
+</ul>
+<h2 id="self-check-questions-10">Self-check questions</h2>
+<ol type="1">
+<li><p>Distinguish inductive from deductive reasoning, and name the
+three factors that determine the strength of an inductive
+argument.</p></li>
+<li><p>Explain the difference between validity and truth, using the “all
+flowers are animals” syllogism. Why is belief bias evidence that we
+judge form by content?</p></li>
+<li><p>Using Figure 11.1, explain why “all mammals are animals; all dogs
+are animals; therefore all dogs are mammals” is invalid even though its
+conclusion is true. What is the general method for showing a syllogism
+invalid?</p></li>
+<li><p>For conditional syllogisms, which two forms are valid and which
+two are not? Give the invalid form that reasons “the street is wet,
+therefore it is raining”, and name it.</p></li>
+<li><p>Why do people fail the abstract Wason selection task but succeed
+with the drinking-age version? Give both explanations, and say what the
+contrast has in common with the analogical paradox of <a class="xref" href="ch10.html#problem-solving-by-analogy">§10.7</a>.</p></li>
+<li><p>Distinguish the availability and representativeness heuristics,
+and give an example of base-rate neglect.</p></li>
+<li><p>Why can the conjunction fallacy never be a correct probability
+judgement? Explain in terms of what adding detail does to resemblance
+and to probability.</p></li>
+<li><p>What does expected utility theory predict, and how do the
+Denes-Raj and Epstein jelly-bean results depart from it? Why does the
+fact that participants understood the probabilities make the result
+stronger evidence rather than weaker?</p></li>
+<li><p>Explain the framing effect in terms of risk attitudes for gains
+versus losses, and give a real-world example of choice architecture
+exploiting status-quo bias.</p></li>
+<li><p>Set out the homeostatic account of the difference between
+emotions and feelings, and explain how feelings could improve rather
+than degrade a decision.</p></li>
+<li><p>Bechara and colleagues (1994) found their patients were guided by
+immediate prospects only. Explain why that impairs decision-making
+rather than making them more rational, and what it suggests about the
+relationship between emotion and reason.</p></li>
+<li><p>Kermer and colleagues found the loss-gain asymmetry in forecasts
+but not in experience. Explain what that implies about loss aversion,
+and what mechanism the authors identified.</p></li>
+<li><p>Describe Sanfey and colleagues' ultimatum-game findings. What
+does anterior-insula activity predict, and in what sense does rejecting
+an unfair offer stop looking irrational once repeated interactions are
+considered?</p></li>
+<li><p>State Gigerenzer's ecological-rationality argument. Why does the
+natural-frequencies result relocate part of the fault away from the
+reasoner?</p></li>
+<li><p>Using Table 11.1, name two effects from this chapter that are
+well replicated and two claims from the wider literature that are not.
+What distinguishes the two groups?</p></li>
+<li><p>“People are fundamentally irrational.” Evaluate this claim using
+the material in <a class="xref" href="#are-we-really-that-irrational">§11.8</a>, and say what a more defensible summary would
+be.</p></li>
+</ol>
+<h2 id="attribution-and-licence-10">Attribution and licence</h2>
+<p>This chapter is licensed under a Creative Commons
+Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
+licence. It adapts and remixes material from the sources below; changes
+were made, including restructuring, rewriting for voice and level,
+integration of the neuroeconomic material, and the addition of original
+framing, prompts and figures.</p>
+<ul>
+<li><p>Andrade and Walker (2019), <em>Cognitive Psychology</em>
+(LibreTexts / College of the Canyons), Chapter 8 (Reasoning) and Chapter
+9 (Decision Making). CC BY 4.0. Base source: syllogisms, validity and
+truth, the Wason task, inductive-argument strength, the availability and
+representativeness heuristics, the conjunction fallacy, confirmation
+bias, the utility approach and framing.</p></li>
+<li><p>Graham and Griffin (2025), <em>Cognitive Psychology</em>, Chapter
+9: Judgement, Decision Making, and Intelligence (Central New Mexico
+Community College). CC BY-NC-SA 4.0. Supplement: bounded rationality,
+anchoring, overconfidence, the framing problem, and the dual-system
+account. Intelligence material omitted per the unit's scope.</p></li>
+</ul>
+<p>All other studies cited in this chapter are described from standard
+knowledge in the author's own wording, with no source text adapted. The
+homeostatic account of emotions and feelings in <a class="xref" href="#emotion-in-decision-making">§11.6</a> follows Damasio
+(2018).</p>
+<p>The BIOL3005 lecture slides (Goldstein, Cognitive Psychology, ©
+Cengage) are used solely as the assessment map, under Curtin's section
+113P statutory licence. No slide text or figure has been reproduced.
+Figures 11.1 to 11.6 are original diagrams created for this book.</p>
+<p>Full bibliographic details for every work cited in this chapter,
+including the sources named above, are given in the References
+below.</p>
+<h2 id="references-10">References</h2>
+<p>Andrade, M., &amp; Walker, N. (2019). <em>Cognitive psychology</em>.
+College of the Canyons; LibreTexts.
+https://socialsci.libretexts.org/Bookshelves/Psychology/Cognitive_Psychology/Cognitive_Psychology_(Andrade_and_Walker)</p>
+<p>Bechara, A., Damasio, A. R., Damasio, H., &amp; Anderson, S. W.
+(1994). Insensitivity to future consequences following damage to human
+prefrontal cortex. <em>Cognition</em>, <em>50</em>(1–3), 7–15.
+https://doi.org/10.1016/0010-0277(94)90018-3</p>
+<p>Damasio, A. (2018). <em>The strange order of things: Life, feeling,
+and the making of cultures</em>. Pantheon Books.</p>
+<p>Denes-Raj, V., &amp; Epstein, S. (1994). Conflict between intuitive
+and rational processing: When people behave against their better
+judgment. <em>Journal of Personality and Social Psychology</em>,
+<em>66</em>(5), 819–829. https://doi.org/10.1037/0022-3514.66.5.819</p>
+<p>Gal, D., &amp; Rucker, D. D. (2018). The loss of loss aversion: Will
+it loom larger than its gain? <em>Journal of Consumer Psychology,
+28</em>(3), 497–516. <a href="https://doi.org/10.1002/jcpy.1047">https://doi.org/10.1002/jcpy.1047</a></p>
+<p>Gigerenzer, G., &amp; Hoffrage, U. (1995). How to improve Bayesian
+reasoning without instruction: Frequency formats. <em>Psychological
+Review</em>, <em>102</em>(4), 684–704.
+https://doi.org/10.1037/0033-295X.102.4.684</p>
+<p>Gigerenzer, G., Todd, P. M., &amp; the ABC Research Group. (1999).
+<em>Simple heuristics that make us smart</em>. Oxford University
+Press.</p>
+<p>Graham, R., &amp; Griffin, S. (2025). <em>Cognitive psychology</em>.
+Central New Mexico Community College.
+https://nmoer.pressbooks.pub/cognitivepsychology/</p>
+<p>Griggs, R. A., &amp; Cox, J. R. (1982). The elusive
+thematic-materials effect in Wason's selection task. <em>British Journal
+of Psychology</em>, <em>73</em>(3), 407–420.
+https://doi.org/10.1111/j.2044-8295.1982.tb01823.x</p>
+<p>Hagger, M. S., Chatzisarantis, N. L. D., Alberts, H., Anggono, C. O.,
+Batailler, C., Birt, A. R., Brand, R., Brandt, M. J., Brewer, G.,
+Bruyneel, S., Calvillo, D. P., Campbell, W. K., Cannon, P. R., Carlucci,
+M., Carruth, N. P., Cheung, T., Crowell, A., De Ridder, D. T. D.,
+Dewitte, S., … Zwienenberg, M. (2016). A multilab preregistered
+replication of the ego-depletion effect. <em>Perspectives on
+Psychological Science</em>, <em>11</em>(4), 546–573.
+https://doi.org/10.1177/1745691616652873</p>
+<p>Hoffrage, U., &amp; Gigerenzer, G. (1998). Using natural frequencies
+to improve diagnostic inferences. <em>Academic Medicine, 73</em>(5),
+538–540. <a href="https://doi.org/10.1097/00001888-199805000-00024">https://doi.org/10.1097/00001888-199805000-00024</a></p>
+<p>Kahneman, D. (2011). <em>Thinking, fast and slow</em>. Farrar, Straus
+and Giroux.</p>
+<p>Kermer, D. A., Driver-Linn, E., Wilson, T. D., &amp; Gilbert, D. T.
+(2006). Loss aversion is an affective forecasting error.
+<em>Psychological Science</em>, <em>17</em>(8), 649–653. <a href="https://doi.org/10.1111/j.1467-9280.2006.01760.x">https://doi.org/10.1111/j.1467-9280.2006.01760.x</a></p>
+<p>Klein, R. A., Ratliff, K. A., Vianello, M., Adams, R. B., Jr.,
+Bahník, Š., Bernstein, M. J., Bocian, K., Brandt, M. J., Brooks, B.,
+Brumbaugh, C. C., Cemalcilar, Z., Chandler, J., Cheong, W., Davis, W.
+E., Devos, T., Eisner, M., Frankowska, N., Furrow, D., Galliani, E. M.,
+… Nosek, B. A. (2014). Investigating variation in replicability: A “many
+labs” replication project. <em>Social Psychology, 45</em>(3), 142–152.
+<a href="https://doi.org/10.1027/1864-9335/a000178">https://doi.org/10.1027/1864-9335/a000178</a></p>
+<p>Lichtenstein, S., Slovic, P., Fischhoff, B., Layman, M., &amp; Combs,
+B. (1978). Judged frequency of lethal events. <em>Journal of
+Experimental Psychology: Human Learning and Memory</em>, <em>4</em>(6),
+551–578. https://doi.org/10.1037/0278-7393.4.6.551</p>
+<p>Mrkva, K., Johnson, E. J., Gächter, S., &amp; Herrmann, A. (2020).
+Moderating loss aversion: Loss aversion has moderators, but reports of
+its death are greatly exaggerated. <em>Journal of Consumer Psychology,
+30</em>(3), 407–428. <a href="https://doi.org/10.1002/jcpy.1156">https://doi.org/10.1002/jcpy.1156</a></p>
+<p>Sanfey, A. G., Rilling, J. K., Aronson, J. A., Nystrom, L. E., &amp;
+Cohen, J. D. (2003). The neural basis of economic decision-making in the
+ultimatum game. <em>Science</em>, <em>300</em>(5626), 1755–1758.
+https://doi.org/10.1126/science.1082976</p>
+<p>Simon, H. A. (1955). A behavioral model of rational choice. <em>The
+Quarterly Journal of Economics</em>, <em>69</em>(1), 99–118.
+https://doi.org/10.2307/1884852</p>
+<p>Sripada, C., Kessler, D., &amp; Jonides, J. (2014). Methylphenidate
+blocks effort-induced depletion of regulatory control in healthy
+volunteers. <em>Psychological Science</em>, <em>25</em>(6), 1227–1234.
+https://doi.org/10.1177/0956797614526415</p>
+<p>Tversky, A., &amp; Kahneman, D. (1973). Availability: A heuristic for
+judging frequency and probability. <em>Cognitive Psychology</em>,
+<em>5</em>(2), 207–232. https://doi.org/10.1016/0010-0285(73)90033-9</p>
+<p>Tversky, A., &amp; Kahneman, D. (1974). Judgment under uncertainty:
+Heuristics and biases. <em>Science</em>, <em>185</em>(4157), 1124–1131.
+https://doi.org/10.1126/science.185.4157.1124</p>
+<p>Tversky, A., &amp; Kahneman, D. (1981). The framing of decisions and
+the psychology of choice. <em>Science</em>, <em>211</em>(4481), 453–458.
+https://doi.org/10.1126/science.7455683</p>
+<p>Tversky, A., &amp; Kahneman, D. (1983). Extensional versus intuitive
+reasoning: The conjunction fallacy in probability judgment.
+<em>Psychological Review</em>, <em>90</em>(4), 293–315.
+https://doi.org/10.1037/0033-295X.90.4.293</p>
+<p>Wason, P. C. (1966). Reasoning. In B. M. Foss (Ed.), <em>New horizons
+in psychology</em> (pp. 135–151). Penguin.</p>
+<nav class="pager"><a href="ch10.html">← Chapter 10</a><a href="ch12.html">Chapter 12 →</a></nav>
+<footer>Marinovic, W. (2026). <em>Cognition: An open textbook for BIOL3005</em>. Curtin University. Licensed under CC BY-NC-SA 4.0.</footer>
+</main>
+</div>
+<script>if(window.matchMedia('(max-width: 900px)').matches)document.querySelectorAll('.side details').forEach(d=>d.removeAttribute('open'));</script>
+</body>
+</html>

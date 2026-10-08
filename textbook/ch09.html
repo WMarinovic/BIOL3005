@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 9: Language | Cognition: An open textbook for BIOL3005</title>
+<style>:root{--ink:#2B142D;--muted:#6B5A70;--line:#E3DAE7;--tint:#F6F2F8;--purple:#663366;--orange:#E07B00;--amber:#FFF4E6;--deep:#2B142D}
+*{box-sizing:border-box}
+html{scroll-padding-top:70px}
+body{margin:0;color:var(--ink);background:#fff;font-family:Charter,"Bitstream Charter","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;font-size:18px;line-height:1.65}
+a{color:var(--purple)}
+.skip{position:absolute;left:-999px}.skip:focus{left:10px;top:10px;background:#fff;padding:6px 10px;z-index:20}
+.top{position:sticky;top:0;z-index:10;background:var(--deep);color:#fff;font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif}
+.topin{max-width:1240px;margin:0 auto;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{color:#fff;text-decoration:none;font-weight:700;font-size:1.05rem}.brand span{font-weight:400;opacity:.75;font-size:.9rem;margin-left:6px}
+.toplinks a{color:#fff;text-decoration:none;margin-left:16px;font-size:.92rem;opacity:.9}.toplinks a:hover{opacity:1;text-decoration:underline}
+.layout{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:270px minmax(0,1fr);gap:40px;padding:0 20px}
+.side{position:sticky;top:58px;align-self:start;max-height:calc(100vh - 70px);overflow:auto;padding:24px 0;font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;font-size:.86rem}
+.side summary{font-weight:700;color:var(--purple);cursor:pointer;margin:6px 0}
+.side ol{list-style:none;padding:0;margin:0 0 14px}.side li{margin:2px 0}
+.side a{display:block;padding:4px 8px;border-radius:5px;text-decoration:none;color:var(--ink);line-height:1.35}
+.side a:hover,.side a[aria-current]{background:var(--tint);color:var(--purple)}
+main{max-width:46rem;padding:28px 0 60px}
+h1,h2,h3,h4,h5,.chnum,.boxtitle,figcaption,.pager,footer,.tablewrap,.chcard{font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif}
+.chnum{color:var(--orange);font-weight:700;letter-spacing:.04em;text-transform:uppercase;font-size:.85rem;margin:8px 0 0}
+h1{font-size:2.3rem;line-height:1.15;color:var(--purple);margin:.2rem 0 1.2rem}
+h2{font-size:1.5rem;color:var(--purple);margin:2.4rem 0 .6rem;line-height:1.25}
+h3{font-size:1.15rem;margin:1.8rem 0 .4rem}h4,h5{font-size:1rem;margin:1.4rem 0 .3rem}
+p{margin:.5rem 0 1rem}
+.lede{font-size:1.1rem}
+.box{border-radius:8px;padding:14px 20px;margin:1.5rem 0;font-size:.97rem}
+.box p:last-child{margin-bottom:.2rem}
+.boxtitle{font-weight:700;margin:0 0 .4rem!important;font-size:.95rem}
+.box.objectives{background:var(--tint);border-left:5px solid var(--purple)}.box.objectives .boxtitle{color:var(--purple)}
+.box.think{background:var(--amber);border-left:5px solid var(--orange)}.box.think .boxtitle{color:#9A5200}
+.box.why{background:var(--deep);color:#fff}.box.why .boxtitle{color:#FFC27A}.box.why a{color:#FFC27A}
+.box.note{background:var(--tint);border:1px solid var(--line)}
+figure{margin:1.8rem 0;text-align:center}
+figure img{max-width:100%;height:auto;border-radius:4px}
+figcaption{font-size:.86rem;color:var(--muted);text-align:left;margin-top:.5rem;line-height:1.45}
+.tablewrap{overflow-x:auto;margin:1.4rem 0;font-size:.88rem}
+.tablewrap table{border-collapse:collapse;width:100%}
+.tablewrap td,.tablewrap th{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+.tablewrap thead th,.tablewrap tr:first-child th{background:var(--purple);color:#fff}
+.tablecaption{font-size:.86rem;color:var(--muted);font-family:"Segoe UI",system-ui,Arial,sans-serif}
+a.xref{text-decoration:none;border-bottom:1px dotted var(--purple)}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line)}
+.pager a{font-weight:600;text-decoration:none;border:2px solid var(--purple);border-radius:6px;padding:6px 12px}
+footer{margin-top:2rem;font-size:.8rem;color:var(--muted)}
+.chcards{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.chcard{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.chcard a{display:flex;gap:10px;align-items:baseline;text-decoration:none;font-weight:700;color:var(--purple)}
+.chcard .n{color:var(--orange);font-size:1.4rem}
+.chcard p{font-size:.8rem;color:var(--muted);margin:.4rem 0 0;line-height:1.4}
+@media (max-width:900px){.layout{grid-template-columns:1fr;gap:0}.side{position:static;max-height:none;padding:12px 0 0;border-bottom:1px solid var(--line)}.side details{margin-bottom:6px}body{font-size:17px}h1{font-size:1.9rem}.brand span{display:none}}
+@media print{.top,.side,.pager{display:none}.layout{display:block}main{max-width:none}body{font-size:11pt}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="topin">
+  <a class="brand" href="index.html">Cognition <span>An open textbook for BIOL3005</span></a>
+  <nav class="toplinks"><a href="index.html">Contents</a><a href="BIOL3005_Cognition_textbook.pdf">PDF</a><a href="../index.html">Tutorials</a></nav>
+</div></header>
+<div class="layout">
+<aside class="side"><details open><summary>In this chapter</summary><ol class="sectoc"><li><a href="#what-makes-human-language-special">9.1 What makes human language special</a></li><li><a href="#the-processing-of-language">9.2 The processing of language</a></li><li><a href="#understanding-words">9.3 Understanding words</a></li><li><a href="#understanding-sentences">9.4 Understanding sentences</a></li><li><a href="#understanding-text-and-stories">9.5 Understanding text and stories</a></li><li><a href="#producing-language-conversation">9.6 Producing language: conversation</a></li><li><a href="#bilingualism-and-language-in-society">9.7 Bilingualism and language in society</a></li><li><a href="#chapter-summary-8">Chapter summary</a></li><li><a href="#self-check-questions-8">Self-check questions</a></li><li><a href="#attribution-and-licence-8">Attribution and licence</a></li><li><a href="#references-8">References</a></li></ol></details>
+<details><summary>All chapters</summary><ol class="chlist"><li><a href="ch01.html">Introduction &amp; Cognitive Neuroscience</a></li><li><a href="ch02.html">Attention</a></li><li><a href="ch03.html">Short-Term and Working Memory</a></li><li><a href="ch04.html">Long-Term Memory: Structure</a></li><li><a href="ch05.html">Long-Term Memory: Encoding, Retrieval and Consolidation</a></li><li><a href="ch06.html">Everyday Memory and Memory Errors</a></li><li><a href="ch07.html">Conceptual Knowledge</a></li><li><a href="ch08.html">Visual Imagery</a></li><li><a href="ch09.html" aria-current="page">Language</a></li><li><a href="ch10.html">Problem Solving and Creativity</a></li><li><a href="ch11.html">Judgement, Decisions and Reasoning</a></li><li><a href="ch12.html">Drugs, Disorders and the Cognitive Brain</a></li></ol></details></aside>
+<main id="main">
+<p class="chnum">Chapter 9</p>
+<h1>Language</h1>
+<h3 id="where-this-chapter-sits-8">Where this chapter sits</h3>
+<p>Every chapter so far has studied one mind at a time. Attention
+selected, memory stored, concepts organised and imagery simulated, all
+inside a single head. Language is the capacity that lets the contents of
+one head reach another, which makes it both the most distinctively human
+of our abilities and the one that makes all the others shareable.</p>
+<p>This chapter follows a single utterance from the thought in one mind
+to the meaning in another. We ask what makes human language special,
+then work up through words, sentences and whole stories, and then down
+the other side into how we produce language in conversation. The chapter
+closes with the situation most of the world actually lives in, which is
+more than one language at once.</p>
+<h3 id="learning-objectives-8">Learning objectives</h3>
+<aside class="box objectives"><p class="boxtitle">By the end of this chapter you should be able to :</p>
+<ol type="1">
+<li><p>Explain what makes human language distinctive (hierarchy, rules,
+arbitrariness, universality) and what was at issue between Skinner and
+Chomsky.</p></li>
+<li><p>Describe how we understand words, including the word-frequency
+effect, speech segmentation, and lexical ambiguity with meaning
+dominance.</p></li>
+<li><p>Explain how we parse sentences, and contrast the garden-path
+model with the constraint-based approach, saying what evidence
+distinguishes them.</p></li>
+<li><p>Describe how we build coherent representations of text through
+inference and situation models, and explain how cultural schemas shape
+comprehension.</p></li>
+<li><p>Explain how conversation is coordinated through common ground,
+the given–new contract and syntactic priming, and relate Broca's and
+Wernicke's areas to production and comprehension.</p></li>
+<li><p>Describe Australia's linguistic diversity, including Indigenous
+languages and Aboriginal English, and explain why treating a dialect as
+a deficit is a consequential error.</p></li>
+<li><p>Explain what makes someone bilingual, distinguish simultaneous
+from sequential acquisition, and describe codeswitching.</p></li>
+<li><p>Evaluate the claim that bilingualism confers a cognitive
+advantage, and explain how accent and language of presentation affect
+belief and judgement.</p></li>
+</ol></aside>
+<h2 id="what-makes-human-language-special">9.1 What makes human language special</h2>
+<p>Language is a system of communication that uses sounds or symbols to
+express feelings, thoughts, ideas and experiences. Three properties make
+the human version extraordinary. It is hierarchical: a small set of
+elements (sounds, then words) combines without limit into larger units
+(phrases, then sentences), so that a finite vocabulary yields an
+unbounded set of possible sentences. It is rule-governed: those
+combinations follow a grammar, so that “the cat chased the dog” means
+something different from “the dog chased the cat”, and “chased dog the
+cat the” means nothing at all. And it is arbitrary: apart from a few
+onomatopoeic cases, a word bears no resemblance to its referent. There
+is nothing dog-like about the sound “dog”; a community of speakers
+simply agrees on it.</p>
+<p>Language is also strikingly universal. Every human culture has a
+fully expressive language. Deaf children not taught a sign language will
+invent one. Language emerges on a similar timetable across cultures. And
+while languages differ enormously in their words and sounds, each is
+unique, yet they share deep similarities: all have nouns and verbs, ways
+to negate, to question, and to mark time.</p>
+<p>That universality framed the founding debate of the field. B. F.
+Skinner (1957), in Verbal Behavior, argued that language is learned like
+any other behaviour, through reinforcement. Noam Chomsky, first in
+Syntactic Structures (1957) and more pointedly in his review of
+Skinner's book (Chomsky, 1959), argued that the core of language is
+substantially innate. His argument was not from intuition but from two
+observations about children: they produce sentences they have never
+heard and that were never reinforced, and they acquire complex rules
+from input too impoverished to specify them.</p>
+<p>It is worth being clear about what the debate settled and what it did
+not. Chomsky's critique was decisive against the strong reinforcement
+account, and it reoriented the discipline towards the mental machinery
+of language, the province of psycholinguistics, which studies how humans
+comprehend, produce, represent and acquire language. How much of that
+machinery is language-specific rather than general-purpose learning
+remains argued over, and statistical learning, which we meet in <a class="xref" href="#understanding-words">§9.3</a>,
+has since shown that infants extract more structure from the input than
+was once assumed, although whether this reaches the grammatical
+knowledge at the heart of the poverty-of-the-stimulus argument is still
+debated.</p>
+<h2 id="the-processing-of-language">9.2 The processing of language</h2>
+<p>A single act of communication is a chain (Denes &amp; Pinson, 1993).
+In the speaker, a thought is cast into a linguistic representation,
+which drives the vocal tract to produce an acoustic signal. In the
+listener, that signal is picked up by audition, rebuilt into a
+linguistic representation, and finally recovered as meaning (Figure
+9.1).</p>
+<figure><img alt="The processing of language. A thought in the speaker becomes a linguistic representation, then articulation, then an acoustic signal, which the listener perceives, re-represents and recovers as meaning. Original diagram after the speech chain (Denes &amp; Pinson, 1993) · CC BY-NC-SA 4.0." loading="lazy" src="media/ch09_image1.png"/><figcaption><em>Figure 9.1 The processing of language. A thought in the speaker
+becomes a linguistic representation, then articulation, then an acoustic
+signal, which the listener perceives, re-represents and recovers as
+meaning. Original diagram after the speech chain (Denes &amp; Pinson,
+1993) · CC BY-NC-SA 4.0.</em></figcaption></figure>
+<p>Framing language this way makes it an information-processing problem
+of the kind this unit has treated throughout: each step takes time, uses
+mental representations, and varies in efficiency with the amount and
+type of information. That in turn licenses a set of sharp questions that
+follow the chain. Why are some sounds meaningful and others not? How are
+words recognised, and how are they combined? How are ambiguous sentences
+resolved? How do we follow connected stories? The rest of the chapter
+answers these in order, working inward from sound to meaning and then
+back out to speech.</p>
+<h2 id="understanding-words">9.3 Understanding words</h2>
+<p>Your lexicon is the set of all the words you know. Semantics is
+meaning in general, and lexical semantics the meanings carried by
+individual words, each of which may have several.</p>
+<p>Recognising a word is not a uniform process. The word-frequency
+effect is that we respond faster to common words than to rare ones; for
+example, people name pictured objects faster when their names are common
+(Wingfield, 1968), and eye-tracking during reading shows it directly:
+readers fixate low-frequency words for longer than high-frequency ones
+(Rayner &amp; Duffy, 1986; see Figure 9.2).</p>
+<figure><img alt="The word-frequency effect. Readers fixate rarer words for longer, one of the most reliable effects in reading research. Illustrative values reflecting the pattern reported by Rayner and Duffy (1986); original figure · CC BY-NC-SA 4.0." loading="lazy" src="media/ch09_image2.png"/><figcaption><em>Figure 9.2 The word-frequency effect. Readers fixate rarer words
+for longer, one of the most reliable effects in reading research.
+Illustrative values reflecting the pattern reported by Rayner and Duffy
+(1986); original figure · CC BY-NC-SA 4.0.</em></figcaption></figure>
+<p>Recognition must also cope with variable pronunciation. In running
+speech, “did you” surfaces as “did-joo” and “going to” as “gonna”, and
+listeners resolve them using context. Notice that this is the opposite
+of what a simple template-matching account would need: the signal is not
+a clean instance of a stored form, and understanding it requires
+knowledge brought to the signal rather than extracted from it.</p>
+<h3 id="speech-segmentation">Speech segmentation</h3>
+<p>A deeper puzzle is speech segmentation. The acoustic signal contains
+no reliable silences between words, yet we hear discrete words. Some of
+the solution is knowledge we already have: context, meaning, and
+knowledge of which sound sequences are legal in our language. But a
+remarkable part of it is statistical learning, tracking which sounds
+tend to follow which. Sounds that reliably co-occur get grouped as a
+word, and a dip in predictability signals a boundary.</p>
+<p>Infants do this within minutes of exposure: eight-month-olds who
+heard just two minutes of a continuous stream of nonsense syllables
+could later tell its “words” apart from sequences that spanned a word
+boundary (Saffran et al., 1996). This matters for two reasons. It
+explains how a baby can begin to break into a language before knowing
+any of its words, since the statistics are available without the
+meanings. And, as <a class="xref" href="#what-makes-human-language-special">§9.1</a> noted, it bears, if indirectly, on the
+poverty-of-the-stimulus argument: the input turns out to be richer than
+it looks, once you count the statistics in it.</p>
+<h3 id="ambiguous-words">Ambiguous words</h3>
+<p>Most common words are lexically ambiguous, carrying more than one
+meaning: a cast is a plaster support and also a group of actors. How do
+we settle on the right one? Tanenhaus and colleagues (1979) showed that
+for a moment we do not. On first encountering an ambiguous word, people
+briefly access all of its meanings, shown by the fact that the ambiguous
+word primes responses to words related to any of its senses. Only then
+does context prune away the irrelevant one.</p>
+<p>Which meaning wins, and how fast, depends on meaning dominance. With
+biased dominance, one meaning is far more frequent than the others, and
+it is reached quickly unless context forces the rarer sense. With
+balanced dominance, two meanings are about equally frequent, and without
+context the reader is briefly slowed while the competition resolves.
+Meaning is therefore a race between frequency and context, which is why
+the same word can feel instant in one sentence and momentarily confusing
+in another.</p>
+<h2 id="understanding-sentences">9.4 Understanding sentences</h2>
+<p>A sentence is more than a string of words. Recovering its meaning
+requires syntax, the rules for combining words, and parsing, the mental
+grouping of words into phrases as they arrive. Parsing happens
+incrementally, word by word, which is efficient, because it means we do
+not wait for the end of a sentence to begin understanding it. It also
+occasionally leads us astray.</p>
+<p>A garden-path sentence begins by appearing to mean one thing and ends
+meaning another. In “While the man hunted the deer ran into the woods”,
+we initially attach “the deer” as the object of “hunted”, then stall at
+“ran” and must reinterpret “the deer” as the subject of a new clause.
+This is a temporary ambiguity: the early words are ambiguous but the
+sentence is clear by its end, and the measurable slowdown at the
+disambiguating word is the cost of backtracking (Figure 9.3).</p>
+<figure><img alt="Garden-path sentences and the late-closure heuristic. The parser commits early to one grouping and must reinterpret when that commitment fails. Original diagram · CC BY-NC-SA 4.0." loading="lazy" src="media/ch09_image3.png"/><figcaption><em>Figure 9.3 Garden-path sentences and the late-closure heuristic.
+The parser commits early to one grouping and must reinterpret when that
+commitment fails. Original diagram · CC BY-NC-SA 4.0.</em></figcaption></figure>
+<h3 id="two-accounts-of-parsing">Two accounts of parsing</h3>
+<p>Why are we led up the garden path at all? The garden-path model holds
+that parsing is driven first by fast syntactic heuristics, notably late
+closure, the assumption that each new word belongs to the phrase
+currently being built. On that assumption “the deer” is bundled into the
+hunting clause. On this view grammar leads and meaning catches up
+afterwards.</p>
+<p>The constraint-based approach argues instead that the parser draws on
+all available information at once, weighting syntax, word meaning, story
+context and memory load together. It also explains why some structures
+are reliably easier than others: subject-relative clauses (“The senator
+who spotted the reporter shouted”) are easier than object-relative ones
+(“The senator who the reporter spotted shouted”), partly because the
+latter place a heavier load on memory.</p>
+<p>The most telling evidence comes from watching the eyes. In the
+visual-world paradigm, Tanenhaus and colleagues (1995) had people follow
+spoken instructions such as “Put the apple on the towel in the box”
+while looking at a real scene (Figure 9.4).</p>
+<figure><img alt="The visual-world paradigm (Tanenhaus et al., 1995). The visible scene changes how the same ambiguous instruction is parsed, revealed by where listeners look. Original diagram · CC BY-NC-SA 4.0." loading="lazy" src="media/ch09_image4.png"/><figcaption><em>Figure 9.4 The visual-world paradigm (Tanenhaus et al., 1995).
+The visible scene changes how the same ambiguous instruction is parsed,
+revealed by where listeners look. Original diagram · CC BY-NC-SA
+4.0.</em></figcaption></figure>
+<p>When the scene held a single apple, listeners briefly looked at an
+empty towel, having parsed “on the towel” as the destination. When it
+held two apples, they did not, having used the scene to parse “on the
+towel” as specifying which apple was meant. Non-linguistic context
+reached into parsing within a fraction of a second.</p>
+<p>That timing is the whole argument. Nobody disputes that context
+eventually influences interpretation; the question is whether it arrives
+in time to guide the initial parse or only to repair it afterwards. A
+syntax-first model can accommodate late repair but not immediate
+guidance, and what the eyes show is immediate guidance. The modern
+position is closer to the constraint-based view, with syntactic
+heuristics understood as strong default weightings rather than a
+separate first stage.</p>
+<h2 id="understanding-text-and-stories">9.5 Understanding text and stories</h2>
+<p>Beyond the sentence, comprehension requires building a connected
+whole. Coherence is the reader's representation of how the parts of a
+text relate to one another and to its overall topic, and we build it
+largely by inference, supplying information the text never states.
+Anaphoric inferences connect a pronoun to its referent. Instrument
+inferences fill in the likely means, so that “she swept the floor”
+implies a broom. Causal inferences link an event to its cause in an
+earlier sentence.</p>
+<p>The end product is a situation model: a mental representation not of
+the words but of the state of affairs they describe, built from the
+protagonist's point of view and fleshed out with schemas. Readers
+represent the story almost as though experiencing the situation
+themselves, which is why it is the situation model, and not the
+sentences, that survives until the next day. You met the same principle
+in Chapter 6, where schemas filled in what was expected rather than what
+was presented; here that filling-in is doing useful work rather than
+causing error.</p>
+<h3 id="whose-schemas">Whose schemas?</h3>
+<p>The useful work and the error, however, have the same source, because
+they are the same process. Because inference draws on the schemas a
+reader actually has, comprehension of the same text differs between
+readers with different background knowledge, and that difference falls
+along cultural lines.</p>
+<p>Give readers a story that assumes knowledge they do not share and
+comprehension suffers, not through any deficit of language or
+intelligence, but because the inferences the text relies on are
+unavailable. Readers also import their own schemas, filling gaps with
+what would be normal in their world rather than in the story's. A reader
+from outside a story's culture may therefore recall it accurately in its
+words and still have built a different situation model.</p>
+<p>This has a direct practical consequence, and it is worth stating
+before <a class="xref" href="#bilingualism-and-language-in-society">§9.7</a> returns to it. A comprehension test is always partly a test
+of shared background, so a reader's score reflects the fit between their
+schemas and the text's assumptions as much as their comprehension
+ability. Reading assessments built on culturally specific material will
+therefore underestimate readers whose knowledge lies elsewhere. That is
+a measurement problem rather than a fact about the readers.</p>
+<h2 id="producing-language-conversation">9.6 Producing language: conversation</h2>
+<p>Conversation is language's natural habitat, and it is a feat of rapid
+coordination between two or more minds. Speakers observe the given–new
+contract, structuring sentences so that already-shared information
+provides the anchor for new information, which then becomes given in its
+turn. They build on common ground, the shared knowledge that lets much
+go unsaid. And they fall into entrainment, unconsciously synchronising
+their words, rhythms and constructions.</p>
+<p>One powerful form of entrainment is syntactic priming, or syntactic
+coordination: producing a particular grammatical construction makes a
+conversation partner more likely to reuse it. Branigan and colleagues
+(2000) showed this with a confederate who described a card using one of
+two grammatical forms, after which the participant described a new card
+(Figure 9.5).</p>
+<figure><img alt="Syntactic priming (after Branigan et al., 2000). Having heard one grammatical construction, speakers tend to reuse it to describe a different picture. Original diagram · CC BY-NC-SA 4.0." loading="lazy" src="media/ch09_image5.png"/><figcaption><em>Figure 9.5 Syntactic priming (after Branigan et al., 2000).
+Having heard one grammatical construction, speakers tend to reuse it to
+describe a different picture. Original diagram · CC BY-NC-SA
+4.0.</em></figcaption></figure>
+<p>Participants tended to reuse whichever structure they had just heard,
+even though the picture to be described was different from the one the
+confederate had described. Reusing a structure reduces the computational
+load of talking: some of the work of planning a sentence has already
+been done. Fluent conversation also draws on theory of mind, tracking
+what a partner knows and intends, and on nonverbal signals such as
+gesture, facial expression and tone of voice, which carry much of the
+meaning.</p>
+<h3 id="language-in-the-brain">Language in the brain</h3>
+<p>The physiology of language returns us to the localisation evidence of
+Chapter 1. Broca's area, in the left frontal lobe, supports fluent
+grammatical speech production; Wernicke's area, in the left temporal
+lobe, supports comprehension. Damage produces the double dissociation
+whose logic you now know well: Broca's aphasia leaves comprehension
+relatively intact, except for syntactically complex sentences, but
+speech laboured and agrammatical, while Wernicke's aphasia leaves speech
+fluent but empty and comprehension poor.</p>
+<p>Two cautions keep this honest, and both matter clinically. The
+classical picture is a simplification: language depends on a distributed
+network including the connections between these regions, and real
+aphasias rarely fall neatly into two types. And the mapping to the left
+hemisphere, while typical, is not universal. What the dissociation
+establishes is that production and comprehension are separable, not that
+each lives in one place.</p>
+<h2 id="bilingualism-and-language-in-society">9.7 Bilingualism and language in society</h2>
+<p>Almost everything in this chapter so far has described a monolingual
+mind, which is a curious default given that most of the world is not
+monolingual. Australia is emphatically not. At the 2021 Census, 5.8
+million people, or 22.8 per cent, used a language other than English at
+home, more than 300 languages were reported, and the most common
+languages other than English were Mandarin (2.7 per cent), Arabic (1.4),
+Vietnamese (1.3), Cantonese (1.2) and Punjabi (0.9) (Australian Bureau
+of Statistics, 2022a; Figure 9.6).</p>
+<figure><img alt="Australia's linguistic diversity. The most commonly used languages other than English at home, 2021 Census. Original figure from public ABS data · CC BY-NC-SA 4.0." loading="lazy" src="media/ch09_image6.png"/><figcaption><em>Figure 9.6 Australia's linguistic diversity. The most commonly
+used languages other than English at home, 2021 Census. Original figure
+from public ABS data · CC BY-NC-SA 4.0.</em></figcaption></figure>
+<p>This is the ordinary condition of language rather than an exception
+to it, and it reshapes questions a monolingual psycholinguistics tends
+to set aside. It also matters professionally: anyone working in speech
+pathology, education or clinical psychology in Australia will spend much
+of their career working with speakers whose language profile is not the
+one the textbooks assume.</p>
+<h3 id="indigenous-languages-and-aboriginal-english">Indigenous languages and Aboriginal English</h3>
+<p>Before 1788 several hundred Indigenous languages were spoken across
+Australia. Today many are critically endangered. Of the 123 Indigenous
+languages still in use or being revitalised, only 12 traditional
+languages are still being learned by children as a first language
+(Department of Infrastructure, Transport, Regional Development and
+Communications, 2020), though revitalisation efforts are underway for
+many more. Early results from the fourth survey, released in 2026, count
+177 languages spoken or used and 113 being revived, revitalised or
+reawakened, a rise that reflects much greater community participation in
+the survey as well as revitalisation itself (Australian Institute of
+Aboriginal and Torres Strait Islander Studies, 2026).</p>
+<p>Census figures tell a similar story. In 2021, 76,978 Aboriginal and
+Torres Strait Islander people (9.5 per cent) reported using an
+Aboriginal or Torres Strait Islander language at home, down from 16.4
+per cent in 1991 (although the number of speakers has risen, and the ABS
+attributes the falling proportion largely to growth in the number of
+people identifying as Aboriginal or Torres Strait Islander), and more
+than 150 such languages had at least one reported speaker (Australian
+Bureau of Statistics, 2022b). The Census and the language surveys
+classify and count languages differently, so their totals are not
+directly comparable. The two most commonly spoken were Yumplatok (Torres
+Strait Creole) and Kriol. Both are new contact languages that formed
+after 1788, when speakers of traditional languages came into contact
+with speakers of English. Census counts also show the measurement
+problem this section returns to. The question allows only one language
+per person, and the ABS itself notes that its data do not fully capture
+the multilingualism common in many communities. Only 1,371 people were
+recorded as speakers of Aboriginal English, a number that reflects how
+the question is asked more than how many people speak it.</p>
+<p>Alongside these, Aboriginal English is a distinct and rule-governed
+variety of English, spoken by a large majority of Aboriginal
+Australians, which merges English with features of Indigenous languages
+and varies in its vocabulary and grammar across regions (Eades, 2013).
+The point that matters most here is a technical one with large
+consequences: Aboriginal English is a dialect, not an error. It has its
+own systematic grammar, and a speaker of it is following rules rather
+than failing to follow English ones.</p>
+<p>The consequence is the measurement problem of <a class="xref" href="#understanding-text-and-stories">§9.5</a> in its sharpest
+form. A standardised language assessment written for Standard Australian
+English can score a fluent Aboriginal English speaker as impaired,
+because the features that differ are counted as errors. Misreading
+dialect difference as language disorder is a documented and
+consequential mistake, and it leads to children being referred for
+clinical intervention they do not need while genuine difficulties go
+unnoticed. Knowing that a dialect is rule-governed is therefore not a
+point of etiquette; it is what protects against a diagnostic error.</p>
+<h3 id="who-counts-as-bilingual">Who counts as bilingual?</h3>
+<p>There is no clean line. Bilingualism is not a category people fall
+into but a set of dimensions along which they vary, and getting this
+straight early makes everything that follows easier to think about.
+Speakers differ in the age and context at which they acquired each
+language, in their proficiency in each, in how often and in which
+settings they use each one, in how similar their languages are to each
+other, in the relative social prestige of those languages, and in their
+emotional relationship to each.</p>
+<p>Hold on to the implication. Any study that sorts people into
+“bilingual” and “monolingual” by a single question is collapsing all of
+that variation into a binary, and two studies doing so may be comparing
+quite different groups. That is not a minor methodological quibble; it
+is the single most useful thing to know when reading this literature, as
+the contested advantage debate below shows.</p>
+<h3 id="becoming-bilingual">Becoming bilingual</h3>
+<p>Bilingualism can be simultaneous, acquiring two languages from the
+start, or sequential, adding a second language after a first is
+established (Kohnert, 2013). The distinction matters because the two
+routes face different problems: a simultaneous learner must sort two
+systems apart while building both, whereas a sequential learner already
+has one system in place, which can both help and interfere.</p>
+<p>A long-standing question is how the two languages are organised. The
+unitary system hypothesis holds that a bilingual child begins with a
+single lexicon and grammar spanning both languages; the separate systems
+hypothesis holds that distinct systems are built for each from early on
+(Fromkin et al., 2018). The evidence now leans towards the separate
+systems view: bilingual toddlers show signs of differentiating their
+languages from early on, although the two systems interact and influence
+each other's development.</p>
+<p>Fluent bilinguals also codeswitch, moving between languages between
+or within sentences. This was once read as confusion or incomplete
+mastery. It is now understood as a marker of competence: codeswitching
+is rule-governed, tends to occur at particular syntactic boundaries, and
+requires fluency in both languages to do well (Yow et al., 2018). The
+earlier interpretation is a good example of a deficit reading imposed on
+a competence, exactly as with Aboriginal English.</p>
+<h3 id="does-bilingualism-change-the-mind">Does bilingualism change the mind?</h3>
+<p>Bilingualism has been claimed to confer a broad cognitive advantage,
+particularly in executive function. The reasoning is plausible: a
+bilingual speaker must continually select one language and suppress the
+other, and that ought to train inhibition, working memory and cognitive
+flexibility, which are precisely the abilities of Chapter 3.</p>
+<p>The honest state of the evidence is that the advantage appears in
+some studies and fails to replicate in others, and that the effect,
+where present, is smaller than early reports suggested; meta-analyses
+that correct for publication bias find little or no overall advantage in
+either adults (Lehtonen et al., 2018) or children (Lowe et al., 2021).
+This is contested territory, and you should treat it as contested rather
+than established.</p>
+<p>The most promising explanation for the inconsistency is the
+dimensional point made above. If bilingualism is a graded, changeable
+profile rather than a trait, then studies that recruit by a yes-or-no
+question will include very different people under the same label, and
+will disagree with each other for that reason alone. On this view the
+question “does bilingualism improve executive function?” is badly
+formed, and the better question is which aspects of bilingual
+experience, at which levels of proficiency and switching, are associated
+with which specific abilities.</p>
+<p>One related finding is worth reporting carefully, because it is
+striking and easy to overstate. A meta-analysis of 25 studies, covering
+more than 780,000 students, of whom about 92,000 began a second language
+between the ages of 8 and 13 and the rest served as comparison groups,
+found that second-language learning is associated with better numeracy
+and mathematics skills (Nucette et al., 2025). The pooled association is
+sizeable, though it varies considerably between studies, and there is a
+mechanistic story available, since mathematics draws on the same
+executive abilities that language switching is thought to train. But it
+is an association drawn largely from observational data, and the obvious
+confound should be stated plainly: students who take up a second
+language are not a random sample of students. Whether the language
+learning causes the mathematics gain, or both reflect something else
+about the students and their schools, is not settled by the
+correlation.</p>
+<h3 id="accent-language-and-social-judgement">Accent, language and social judgement</h3>
+<p>The language and even the accent we hear something in changes how we
+treat it, which connects language directly to the fluency effects of
+Chapter 6.</p>
+<p>The foreign-language effect is that people make cooler, more
+utilitarian choices in moral dilemmas posed in a later-learned language
+than in their native tongue (Costa et al., 2014), apparently because the
+foreign language carries less emotional charge. Accent has its own
+effects: a foreign accent can lower the credibility listeners assign to
+a claim (Lev-Ari &amp; Keysar, 2010), although the finding has a mixed
+replication record, with several attempts failing to reproduce it (e.g.,
+Souza &amp; Markman, 2013). Group cues shape children's trust early:
+four-year-olds accepted false testimony from a speaker who shared both
+their accent and their race but were sceptical of the same testimony
+from a speaker who shared neither, whereas three-year-olds believed
+both, and a match on accent or race alone was not enough (McDonald &amp;
+Ma, 2016).</p>
+<p>For the accent effect, the mechanism is the one Chapter 6 identified
+as driving the illusory-truth effect, and recognising it is what makes
+these findings more than a list. Foreign-accented speech is harder to
+process; harder processing feels like doubt; and the doubt gets
+attributed to the claim rather than to the accent. That diagnosis makes
+a prediction, and one study supports it: brief exposure to
+foreign-accented speech, which makes it easier to process, partly undoes
+the credibility penalty (Boduch-Grabka &amp; Lev-Ari, 2021).</p>
+<p>These are sobering findings, because the process involved is ordinary
+and invisible. Nobody decides to believe a claim less because of an
+accent. Processing fluency does the work, and the result is a bias along
+lines of language and origin, arising in listeners who would sincerely
+deny holding it. The practical implication is the same as in Chapter 6:
+because the effect operates below judgement, it is not reliably fixed by
+trying to be fair, and is better addressed by changing the conditions,
+through exposure, through structured assessment, and through not relying
+on impressions of credibility where a decision matters.</p>
+<aside class="box think"><p class="boxtitle">Think about</p>
+<p>First, your own languages. If you speak more than one, work through
+the dimensions in <a class="xref" href="#bilingualism-and-language-in-society">§9.7</a>: when did you acquire each, how proficient are
+you in each, where and with whom do you use each, how close are they to
+one another, and how do you feel about each? If you speak only English,
+do the same exercise for someone you know. Now consider how a study that
+recorded only “bilingual: yes or no” would represent that person, and
+what it would miss.</p>
+<p>Second, the measurement problem. <a class="xref" href="#understanding-text-and-stories">§9.5</a> argued that a comprehension
+test is partly a test of shared background, and <a class="xref" href="#bilingualism-and-language-in-society">§9.7</a> applied the same
+argument to language assessment for Aboriginal English speakers. Set out
+the parallel precisely. What exactly is being measured when a test is
+built on one variety of a language and administered to a speaker of
+another, and what would a fairer assessment have to establish first?</p>
+<p>Third, accent and credibility. Boduch-Grabka and Lev-Ari found that
+brief exposure to a foreign accent reduces the credibility penalty.
+Explain why the processing-fluency account predicts that result, and say
+what it implies about whether the bias is best described as a prejudice
+or as a by-product. Does the answer change what you would do about
+it?</p><p><strong>Going further: why the bilingual advantage is so hard to
+measure</strong></p>
+<p><em>The bilingual-advantage literature is a useful case study in
+something that reaches well beyond bilingualism, which is what happens
+when a graded, multidimensional thing is measured with a
+category.</em></p>
+<p><em>Suppose the true state of affairs is that certain aspects of
+bilingual experience (sustained high proficiency in both languages,
+frequent switching between them, immersion in a community that uses
+both) are associated with better executive control, and that other
+profiles are not. Now suppose a hundred laboratories each recruit
+“bilinguals” by asking whether people speak a second language. Some will
+happen to recruit highly proficient frequent switchers and find an
+effect. Others will recruit people with schoolroom French they rarely
+use, and find nothing. The literature will look inconsistent, and it
+will look that way even though every individual study was competently
+run and honestly reported.</em></p>
+<p><em>This is worth recognising because the same structure recurs
+across psychology. A construct is defined by convenience, measured as a
+binary, and then found to behave inconsistently. The inconsistency is
+read as a failure of the effect, when it may be a failure of the
+measurement. The remedy is not a larger sample, which merely estimates
+the average of a heterogeneous mixture more precisely; it is to measure
+the dimensions and model them.</em></p>
+<p><em>Notice that this is the same lesson as the sequential-lineup case
+in Chapter 6, where a real change in response bias was mistaken for a
+change in discriminability, and the same as the Morris crossover in
+Chapter 5, which held under narrower conditions than the textbook
+version implied. In all three, the fix was to ask a more precise
+question rather than to run a bigger study. That habit of asking what
+exactly is being measured is probably the single most portable thing in
+this unit.</em></p><p><strong>The Rider and the Elephant</strong></p>
+<p>Throughout this unit we use one image for the divide between
+automatic and deliberate processing. The Elephant is our unconscious
+processing: powerful, automatic, fast, and tireless. The Rider is our
+conscious processing: deliberate, controlled, slow, and short-lived.</p>
+<p>Language is the Elephant's most impressive performance. You do not
+decide how to parse a sentence, choose which meaning of an ambiguous
+word to activate, or plan the grammatical structure of your next
+utterance; all of it is delivered, at conversational speed, while the
+Rider attends to what is being said rather than how. The garden-path
+sentence is interesting precisely because it is one of the rare moments
+when the machinery becomes briefly visible, as a stumble.</p>
+<p>The accent findings in <a class="xref" href="#bilingualism-and-language-in-society">§9.7</a> show the cost of that efficiency. The
+fluency of processing is computed automatically and is normally a good
+guide to whether something is familiar and well-formed. Applied to a
+speaker with an unfamiliar accent it produces a judgement about
+credibility that the Rider never made and would not endorse. As in
+Chapter 6, the Rider's useful power is not to see through the Elephant
+but to arrange matters so the Elephant's shortcuts do less
+damage.</p></aside>
+<h2 id="chapter-summary-8">Chapter summary</h2>
+<ul>
+<li><p>Human language is hierarchical, rule-governed, arbitrary and
+universal. Chomsky's critique of Skinner was decisive against a pure
+reinforcement account and reoriented the field towards the mental
+machinery of language, though how much of that machinery is
+language-specific remains contested.</p></li>
+<li><p>Word recognition shows the word-frequency effect (Wingfield,
+1968; Rayner &amp; Duffy, 1986) and must solve speech segmentation
+despite the absence of silences between words, partly through
+statistical learning, which infants perform within minutes and which
+bears on the poverty-of-the-stimulus argument.</p></li>
+<li><p>Ambiguous words briefly activate all their meanings (Tanenhaus et
+al., 1979), with resolution governed by context and by meaning
+dominance, biased or balanced.</p></li>
+<li><p>Sentences are parsed incrementally. The garden-path model
+attributes errors to fast syntactic heuristics such as late closure; the
+constraint-based approach holds that syntax, meaning and context combine
+immediately. The visual-world paradigm (Tanenhaus et al., 1995) shows
+non-linguistic context guiding the initial parse within a fraction of a
+second, which favours the constraint-based view.</p></li>
+<li><p>Text comprehension builds coherence through anaphoric, instrument
+and causal inference, producing a situation model of the described
+events rather than of the words.</p></li>
+<li><p>Because inference draws on the reader's own schemas,
+comprehension depends on shared background, so a comprehension test is
+partly a test of cultural knowledge.</p></li>
+<li><p>Conversation is coordinated through the given–new contract,
+common ground, entrainment and syntactic priming (Branigan et al.,
+2000), and draws on theory of mind. Broca's and Wernicke's areas
+dissociate production from comprehension, though the classical two-area
+picture simplifies a distributed network.</p></li>
+<li><p>Australia is highly multilingual: 22.8 per cent of people used a
+language other than English at home in 2021, across more than 300
+languages (ABS, 2022a). Only 12 traditional Indigenous languages are
+still being learned by children as a first language (Department of
+Infrastructure, Transport, Regional Development and Communications,
+2020).</p></li>
+<li><p>Aboriginal English is a rule-governed dialect, not incorrect
+English (Eades, 2013). Assessing it against Standard Australian English
+norms produces a diagnostic error, scoring dialect features as
+impairment.</p></li>
+<li><p>Bilingualism is not a category but a set of dimensions: age and
+context of acquisition, proficiency, patterns of use, similarity between
+languages, prestige and emotional relationship. Acquisition may be
+simultaneous or sequential, and codeswitching is a marker of competence
+rather than confusion (Yow et al., 2018).</p></li>
+<li><p>The claimed bilingual executive-function advantage is genuinely
+contested, replicating inconsistently. The most promising explanation is
+that binary recruitment lumps together very different language profiles.
+An association between second-language learning and mathematics
+attainment is consistent (Nucette et al., 2025) but largely
+observational, with obvious selection confounds.</p></li>
+<li><p>Language shapes judgement: a later-learned language makes moral
+choices more utilitarian (Costa et al., 2014), and four-year-olds are
+more credulous towards speakers who share both their accent and their
+race (McDonald &amp; Ma, 2016). The accent-based credibility penalty
+follows from processing fluency rather than deliberate judgement, which
+is why brief exposure to an accent can reduce it (Boduch-Grabka &amp;
+Lev-Ari, 2021).</p></li>
+</ul>
+<h2 id="self-check-questions-8">Self-check questions</h2>
+<ol type="1">
+<li><p>Explain what is meant by saying language is hierarchical,
+rule-governed and arbitrary, giving an example of each.</p></li>
+<li><p>What observations about children's language did Chomsky use
+against Skinner, and what did he conclude? What did the debate not
+settle?</p></li>
+<li><p>How does statistical learning in infants bear on the
+poverty-of-the-stimulus argument?</p></li>
+<li><p>What is the word-frequency effect, and how do eye-movement data
+demonstrate it?</p></li>
+<li><p>Why is variable pronunciation a problem for any account of word
+recognition based on matching the signal to a stored template?</p></li>
+<li><p>On first meeting an ambiguous word, do we access one meaning or
+several? Cite the evidence, and explain the role of meaning
+dominance.</p></li>
+<li><p>Explain why “While the man hunted the deer ran into the woods” is
+a garden-path sentence, and what late closure contributes to the
+explanation.</p></li>
+<li><p>How did Tanenhaus and colleagues (1995) use the visual world to
+distinguish the garden-path model from the constraint-based approach?
+Why is the timing of the context effect, rather than its existence, what
+settles the question?</p></li>
+<li><p>What is a situation model, and why is it, rather than the exact
+sentences, what we tend to remember?</p></li>
+<li><p>Explain why two readers with different cultural backgrounds can
+build different situation models from the same text without either
+misreading it.</p></li>
+<li><p>Explain syntactic priming, and why the fact that the second
+picture is different from the first matters to the
+interpretation.</p></li>
+<li><p>State the double dissociation between Broca's and Wernicke's
+aphasia, and give two reasons the classical two-area picture is a
+simplification.</p></li>
+<li><p>Why is it a consequential error, rather than merely a
+discourtesy, to treat Aboriginal English as incorrect English? Set out
+the clinical consequence.</p></li>
+<li><p>Name four dimensions along which bilingual speakers differ, and
+explain why a study recruiting by a single yes-or-no question may reach
+a different conclusion from another doing the same.</p></li>
+<li><p>Distinguish simultaneous from sequential bilingual acquisition,
+and say what different problem each route faces.</p></li>
+<li><p>Why was codeswitching once read as confusion, and what is the
+evidence that it is instead a marker of competence? What does it have in
+common with the Aboriginal English case?</p></li>
+<li><p>The bilingual executive-function advantage replicates
+inconsistently. Give the most promising explanation for the
+inconsistency, and explain why a larger sample would not resolve
+it.</p></li>
+<li><p>A meta-analysis finds that second-language learners achieve
+better mathematics results. Give one mechanistic explanation and one
+confound, and say what evidence would distinguish them.</p></li>
+<li><p>Explain, using processing fluency, why a foreign accent can
+reduce the credibility of a claim, and why brief exposure to the accent
+reduces that effect. What does this imply about how to counter the
+bias?</p></li>
+</ol>
+<h2 id="attribution-and-licence-8">Attribution and licence</h2>
+<p>This chapter is licensed under a Creative Commons
+Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
+licence. It adapts and remixes the sources below; changes were made,
+including restructuring into the unit's teaching scaffold, rewriting for
+voice and level, adding the critical evaluation of the parsing and
+bilingual-advantage debates, writing <a class="xref" href="#bilingualism-and-language-in-society">§9.7</a> in full, and adding original
+figures.</p>
+<ul>
+<li><p>Graham and Griffin (2025), <em>Cognitive Psychology</em>, Chapter
+6 (speech perception; parsing; language and the brain) (Central New
+Mexico Community College). CC BY-NC-SA 4.0. Base source for the
+psycholinguistics core, §<a class="xref" href="#what-makes-human-language-special">§9.1</a> to 9.6.</p></li>
+<li><p>Stangor and Walinga (2014), <em>Introduction to Psychology – 1st
+Canadian Edition</em> (BCcampus). CC BY-NC-SA 4.0. Supplement for
+language comprehension and production.</p></li>
+<li><p>Australian Bureau of Statistics (2022a, 2022b), Cultural
+diversity of Australia; Language statistics for Aboriginal and Torres
+Strait Islander peoples, 2021. Public data, used for the language
+statistics and Figure 9.6 in <a class="xref" href="#bilingualism-and-language-in-society">§9.7</a>.</p></li>
+<li><p>Boduch-Grabka and Lev-Ari (2021), <em>Cognitive Science</em>.
+Open access. Adapted for the accent and credibility material in
+<a class="xref" href="#bilingualism-and-language-in-society">§9.7</a>.</p></li>
+<li><p>Nucette, Hamamura, Leitao and Biedermann (2025),
+<em>Bilingualism: Language and Cognition</em>. Open access. Source for
+the language and mathematics association in <a class="xref" href="#bilingualism-and-language-in-society">§9.7</a>.</p></li>
+</ul>
+<p>All other studies cited in this chapter are described from standard
+knowledge in the author's own wording, with no source text adapted.</p>
+<p>The BIOL3005 lecture slides (Goldstein, Cognitive Psychology, 5th
+ed., © Cengage) and the Week 11 guest lecture are used solely as the
+assessment map, under Curtin's section 113P statutory licence. No slide
+text or figure has been reproduced.</p>
+<p>Full bibliographic details for every work cited in this chapter,
+including the sources named above, are given in the References
+below.</p>
+<h2 id="references-8">References</h2>
+<p>Australian Bureau of Statistics. (2022a). <em>Cultural diversity of
+Australia</em>.
+https://www.abs.gov.au/articles/cultural-diversity-australia</p>
+<p>Australian Bureau of Statistics. (2022b). <em>Language statistics for
+Aboriginal and Torres Strait Islander peoples, 2021</em>. <a href="https://www.abs.gov.au/statistics/people/aboriginal-and-torres-strait-islander-peoples/language-statistics-aboriginal-and-torres-strait-islander-peoples/2021">https://www.abs.gov.au/statistics/people/aboriginal-and-torres-strait-islander-peoples/language-statistics-aboriginal-and-torres-strait-islander-peoples/2021</a></p>
+<p>Australian Institute of Aboriginal and Torres Strait Islander
+Studies. (2026). <em>National Indigenous Languages Surveys</em>. <a href="https://aiatsis.gov.au/research/languages/national-indigenous-languages-surveys">https://aiatsis.gov.au/research/languages/national-indigenous-languages-surveys</a></p>
+<p>Boduch-Grabka, K., &amp; Lev-Ari, S. (2021). Exposing individuals to
+foreign accent increases their trust in what nonnative speakers say.
+<em>Cognitive Science</em>, <em>45</em>(11), Article e13064.
+https://doi.org/10.1111/cogs.13064</p>
+<p>Branigan, H. P., Pickering, M. J., &amp; Cleland, A. A. (2000).
+Syntactic co-ordination in dialogue. <em>Cognition</em>, <em>75</em>(2),
+B13–B25. https://doi.org/10.1016/S0010-0277(99)00081-5</p>
+<p>Chomsky, N. (1957). <em>Syntactic structures</em>. Mouton.</p>
+<p>Chomsky, N. (1959). A review of B. F. Skinner's Verbal behavior.
+<em>Language, 35</em>(1), 26–58. <a href="https://doi.org/10.2307/411334">https://doi.org/10.2307/411334</a></p>
+<p>Costa, A., Foucart, A., Hayakawa, S., Aparici, M., Apesteguia, J.,
+Heafner, J., &amp; Keysar, B. (2014). Your morals depend on language.
+<em>PLOS ONE</em>, <em>9</em>(4), Article e94842.
+https://doi.org/10.1371/journal.pone.0094842</p>
+<p>Denes, P. B., &amp; Pinson, E. N. (1993). <em>The speech chain: The
+physics and biology of spoken language</em> (2nd ed.). W. H.
+Freeman.</p>
+<p>Department of Infrastructure, Transport, Regional Development and
+Communications. (2020). <em>National Indigenous languages report</em>.
+Commonwealth of Australia.
+https://www.arts.gov.au/what-we-do/indigenous-arts-and-languages/indigenous-languages-and-arts-program/national-indigenous-languages-report</p>
+<p>Eades, D. (2013). <em>Aboriginal ways of using English</em>.
+Aboriginal Studies Press.</p>
+<p>Fromkin, V., Rodman, R., &amp; Hyams, N. (2018). <em>An introduction
+to language</em> (11th ed.). Cengage.</p>
+<p>Graham, R., &amp; Griffin, S. (2025). <em>Cognitive psychology</em>.
+Central New Mexico Community College.
+https://nmoer.pressbooks.pub/cognitivepsychology/</p>
+<p>Kohnert, K. (2013). <em>Language disorders in bilingual children and
+adults</em> (2nd ed.). Plural Publishing.</p>
+<p>Lehtonen, M., Soveri, A., Laine, A., Järvenpää, J., de Bruin, A.,
+&amp; Antfolk, J. (2018). Is bilingualism associated with enhanced
+executive functioning in adults? A meta-analytic review.
+<em>Psychological Bulletin, 144</em>(4), 394–425. <a href="https://doi.org/10.1037/bul0000142">https://doi.org/10.1037/bul0000142</a></p>
+<p>Lev-Ari, S., &amp; Keysar, B. (2010). Why don't we believe non-native
+speakers? The influence of accent on credibility. <em>Journal of
+Experimental Social Psychology</em>, <em>46</em>(6), 1093–1096.
+https://doi.org/10.1016/j.jesp.2010.05.025</p>
+<p>Lowe, C. J., Cho, I., Goldsmith, S. F., &amp; Morton, J. B. (2021).
+The bilingual advantage in children's executive functioning is not
+related to language status: A meta-analytic review. <em>Psychological
+Science, 32</em>(7), 1115–1146. <a href="https://doi.org/10.1177/0956797621993108">https://doi.org/10.1177/0956797621993108</a></p>
+<p>McDonald, K. P., &amp; Ma, L. (2016). Preschoolers' credulity toward
+misinformation from ingroup versus outgroup speakers. <em>Journal of
+Experimental Child Psychology</em>, <em>148</em>, 87–100.
+https://doi.org/10.1016/j.jecp.2016.03.011</p>
+<p>Nucette, A., Hamamura, T., Leitao, S., &amp; Biedermann, B. (2025).
+Can learning a new language make you better at maths? A meta-analysis of
+foreign language learning and numeracy skills during early adolescence.
+<em>Bilingualism: Language and Cognition</em>, <em>28</em>(4), 923–953.
+https://doi.org/10.1017/S1366728924000701</p>
+<p>Rayner, K., &amp; Duffy, S. A. (1986). Lexical complexity and
+fixation times in reading: Effects of word frequency, verb complexity,
+and lexical ambiguity. <em>Memory &amp; Cognition</em>, <em>14</em>(3),
+191–201. https://doi.org/10.3758/BF03197692</p>
+<p>Saffran, J. R., Aslin, R. N., &amp; Newport, E. L. (1996).
+Statistical learning by 8-month-old infants. <em>Science,
+274</em>(5294), 1926–1928. <a href="https://doi.org/10.1126/science.274.5294.1926">https://doi.org/10.1126/science.274.5294.1926</a></p>
+<p>Skinner, B. F. (1957). <em>Verbal behavior</em>.
+Appleton-Century-Crofts.</p>
+<p>Souza, A. L., &amp; Markman, A. B. (2013). Foreign accent does not
+influence cognitive judgments. In <em>Proceedings of the 35th Annual
+Meeting of the Cognitive Science Society</em> (pp. 1360–1365). Cognitive
+Science Society. <a href="https://escholarship.org/uc/item/8hd9v4ff">https://escholarship.org/uc/item/8hd9v4ff</a></p>
+<p>Stangor, C., &amp; Walinga, J. (2014). <em>Introduction to psychology
+– 1st Canadian edition</em>. BCcampus.
+https://opentextbc.ca/introductiontopsychology/</p>
+<p>Tanenhaus, M. K., Leiman, J. M., &amp; Seidenberg, M. S. (1979).
+Evidence for multiple stages in the processing of ambiguous words in
+syntactic contexts. <em>Journal of Verbal Learning and Verbal
+Behavior</em>, <em>18</em>(4), 427–440.
+https://doi.org/10.1016/S0022-5371(79)90237-8</p>
+<p>Tanenhaus, M. K., Spivey-Knowlton, M. J., Eberhard, K. M., &amp;
+Sedivy, J. C. (1995). Integration of visual and linguistic information
+in spoken language comprehension. <em>Science</em>, <em>268</em>(5217),
+1632–1634. https://doi.org/10.1126/science.7777863</p>
+<p>Wingfield, A. (1968). Effects of frequency on identification and
+naming of objects. <em>The American Journal of Psychology</em>,
+<em>81</em>(2), 226–234.</p>
+<p>Yow, W. Q., Tan, J. S. H., &amp; Flynn, S. (2018). Code-switching as
+a marker of linguistic competence in bilingual children.
+<em>Bilingualism: Language and Cognition</em>, <em>21</em>(5),
+1075–1090. https://doi.org/10.1017/S1366728917000335</p>
+<nav class="pager"><a href="ch08.html">← Chapter 8</a><a href="ch10.html">Chapter 10 →</a></nav>
+<footer>Marinovic, W. (2026). <em>Cognition: An open textbook for BIOL3005</em>. Curtin University. Licensed under CC BY-NC-SA 4.0.</footer>
+</main>
+</div>
+<script>if(window.matchMedia('(max-width: 900px)').matches)document.querySelectorAll('.side details').forEach(d=>d.removeAttribute('open'));</script>
+</body>
+</html>
