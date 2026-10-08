@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIOL3005 Week 9: Language</title>
+<style>
+  :root{
+    --ink:#2B142D; --muted:#6B5A70; --line:#E3DAE7; --tint:#F6F2F8; --paper:#FFFFFF;
+    --same:#663366; --across:#E07B00; --across-text:#A35600; --stage:#1E1222;
+    --ok:#2E7D4F; --bad:#B3261E;
+    --head: Rockwell, "Rockwell Nova", "Roboto Slab", "Sitka Small", Georgia, serif;
+    --body: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{font-size:16px}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.55}
+  a{color:var(--same)}
+  :focus-visible{outline:3px solid var(--across);outline-offset:2px}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+  header.mast{border-bottom:1px solid var(--line);padding:28px 0 0}
+  .unit{font-size:.9rem;color:var(--muted);margin:0}
+  h1{font-family:var(--head);font-weight:700;font-size:2.3rem;line-height:1.1;margin:.2rem 0 .4rem;letter-spacing:-.01em}
+  .lede{max-width:68ch;margin:0 0 18px;color:var(--muted)}
+  nav[role=tablist]{display:flex;gap:4px;flex-wrap:wrap}
+  nav button{font:inherit;font-weight:600;background:none;border:0;border-bottom:3px solid transparent;
+    padding:10px 14px;color:var(--muted);cursor:pointer}
+  nav button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--same)}
+  nav button:hover{color:var(--ink)}
+  main section{display:none;padding:28px 0 60px}
+  main section.on{display:block}
+  h2{font-family:var(--head);font-size:1.55rem;margin:0 0 .5rem}
+  h3{font-family:var(--head);font-size:1.15rem;margin:1.6rem 0 .4rem}
+  p.note{font-size:.92rem;color:var(--muted);max-width:72ch}
+  .twocol{display:grid;grid-template-columns:1.25fr 1fr;gap:28px;align-items:start}
+  @media (max-width:820px){.twocol{grid-template-columns:1fr}h1{font-size:1.8rem}}
+  .btn{font:inherit;font-weight:600;border:2px solid var(--same);background:var(--same);color:#fff;border-radius:6px;padding:8px 16px;cursor:pointer}
+  .btn.ghost{background:#fff;color:var(--same)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0}
+  label.inline{display:flex;gap:6px;align-items:center;font-size:.95rem}
+  select,input[type=number],textarea{font:inherit;border:1px solid #CBBBD2;border-radius:5px;padding:6px 8px;background:#fff;color:var(--ink)}
+  textarea{width:100%;min-height:130px;font-family:Consolas,"Courier New",monospace;font-size:.85rem}
+
+  /* Trial stage: the split visual field is the motif */
+  .stage{position:relative;background:var(--stage);border-radius:10px;aspect-ratio:16/10;overflow:hidden;user-select:none}
+  .stage::before{content:"";position:absolute;left:50%;top:6%;bottom:6%;border-left:1px dashed rgba(255,255,255,.14)}
+  .fieldlab{position:absolute;bottom:10px;font-size:.75rem;color:rgba(255,255,255,.45)}
+  .fieldlab.l{left:14px}.fieldlab.r{right:14px}
+  .fix{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#fff;font-size:2rem;font-weight:300}
+  .item{position:absolute;width:15%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;color:#fff;
+    font-family:Arial,sans-serif;font-weight:700;font-size:clamp(1.6rem,5vw,3.2rem);border-radius:8px;border:3px solid transparent}
+  .item svg{width:78%;height:78%}
+  .pos-tl{left:17%;top:12%}.pos-tr{right:17%;top:12%}.pos-bl{left:17%;bottom:12%}.pos-br{right:17%;bottom:12%}
+  .item.hl-same,.item.fb-same{border-color:#C9A3C9}.item.hl-across,.item.fb-across{border-color:var(--across)}
+  .stagebar{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;align-items:center}
+  .verdict{min-height:3.2em;margin-top:10px;font-size:.98rem}
+  .tag{display:inline-block;font-size:.8rem;font-weight:700;padding:1px 8px;border-radius:999px;color:#fff}
+  .tag.same{background:var(--same)}.tag.across{background:var(--across)}
+  .keyfacts{background:var(--tint);border-radius:10px;padding:16px 20px}
+  .keyfacts p{margin:.2rem 0 .7rem}
+
+  /* Results table */
+  table.entry{border-collapse:collapse;width:100%;font-size:.95rem}
+  table.entry th,table.entry td{padding:6px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+  table.entry th{font-weight:600;font-size:.85rem;color:var(--muted)}
+  table.entry th.same{color:var(--same)} table.entry th.across{color:var(--across-text)}
+  table.entry input{width:5.4rem}
+  input.bad{border-color:var(--bad);background:#FDECEA}
+  .linebox{font-family:Consolas,"Courier New",monospace;font-size:.85rem;background:var(--tint);padding:8px 10px;border-radius:5px;word-break:break-all}
+  .interp p{margin:.3rem 0;max-width:75ch}
+  .chart svg{width:100%;height:auto;display:block}
+  .chartgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start}
+  @media (max-width:820px){.chartgrid{grid-template-columns:1fr}}
+  .entrywrap{max-width:780px}
+  .legend{display:flex;gap:16px;font-size:.85rem;color:var(--muted);flex-wrap:wrap;margin:4px 0}
+  .sw{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-right:5px}
+  .banner{background:#FFF4E5;border:1px solid #F3C98B;color:#6B3D00;border-radius:6px;padding:8px 12px;font-size:.92rem;margin:10px 0}
+  table.summary{border-collapse:collapse;font-size:.92rem;margin-top:8px}
+  table.summary th,table.summary td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:right}
+  table.summary th:first-child,table.summary td:first-child{text-align:left}
+  .status{font-size:.92rem;color:var(--muted)}
+
+  /* Quiz */
+  .quizpick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:720px}
+  @media (max-width:600px){.quizpick{grid-template-columns:1fr}}
+  .pick{border:1px solid var(--line);border-radius:10px;padding:16px;background:#fff;text-align:left;font:inherit;cursor:pointer}
+  .pick:hover{border-color:var(--same)}
+  .pick strong{font-family:var(--head);font-size:1.15rem;display:block;margin-bottom:4px}
+  .qcard{max-width:760px}
+  .qmeta{display:flex;justify-content:space-between;color:var(--muted);font-size:.9rem}
+  .progress{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:6px 0 18px}
+  .progress div{height:100%;background:var(--same);transition:width .25s}
+  .qtext{font-size:1.15rem;font-weight:600;margin:0 0 14px}
+  .opt{display:block;width:100%;text-align:left;font:inherit;background:#fff;border:2px solid var(--line);border-radius:8px;padding:10px 14px;margin:8px 0;cursor:pointer;color:var(--ink)}
+  .opt:hover:not(:disabled){border-color:#B9A2C2}
+  .opt.sel{border-color:var(--same);background:var(--tint)}
+  .opt.right{border-color:var(--ok);background:#EAF5EE}
+  .opt.wrong{border-color:var(--bad);background:#FDECEA}
+  .opt:disabled{cursor:default}
+  .why{font-size:.92rem;margin-top:4px;color:var(--ink)}
+  .ref{font-size:.85rem;color:var(--muted);margin-top:10px}
+  .review{border-top:1px solid var(--line);padding:12px 0}
+  .review .ok{color:var(--ok);font-weight:700}.review .no{color:var(--bad);font-weight:700}
+  /* Full task overlay */
+  #run{position:fixed;inset:0;background:var(--stage);z-index:1000;display:none;color:#fff;cursor:none}
+  #run.on{display:block}
+  #run.screenmode{cursor:auto}
+  #runFix{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:6vh;font-weight:300;line-height:1}
+  .ritem{position:absolute;transform:translate(-50%,-50%);height:12vh;width:12vh;display:flex;align-items:center;justify-content:center;
+    font-family:Arial,sans-serif;font-weight:700;font-size:10vh;line-height:1;border-radius:1.2vh;border:.4vh solid transparent}
+  .ritem svg{width:10vh;height:10vh}
+  .rp-tl{left:25%;top:30%}.rp-tr{left:75%;top:30%}.rp-bl{left:25%;top:70%}.rp-br{left:75%;top:70%}
+  .ritem.fb-same{border-color:#C9A3C9}.ritem.fb-across{border-color:var(--across)}
+  #runMsg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(680px,90vw);background:#fff;color:var(--ink);
+    border-radius:12px;padding:26px 30px;display:none;max-height:90vh;overflow:auto}
+  #runMsg h2{margin-top:0}
+  #runMsg p{margin:.4rem 0 .8rem}
+  #runFb{position:absolute;left:50%;top:88%;transform:translate(-50%,-50%);font-size:2.4vh;font-weight:600;text-align:center;width:90vw}
+  .taskcard{background:var(--tint);border-radius:10px;padding:18px 22px;max-width:760px}
+  .taskcard ol{padding-left:1.2rem;margin:.4rem 0}
+  details.tutor{margin-top:14px;font-size:.92rem}
+  details.tutor summary{cursor:pointer;color:var(--muted);font-weight:600}
+  footer{border-top:1px solid var(--line);padding:16px 0 30px;font-size:.82rem;color:var(--muted)}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  .fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 24px;max-width:780px}
+  @media (max-width:640px){.fields{grid-template-columns:1fr}}
+  .fields label{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:.95rem;border-bottom:1px solid var(--line);padding:6px 0}
+  .fields input{width:6rem}
+  .bigstim{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:Arial,sans-serif;font-weight:700;color:#fff;line-height:1;text-align:center;white-space:nowrap}
+  #run .bigstim{font-size:9vh}
+  .lstage .bigstim{font-size:16cqh}
+  .lstage{container-type:size}
+  .lstage::before{display:none}
+  .question{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#fff;font-size:4.2vh;text-align:center;width:86vw;line-height:1.3}
+  .lstage .question{font-size:7cqh;width:90%}
+  .keyhint{position:absolute;left:50%;bottom:7%;transform:translateX(-50%);color:rgba(255,255,255,.55);font-size:2.2vh;white-space:nowrap}
+  .lstage .keyhint{font-size:4.5cqh}
+  .remind{position:absolute;left:50%;top:6%;transform:translateX(-50%);color:rgba(255,255,255,.5);font-size:2.4vh}
+  #runMsg input[type=text],#runMsg textarea{width:100%;font-size:1.3rem;padding:8px 10px;margin:6px 0;font-family:Arial,sans-serif}
+  #runMsg input.letters{letter-spacing:.4em;text-transform:uppercase;font-size:1.8rem}
+  #runMsg textarea{min-height:140px;font-size:1.05rem}
+  .countdown{font-weight:700;color:var(--across-text)}
+</style>
+</head>
+<body>
+<header class="mast"><div class="wrap">
+  <p class="unit">BIOL3005 Cognition, Week 9 tutorial</p>
+  <h1>Led up the garden path</h1>
+  <p class="lede">Tools for the language lab: self-paced reading of garden-path and relative-clause sentences, one word at a time. Textbook Chapter 9, §9.3 and §9.4.</p>
+  <nav role="tablist" aria-label="Tutorial tools"><button role="tab" id="t-demo" aria-controls="s-demo" aria-selected="true">Try a trial</button><button role="tab" id="t-task" aria-controls="s-task" aria-selected="false">Run the task</button><button role="tab" id="t-mine" aria-controls="s-mine" aria-selected="false">My results</button><button role="tab" id="t-class" aria-controls="s-class" aria-selected="false">Class results</button><button role="tab" id="t-quiz" aria-controls="s-quiz" aria-selected="false">Quiz</button></nav>
+</div></header>
+<main class="wrap">
+<section id="s-demo" class="on" role="tabpanel" aria-labelledby="t-demo">
+  <div class="twocol"><div><div class="stage lstage" id="stage"><div class="fix">+</div></div>
+<div class="stagebar"><button class="btn" id="dGo">Read a sentence</button><button class="btn ghost" id="dNext" disabled>Next word (spacebar)</button></div>
+<div class="verdict" id="dVerdict">Words appear one at a time. Press the spacebar for each next word, at your own pace.</div></div><div class="keyfacts"><h2>What the task is doing</h2>
+<p>You read sentences one word at a time, pressing the spacebar for each new word. The time you spend on each word is recorded.</p>
+<p>Some sentences are garden paths: “While the man hunted the deer ran into the woods.” You probably read “the deer” as what the man hunted, then stalled at “ran”. Other students read the same sentence with a comma after “hunted”, which removes the ambiguity. The slowdown at the disambiguating word is the cost of reanalysis.</p>
+<p>Other sentences compare subject relatives (“The senator who spotted the reporter shouted”) with object relatives (“The senator who the reporter spotted shouted”), which the textbook says are harder, partly because of memory load.</p></div></div>
+</section>
+<section id="s-task" role="tabpanel" aria-labelledby="t-task">
+  <h2>Run the task</h2>
+  <div class="taskcard"><p>The task runs full screen and takes about 7 minutes. You need a keyboard: the spacebar, and F and J for questions.</p>
+<ol><li>Each sentence appears one word at a time. Press the <strong>spacebar</strong> to see the next word.</li>
+<li>Read at your normal pace, as you would read a book. Do not rush, and do not go back.</li>
+<li>After some sentences there is a yes/no question: <strong>J</strong> for yes, <strong>F</strong> for no.</li></ol>
+    <div class="row"><label class="inline">Writing hand (optional) <select id="taskHand"><option value="NA">Prefer not to say</option><option value="R">Right</option><option value="L">Left</option><option value="B">Both</option></select></label></div>
+    <div class="row"><button class="btn" id="taskStart">Start the task</button><span class="status" id="taskStatus"></span></div>
+    <details class="tutor"><summary>Settings for tutors</summary>
+      <div class="row"><label class="inline">Length <select id="taskN"><option value="1" selected>Standard: 40 sentences (about 7 minutes)</option><option value="0.25">Quick check: 10 sentences (about 2 minutes)</option></select></label></div>
+      <p class="note">Word-by-word self-paced reading in the centre of the screen. Each student reads every garden-path item once, half with a disambiguating comma (randomly chosen per student), every relative-clause item once, half as subject relatives and half as object relatives, and 12 fillers; three practice sentences come first. Relative-clause and filler sentences are followed by a yes/no comprehension question. Word times outside 100 to 3000 ms are excluded from the averages.</p>
+    </details>
+  </div>
+</section>
+<section id="s-mine" role="tabpanel" aria-labelledby="t-mine">
+  <h2>Your results</h2>
+  <p class="note" id="mineIntro">Run the task first: your numbers are filled in automatically. You can also type them in.</p>
+  <div class="fields" id="fields"></div>
+  <div class="row"><label class="inline">Writing hand (optional) <select id="hand"><option value="NA">Prefer not to say</option><option value="R">Right</option><option value="L">Left</option><option value="B">Both</option></select></label></div>
+  <div class="entrywrap">
+    <h3>Share with your class</h3>
+    <p class="note">Copy this line and paste it where your tutor asks (for example, the tutorial's Teams chat). It contains no name.</p>
+    <div class="linebox" id="myLine"></div>
+    <div class="row"><button class="btn" id="copyLine" disabled>Copy my results line</button><span class="status" id="copyMsg"></span></div>
+    <div id="trialDl" hidden>
+      <h3>Your trial-by-trial data</h3>
+      <p class="note">Download your data (one row per trial) before you close this page; nothing is saved once the tab is closed. Your tutor may ask you to submit the file on Canvas.</p>
+      <div class="row"><button class="btn ghost" id="dlMine">Download my trial data (CSV)</button><span class="status" id="pCode"></span></div>
+    </div>
+  </div>
+  <h3>Your pattern</h3>
+  <div class="chartgrid"><div class="chart" id="my1"></div><div class="chart" id="my2"></div></div>
+  <div class="interp" id="myInterp"></div>
+  <p class="note">Each student reads only eight garden paths and eight controls, and word times vary a lot from word to word, so one person’s difference of 50 ms is not reliable. The class pattern is the better evidence.</p>
+</section>
+<section id="s-class" role="tabpanel" aria-labelledby="t-class">
+  <h2>Pool the class</h2>
+  <p class="note">Paste everything students posted. Lines that do not contain a results code (names, timestamps, chat messages) are ignored automatically. You can also load the trial-data files students downloaded (select several at once, for example after a bulk download from a Canvas assignment).</p>
+  <textarea id="paste" aria-label="Pasted results lines" placeholder="Paste results lines here, one per student. Each starts with SP1,"></textarea>
+  <div class="row">
+    <button class="btn" id="readPaste">Read pasted lines</button>
+    <label class="btn ghost" for="fileIn" style="display:inline-block">Load CSV files</label><input type="file" id="fileIn" accept=".csv,.txt" multiple hidden>
+    <button class="btn ghost" id="simulate">Rehearse with a simulated class</button>
+    <button class="btn ghost" id="clearClass">Clear</button>
+    <button class="btn ghost" id="download" disabled>Download class summary (CSV)</button>
+    <button class="btn ghost" id="downloadTrials" disabled>Download all trials (CSV)</button>
+  </div>
+  <p class="status" id="classStatus">No class data yet.</p>
+  <div id="simBanner"></div>
+  <div id="classBody" hidden><h3>The garden-path effect</h3>
+<p class="note">Reading time on the disambiguating word (for example “ran”) and the word after it, with and without a comma. Right: each student’s garden-path effect at the critical word.</p>
+<div class="chartgrid"><div class="chart" id="c1"></div><div class="chart" id="c2"></div></div>
+<h3>Subject versus object relatives</h3>
+<p class="note">Left: reading time on the two verbs. Right: comprehension accuracy.</p>
+<div class="chartgrid"><div class="chart" id="c3"></div><div class="chart" id="c4"></div></div><div id="cTable"></div></div>
+</section>
+<section id="s-quiz" role="tabpanel" aria-labelledby="t-quiz">
+  <div id="quizStart">
+    <h2>Week 9 quiz</h2>
+    <p class="note">Eight questions on today’s lab and Chapter 9. You get feedback after each answer, including why the other options are wrong. Options appear in a different order each time.</p>
+    <div class="row"><label class="inline"><input type="checkbox" id="useTimer" checked> Use a timer (one minute per question)</label></div>
+    <div class="quizpick">
+      <button class="pick" data-set="core"><strong>Core</strong>What makes language special, word recognition, ambiguity, parsing and conversation.</button>
+      <button class="pick" data-set="stretch"><strong>Stretch</strong>Interpreting our data, the two accounts of parsing, and language in society.</button>
+    </div>
+  </div>
+  <div id="quizRun" hidden></div>
+</section>
+</main>
+<div id="run" aria-live="polite"><div id="runFix">+</div><div id="runItems"></div><div id="runFb"></div><div id="runMsg" role="dialog" aria-modal="true"></div></div>
+<footer><div class="wrap">BIOL3005 Cognition, Curtin University. Licensed under CC BY-NC-SA 4.0. Materials are original; the design follows standard self-paced reading studies of garden-path and relative-clause sentences.</div></footer>
+<script>
+(function(){
+const WK={};
+
+WK.code='SP1';WK.file='week09';WK.marker='region';
+WK.fields=[{k:'gp_crit',label:'Garden path: critical word (ms)',kind:'ms'},{k:'ctrl_crit',label:'With comma: critical word (ms)',kind:'ms'},
+  {k:'gp_spill',label:'Garden path: next word (ms)',kind:'ms'},{k:'ctrl_spill',label:'With comma: next word (ms)',kind:'ms'},
+  {k:'or_rt',label:'Object relatives: verbs (ms)',kind:'ms'},{k:'sr_rt',label:'Subject relatives: verbs (ms)',kind:'ms'},
+  {k:'or_acc',label:'Object relatives: questions correct (%)',kind:'pct'},{k:'sr_acc',label:'Subject relatives: questions correct (%)',kind:'pct'},
+  {k:'fill_acc',label:'Other sentences: questions correct (%)',kind:'pct'}];
+const GP=["While the man hunted| the deer ^ran into the woods.", "While Anna dressed| the baby ^played in the crib.", "While the chef cooked| the meat ^burned on the grill.", "While the band played| the song ^echoed around the hall.", "While the woman sewed| the cloth ^slipped off the table.", "While the boy scratched| the dog ^yawned loudly.", "While the students studied| the book ^fell off the desk.", "While the girl washed| the car ^rolled down the hill.", "While the nurse bathed| the child ^cried for his mother.", "While the mechanic repaired| the truck ^leaked oil on the floor.", "While the teacher read| the poem ^made the class laugh.", "While the man drove| the car ^stalled at the lights.", "While the waiter served| the soup ^cooled on the counter.", "While Tom ate| the pizza ^arrived at the door.", "While the painter painted| the wall ^cracked behind him.", "While the family visited| the museum ^closed for lunch."],RC=[["senator", "spotted", "reporter", "shouted", "spot"], ["doctor", "helped", "nurse", "smiled", "help"], ["banker", "praised", "climber", "resigned", "praise"], ["lawyer", "called", "judge", "laughed", "call"], ["student", "thanked", "tutor", "left", "thank"], ["pilot", "greeted", "chef", "waved", "greet"], ["dancer", "admired", "singer", "bowed", "admire"], ["guard", "stopped", "thief", "sighed", "stop"], ["baker", "visited", "farmer", "sneezed", "visit"], ["coach", "hugged", "player", "cried", "hug"], ["actor", "ignored", "critic", "frowned", "ignore"], ["officer", "followed", "driver", "paused", "follow"]],FILL=[["The children played in the park after school.", "Did the children play after school?", true], ["The old man fed the ducks at the lake.", "Did the man feed pigeons?", false], ["My sister bought a new phone last week.", "Did my sister buy a phone?", true], ["The rain stopped just before the wedding began.", "Did the rain continue during the wedding?", false], ["A small dog barked at the delivery van.", "Did a dog bark at the van?", true], ["The students finished the exam early.", "Did the students finish late?", false], ["Our neighbour painted his fence bright blue.", "Was the fence painted blue?", true], ["The train arrived ten minutes late.", "Was the train on time?", false], ["She left her umbrella on the bus.", "Did she leave her umbrella on the bus?", true], ["The baker opened the shop at six.", "Did the baker open the shop?", true], ["Two boys climbed the tall tree.", "Did three boys climb the tree?", false], ["The concert ended with a loud song.", "Did the concert end quietly?", false]],PRAC=[["The cat slept on the warm sofa.", "Did the cat sleep on the sofa?", true], ["Tom carried the boxes upstairs.", "Did Tom carry the boxes downstairs?", false], ["The phone rang twice during dinner.", "Did the phone ring?", true]];
+const $=id=>document.getElementById(id);
+const okRT=v=>fin(v)&&v>=100&&v<=3000;
+function gpItem(s,comma){const t=s.replace('|',comma?',':'').split(' ');const crit=t.findIndex(w=>w.startsWith('^'));return {words:t.map(w=>w.replace('^','')),crit:[crit],spill:crit+1};}
+function rcItem(r,obj){const [h,v,o,m]=r;const w=obj?['The',h,'who','the',o,'^'+v,'^'+m+'.']:['The',h,'who','^'+v,'the',o,'^'+m+'.'];
+  return {words:w.map(x=>x.replace('^','')),crit:w.map((x,i)=>x.startsWith('^')?i:-1).filter(i=>i>=0),spill:-1};}
+const wHTML=s=>'<div class="bigstim" style="font-size:7vh">'+esc(s)+'</div>';
+WK.mine=function(d){
+  pairChart($('my1'),'Reading time (ms)',[{name:'Critical word',a:{m:d.ctrl_crit},b:{m:d.gp_crit}},{name:'Next word',a:{m:d.ctrl_spill},b:{m:d.gp_spill}}],'ms',{labels:['comma','garden path']});
+  pairChart($('my2'),'Relative clauses',[{name:'Verbs (ms)',a:{m:d.sr_rt},b:{m:d.or_rt}}],'ms',{labels:['subject rel.','object rel.']});
+  let h='';const e=d.gp_crit-d.ctrl_crit,s=d.gp_spill-d.ctrl_spill,r=d.or_rt-d.sr_rt;
+  if(fin(e))h+='<p><strong>Garden path:</strong> the critical word took you '+Math.abs(e).toFixed(0)+' ms '+(e>=0?'longer':'less')+' without the comma'+(fin(s)?', and the next word '+Math.abs(s).toFixed(0)+' ms '+(s>=0?'longer':'less'):'')+'.</p>';
+  if(fin(r))h+='<p><strong>Relative clauses:</strong> the verbs in object relatives took you '+Math.abs(r).toFixed(0)+' ms '+(r>=0?'longer':'less')+' than in subject relatives'+(fin(d.or_acc)&&fin(d.sr_acc)?', with '+d.or_acc.toFixed(0)+'% versus '+d.sr_acc.toFixed(0)+'% of questions correct':'')+'.</p>';
+  $('myInterp').innerHTML=h;};
+WK.simulate=function(){const b=360+gauss()*60,r=v=>Math.round(clamp(v,180,1500)),s=v=>+clamp(v,0,100).toFixed(1);
+  return {gp_crit:r(b+75+gauss()*45),ctrl_crit:r(b+gauss()*25),gp_spill:r(b+50+gauss()*40),ctrl_spill:r(b+gauss()*25),or_rt:r(b+45+gauss()*40),sr_rt:r(b+5+gauss()*30),
+    or_acc:s(78+gauss()*12),sr_acc:s(90+gauss()*8),fill_acc:s(93+gauss()*5)};};
+WK.drawClass=function(rows){const g=k=>summ(col(k));
+  pairChart($('c1'),'Reading time (ms)',[{name:'Critical word',a:g('ctrl_crit'),b:g('gp_crit')},{name:'Next word',a:g('ctrl_spill'),b:g('gp_spill')}],'ms',{labels:['comma','garden path']});
+  const e=rows.map(r=>r.gp_crit-r.ctrl_crit),E=summ(e),sp=rows.map(r=>r.gp_spill-r.ctrl_spill),SP=summ(sp);
+  dotChart($('c2'),'Garden-path effect (ms)',[{name:'Critical word',dots:e,mean:E.m,lo:E.lo,hi:E.hi},{name:'Next word',dots:sp,mean:SP.m,lo:SP.lo,hi:SP.hi}],{zero:true,leftLab:'\u2190 comma slower',rightLab:'garden path slower \u2192'});
+  const o=g('or_rt'),sr=g('sr_rt');pairChart($('c3'),'Relative clauses: verbs (ms)',[{name:'Reading time',a:sr,b:o}],'ms',{labels:['subject rel.','object rel.']});
+  const oa=g('or_acc'),sa=g('sr_acc'),fa=g('fill_acc');
+  dotChart($('c4'),'Questions correct (%)',[{name:'Subject rel.',dots:col('sr_acc'),mean:sa.m,lo:sa.lo,hi:sa.hi},{name:'Object rel.',dots:col('or_acc'),mean:oa.m,lo:oa.lo,hi:oa.hi},{name:'Other',dots:col('fill_acc'),mean:fa.m,lo:fa.lo,hi:fa.hi}],{unit:'%',floor:0,ceil:100});
+  const d=rows.map(r=>r.or_rt-r.sr_rt),D=summ(d);
+  $('cTable').innerHTML=classTable(['Measure','Class average (95% CI)'],[['Garden path, critical word, ms',ci(g('gp_crit'))],['Comma, critical word, ms',ci(g('ctrl_crit'))],['Garden-path effect, critical word, ms',cid(E)],
+    ['Garden-path effect, next word, ms',cid(SP)],['Object minus subject relatives, verbs, ms',cid(D)],['Questions correct: subject / object relatives / other, %',ci(sa,1)+' / '+ci(oa,1)+' / '+ci(fa,1)]]);};
+function summRows(rows,get){const t=rows.filter(r=>get(r,'phase')==='test');const rt=k=>r=>+get(r,k);const o={};
+  const sel=c=>t.filter(r=>get(r,'condition')===c);
+  o.gp_crit=mean(sel('garden_path').map(rt('crit_rt')).filter(okRT));o.ctrl_crit=mean(sel('comma').map(rt('crit_rt')).filter(okRT));
+  o.gp_spill=mean(sel('garden_path').map(rt('spill_rt')).filter(okRT));o.ctrl_spill=mean(sel('comma').map(rt('spill_rt')).filter(okRT));
+  o.or_rt=mean(sel('object_rel').map(rt('crit_rt')).filter(okRT));o.sr_rt=mean(sel('subject_rel').map(rt('crit_rt')).filter(okRT));
+  const acc=c=>{const m=sel(c).filter(r=>get(r,'q_correct')!=='');return m.length?pct(m.map(r=>+get(r,'q_correct')===1)):NaN;};
+  o.or_acc=acc('object_rel');o.sr_acc=acc('subject_rel');o.fill_acc=acc('filler');return o;}
+WK.summarise=rows=>summRows(rows,(r,k)=>r[k]==null?'':String(r[k]));
+WK.summariseCSV=ts=>summRows(ts,(r,k)=>r[k]==null?'':r[k]);
+async function readSentence(words){const rts=[];let fl=false,fs=true;
+  for(let i=0;i<words.length;i++){const r=await trial({html:wHTML(words[i]),fixMs:i===0?T(600):0,fix:i===0,stimMs:null,codes:['Space'],windowMs:TW(8000)});rts.push(r.rt);fl=fl||r.focusLost;fs=fs&&r.fullscreen;}
+  return {rts,fl,fs};}
+async function ask(q){const r=await trial({html:'<div class="question">'+esc(q)+'</div><div class="keyhint">F: no \u00b7 J: yes</div>',fixMs:T(300),fix:false,stimMs:null,codes:['KeyF','KeyJ'],windowMs:TW(10000)});return r;}
+WK.run=async function(meta){const rows=[];
+  let go=await showScreen('<h2>Reading, one word at a time</h2><p>Each sentence appears one word at a time in the middle of the screen. Press the <strong>spacebar</strong> to see the next word. Read at your normal pace, as you would read a book.</p><p>After some sentences there is a yes/no question: <strong>J</strong> for yes, <strong>F</strong> for no.</p><p>Three practice sentences first.</p>',[['Start the practice','go'],['Cancel','quit']]);
+  if(go==='quit')return {rows,quit:true};
+  for(const [s,q,a] of PRAC){await readSentence(s.split(' '));const r=await ask(q);const ok=r.resp?((r.resp==='KeyJ')===a):false;
+    if(!ok){RFB.textContent='The answer was '+(a?'yes.':'no.');await sleep(T(1200));RFB.textContent='';}await sleep(T(400));}
+  const half=k=>{const idx=shuffle([...Array(k).keys()]);return new Set(idx.slice(0,Math.floor(k/2)));};
+  const gpComma=half(GP.length),rcObj=half(RC.length);let items=[];
+  GP.forEach((s,i)=>{const c=gpComma.has(i);const it=gpItem(s,c);items.push({kind:c?'comma':'garden_path',item:i+1,...it,q:null});});
+  RC.forEach((r,i)=>{const ob=rcObj.has(i);const it=rcItem(r,ob);items.push({kind:ob?'object_rel':'subject_rel',item:i+1,...it,q:'Did the '+r[0]+' '+r[4]+' the '+r[2]+'?',a:!ob});});
+  FILL.forEach(([s,q,a],i)=>items.push({kind:'filler',item:i+1,words:s.split(' '),crit:[],spill:-1,q,a}));
+  items=shuffle(items);if(meta.n<1){const keep={};items=items.filter(t=>{keep[t.kind]=(keep[t.kind]||0)+1;return keep[t.kind]<=2;});}
+  go=await showScreen('<h2>Practice finished</h2><p>Now the real sentences ('+items.length+'). Keep reading at your normal pace.</p>',[['Start','go'],['Quit the task','quit']]);
+  if(go==='quit')return {rows,quit:true};
+  let k=0;for(const it of items){const rd=await readSentence(it.words);let qr=null;if(it.q)qr=await ask(it.q);
+    const crit=it.crit.length?mean(it.crit.map(i=>rd.rts[i]).filter(okRT)):NaN;const spill=it.spill>=0?rd.rts[it.spill]:NaN;
+    const row=baseRow(meta,{phase:'test',trial:++k,condition:it.kind,item:it.item,sentence:it.words.join(' '),region:it.crit.map(i=>it.words[i]).join(' '),crit_rt:fin(crit)?crit.toFixed(1):'',spill_rt:fin(spill)?spill.toFixed(1):'',
+      question:it.q||'',answer:it.q?(it.a?'yes':'no'):'',q_response:qr&&qr.resp?(qr.resp==='KeyJ'?'yes':'no'):'',q_correct:qr?(qr.resp?(((qr.resp==='KeyJ')===it.a)?1:0):0):'',fullscreen:rd.fs?1:0,focus_lost:rd.fl?1:0});
+    for(let i=0;i<16;i++)row['w'+(i+1)+'_ms']=i<rd.rts.length&&fin(rd.rts[i])?rd.rts[i].toFixed(1):'';rows.push(row);await sleep(T(400));
+    if(k===Math.floor(items.length/2)&&items.length>12){go=await showScreen('<h2>Half-way</h2><p>Take a short break.</p>',[['Continue','go'],['Quit the task','quit']]);if(go==='quit')return {rows,quit:true};}}
+  return {rows,quit:false};};
+WK.init=function(){let words=null,i=0,t0=0,rts=[];const st=$('stage');
+  const show=()=>{st.innerHTML='<div class="bigstim" style="font-size:12cqh">'+esc(words[i])+'</div>';t0=performance.now();};
+  const next=()=>{if(!words)return;rts.push(performance.now()-t0);i++;if(i<words.length){show();return;}
+    st.innerHTML='';const it=gpItem(GP[0],false);const c=it.crit[0];
+    $('dVerdict').innerHTML='You spent <strong>'+rts[c].toFixed(0)+' ms</strong> on \u201c'+esc(words[c])+'\u201d and '+mean(rts.filter((v,j)=>j!==c)).toFixed(0)+' ms on the other words on average. Did you stall there?';words=null;$('dNext').disabled=true;$('dGo').disabled=false;};
+  $('dGo').addEventListener('click',async()=>{$('dGo').disabled=true;st.innerHTML='<div class="fix">+</div>';await sleep(600);words=gpItem(GP[0],false).words;i=0;rts=[];$('dNext').disabled=false;show();$('dVerdict').textContent='Press the spacebar (or the button) for each next word.';});
+  $('dNext').addEventListener('click',next);
+  document.addEventListener('keydown',e=>{if(!words||!$('s-demo').classList.contains('on'))return;if(e.code==='Space'){e.preventDefault();next();}});};
+
+WK.quiz={"core": [{"q": "What does it mean to say that language is hierarchical?", "ref": "Textbook §9.1", "o": [["Small units combine into larger ones: sounds into words, words into phrases, phrases into sentences", 1, "Correct. Language is also rule-governed, arbitrary and universal."], ["Some languages are better than others", 0, "That is not what the term means."], ["Words are learned in a fixed order", 0, "The term describes structure, not learning order."], ["Only adults use grammar", 0, "Children are notable for their grammar."]]}, {"q": "What is the word-frequency effect, and how do eye movements show it?", "ref": "Textbook §9.3", "o": [["Common words are processed faster than rare ones; readers fixate low-frequency words for longer", 1, "Correct. One of the most reliable effects in reading research (Rayner & Duffy, 1986)."], ["Rare words are read faster because they stand out", 0, "Rare words take longer."], ["Frequency only affects spelling", 0, "It affects recognition and reading times."], ["Eye movements are unaffected by frequency", 0, "Fixation times show the effect directly."]]}, {"q": "How do infants begin to find words in continuous speech?", "ref": "Textbook §9.3", "o": [["By statistical learning: tracking which sounds reliably follow which, with dips in predictability marking boundaries", 1, "Correct. Eight-month-olds did this after two minutes of exposure (Saffran et al., 1996)."], ["By hearing silences between words", 0, "Speech contains no reliable silences between words."], ["By being taught each word separately", 0, "They segment unfamiliar streams without instruction."], ["By understanding meaning first", 0, "Segmentation can begin before meanings are known."]]}, {"q": "When we first meet an ambiguous word such as “cast”, what happens?", "ref": "Textbook §9.3", "o": [["All its meanings are briefly accessed, and context then prunes the irrelevant ones", 1, "Correct (Tanenhaus et al., 1979)."], ["Only the most frequent meaning is accessed", 0, "All meanings are briefly active at first."], ["No meaning is accessed until the sentence ends", 0, "Access is immediate."], ["The reader always chooses the wrong meaning", 0, "Context usually resolves it quickly."]]}, {"q": "What is a garden-path sentence?", "ref": "Textbook §9.4", "o": [["A sentence that seems to mean one thing early on and must be reinterpreted when a later word does not fit", 1, "Correct. The slowdown at the disambiguating word is the cost of backtracking."], ["A sentence about gardens", 0, "The name is metaphorical."], ["A sentence with no grammatical structure", 0, "Garden paths are grammatical."], ["A permanently ambiguous sentence", 0, "The ambiguity is temporary: the sentence is clear by its end."]]}, {"q": "What does the late-closure heuristic assume?", "ref": "Textbook §9.4", "o": [["Each new word belongs to the phrase currently being built", 1, "Correct. That is why “the deer” is first attached to “hunted”."], ["Each new word starts a new sentence", 0, "The opposite."], ["Readers wait until the end of the sentence to parse", 0, "Parsing is incremental."], ["Meaning always overrides grammar", 0, "That is closer to the constraint-based view."]]}, {"q": "What is the given–new contract in conversation?", "ref": "Textbook §9.6", "o": [["Speakers link new information to information the listener already has", 1, "Correct. It is one of the ways conversation is coordinated."], ["Speakers must avoid repeating anything", 0, "Given information is often repeated deliberately."], ["Listeners must agree with what is said", 0, "The contract is about structure, not agreement."], ["New words must be defined", 0, "That is not what the term refers to."]]}, {"q": "Why is Aboriginal English best described as a rule-governed dialect?", "ref": "Textbook §9.7", "o": [["It has its own consistent grammar and conventions, so scoring its features against Standard Australian English as errors is a diagnostic mistake", 1, "Correct (Eades, 2013)."], ["It is a set of mistakes in English", 0, "That is exactly the error the textbook warns against."], ["It has no grammar", 0, "It is rule-governed."], ["It is spoken only in schools", 0, "It is a community dialect."]]}], "stretch": [{"q": "Why does today’s control version of each garden-path sentence add a comma after the first verb?", "ref": "Today’s lab", "o": [["The comma closes the first clause, so “the deer” is read as a new subject and no reanalysis is needed, while every word stays the same", 1, "Correct. Same words, different structure: any difference is the cost of the garden path."], ["To make the sentence shorter", 0, "It adds punctuation without removing words."], ["Because commas are read faster", 0, "The comparison is at the later critical word."], ["To change the meaning", 0, "The final meaning is the same."]]}, {"q": "Why do we also look at the word after the critical word?", "ref": "Today’s lab", "o": [["Processing difficulty often spills over onto the next word in self-paced reading", 1, "Correct. Readers sometimes press on before reanalysis is complete."], ["Because the critical word is too short", 0, "Length is not the reason."], ["Because the next word is always ambiguous", 0, "It is not."], ["To measure reading speed in general", 0, "The comparison is still garden path versus comma."]]}, {"q": "Why does each student read each garden-path item in only one version?", "ref": "Today’s lab", "o": [["Reading both versions would let the first reading resolve the ambiguity for the second, so item order would be confounded with condition", 1, "Correct. Across the class, each item appears in both versions equally often."], ["To save time", 0, "Time is not the main reason."], ["Because the comma version is too easy", 0, "Ease is not the issue."], ["To make the task harder", 0, "The design choice is about confounds."]]}, {"q": "What does the constraint-based approach claim about parsing?", "ref": "Textbook §9.4", "o": [["The parser combines syntax, word meaning, context and memory load at once", 1, "Correct. The visual-world evidence favours this view."], ["Syntax is always processed before meaning", 0, "That is the garden-path model."], ["Context is used only to repair errors afterwards", 0, "That is what a syntax-first model allows."], ["Sentences are understood only at the end", 0, "Parsing is incremental on both accounts."]]}, {"q": "In the visual-world paradigm, listeners with two apples in view did not look at the empty towel. Why does the timing matter?", "ref": "Textbook §9.4", "o": [["Context guided the initial parse within a fraction of a second, which a syntax-first model cannot accommodate", 1, "Correct. Nobody disputes that context matters eventually; the question is when."], ["It shows people ignore the scene", 0, "They used the scene."], ["It shows towels are distracting", 0, "The point is about parsing."], ["Timing does not matter", 0, "Timing is the whole argument."]]}, {"q": "Why are object relatives (“The senator who the reporter spotted shouted”) harder than subject relatives?", "ref": "Textbook §9.4", "o": [["Partly because they place a heavier load on memory: two nouns must be held before either verb arrives", 1, "Correct. This connects parsing to working memory (Chapter 3)."], ["Because they contain more words", 0, "Both versions have the same words."], ["Because they are ungrammatical", 0, "Both are grammatical."], ["Because they are rarer in children’s books only", 0, "Frequency may contribute, but memory load is the textbook’s point."]]}, {"q": "Why might the claimed bilingual advantage in executive function replicate inconsistently?", "ref": "Textbook §9.7", "o": [["Treating bilingualism as a single category lumps together very different language profiles", 1, "Correct. Bilingualism is a set of dimensions, not a category."], ["Bilingual people are all the same", 0, "The point is that they are not."], ["Executive function cannot be measured", 0, "It can, but the groups are heterogeneous."], ["Bilingualism impairs executive function", 0, "The evidence does not show that."]]}, {"q": "Why can brief exposure to an accent reduce the credibility penalty it carries?", "ref": "Textbook §9.7", "o": [["The penalty comes from processing fluency rather than deliberate judgement, and exposure makes the accent easier to process", 1, "Correct (Boduch-Grabka & Lev-Ari, 2021)."], ["People learn the speaker is honest", 0, "The mechanism is fluency, not a belief about honesty."], ["Accents disappear with exposure", 0, "The listener changes, not the accent."], ["Credibility is unrelated to fluency", 0, "Fluency is the mechanism."]]}]};
+
+"use strict";
+/* ---------- Tabs ---------- */
+const tabs=[...document.querySelectorAll('[role=tab]')];
+function showTab(t){tabs.forEach(b=>{const on=b===t;b.setAttribute('aria-selected',on);document.getElementById(b.getAttribute('aria-controls')).classList.toggle('on',on);});}
+tabs.forEach(t=>t.addEventListener('click',()=>showTab(t)));
+/* ---------- Helpers ---------- */
+const C={same:'#663366',across:'#E07B00',ink:'#2B142D',muted:'#6B5A70',line:'#E3DAE7',grid:'#EFE8F2'};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fin=v=>v!=null&&isFinite(v);
+const fmt=(x,d=0)=>(x>0?'+':x<0?'\u2212':'')+Math.abs(x).toFixed(d);
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+const mean=a=>{a=a.filter(fin);return a.length?a.reduce((s,v)=>s+v,0)/a.length:NaN;};
+const pct=a=>a.length?100*a.filter(Boolean).length/a.length:NaN;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const QA=/[?&]qa=1/.test(location.search); // testing only: shortens timings
+const T=ms=>QA?Math.min(ms,150):ms;
+const TW=ms=>QA?Math.min(ms,1500):ms;
+function gauss(){let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+/* ---------- SVG charts ---------- */
+function svgWrap(w,h,inner,label){return '<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="'+esc(label)+'">'+inner+'</svg>';}
+function txt(x,y,s,o={}){return '<text x="'+x+'" y="'+y+'" font-size="'+(o.size||13)+'" fill="'+(o.fill||C.muted)+'" text-anchor="'+(o.anchor||'start')+'" font-weight="'+(o.weight||400)+'" font-family="Segoe UI,system-ui,Arial,sans-serif">'+esc(s)+'</text>';}
+function niceTicks(lo,hi,n=5){const span=hi-lo||1;const step0=span/n;const mag=Math.pow(10,Math.floor(Math.log10(step0)));
+  const step=[1,2,2.5,5,10].map(m=>m*mag).find(s=>s>=step0)||10*mag;const out=[];for(let v=Math.ceil(lo/step)*step;v<=hi+1e-9;v+=step)out.push(+v.toFixed(6));return out;}
+function dotChart(el,title,rows,o={}){
+  const W=500,H=40+rows.length*58+36,L=o.L||132,R=16,T0=34;
+  let vals=o.zero?[0]:[];if(o.fixed)vals=vals.concat(o.fixed);
+  rows.forEach(r=>{['you','ref','mean','lo','hi'].forEach(k=>{if(fin(r[k]))vals.push(r[k]);});(r.dots||[]).forEach(v=>{if(fin(v))vals.push(v);});});
+  if(!vals.length)vals=[0,1];
+  let lo=Math.min(...vals),hi=Math.max(...vals);const pad=(hi-lo)*.12||o.minPad||10;lo-=pad;hi+=pad;
+  if(o.floor!=null)lo=Math.max(lo,o.floor);if(o.ceil!=null)hi=Math.min(hi,o.ceil);
+  const ticks=niceTicks(lo,hi,5);lo=Math.min(lo,ticks[0]);hi=Math.max(hi,ticks[ticks.length-1]);
+  const x=v=>L+(v-lo)/(hi-lo)*(W-L-R);
+  let s=txt(4,18,title,{size:15,fill:C.ink,weight:600});
+  ticks.forEach(t=>{s+='<line x1="'+x(t)+'" x2="'+x(t)+'" y1="'+T0+'" y2="'+(H-30)+'" stroke="'+C.grid+'"/>'+txt(x(t),H-17,(o.zero&&t>0?'+':'')+t,{anchor:'middle',size:12.5});});
+  if(o.zero){s+='<line x1="'+x(0)+'" x2="'+x(0)+'" y1="'+T0+'" y2="'+(H-30)+'" stroke="'+C.ink+'" stroke-width="1.4"/>';
+    if(o.leftLab)s+=txt(x(lo)+2,H-2,o.leftLab,{size:12.5,fill:C.same});if(o.rightLab)s+=txt(x(hi)-2,H-2,o.rightLab,{size:12.5,fill:'#A35600',anchor:'end'});}
+  else if(o.unit)s+=txt(W-R,H-2,o.unit,{size:12.5,anchor:'end'});
+  rows.forEach((r,i)=>{const cy=T0+22+i*58;
+    s+=txt(L-10,cy+5,r.name,{anchor:'end',size:14,fill:C.ink,weight:600})+'<line x1="'+L+'" x2="'+(W-R)+'" y1="'+cy+'" y2="'+cy+'" stroke="'+C.line+'"/>';
+    (r.dots||[]).forEach((v,j)=>{if(!fin(v))return;const jit=((j*37)%17-8)*1.6;s+='<circle cx="'+x(v)+'" cy="'+(cy+jit)+'" r="4" fill="'+(o.zero?(v>=0?C.across:C.same):C.same)+'" fill-opacity=".55"/>';});
+    if(fin(r.mean)){if(fin(r.lo))s+='<line x1="'+x(r.lo)+'" x2="'+x(r.hi)+'" y1="'+(cy+20)+'" y2="'+(cy+20)+'" stroke="'+C.ink+'" stroke-width="3"/>';
+      s+='<rect x="'+(x(r.mean)-2)+'" y="'+(cy+13)+'" width="4" height="14" fill="'+C.ink+'"/>';}
+    if(fin(r.ref))s+='<circle cx="'+x(r.ref)+'" cy="'+cy+'" r="7" fill="#fff" stroke="'+C.same+'" stroke-width="2.5" stroke-dasharray="3 2"/>';
+    if(fin(r.you))s+='<circle cx="'+x(r.you)+'" cy="'+cy+'" r="7" fill="'+C.ink+'"/>';});
+  el.innerHTML=svgWrap(W,H,s,title);}
+/* groups: [{name, a:{m,lo,hi}, b:{m,lo,hi}}]; labels: [labelA,labelB] */
+function pairChart(el,title,groups,yLabel,o={}){
+  const W=500,H=270,T0=34,B=40,L=56,R=10,pw=(W-L-R)/groups.length;
+  let vals=[];groups.forEach(g=>['a','b'].forEach(k=>{if(!g[k])return;['m','lo','hi'].forEach(q=>{if(fin(g[k][q]))vals.push(g[k][q]);});}));
+  if(!vals.length)vals=[0,1];
+  let lo=Math.min(...vals),hi=Math.max(...vals);const pad=(hi-lo)*.15||10;lo-=pad;hi+=pad;if(o.max!=null)hi=Math.min(hi,o.max);if(o.min!=null)lo=Math.max(lo,o.min);
+  const ticks=niceTicks(lo,hi,5);lo=Math.min(lo,ticks[0]);hi=Math.max(hi,ticks[ticks.length-1]);
+  const y=v=>T0+(hi-v)/(hi-lo)*(H-T0-B);
+  let s=txt(4,18,title,{size:15,fill:C.ink,weight:600});
+  if(o.labels){s+='<circle cx="'+(W-170)+'" cy="13" r="5" fill="'+C.same+'"/>'+txt(W-161,17,o.labels[0],{size:12});s+='<circle cx="'+(W-85)+'" cy="13" r="5" fill="'+C.across+'"/>'+txt(W-76,17,o.labels[1],{size:12});}
+  ticks.forEach(t=>{s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(t)+'" y2="'+y(t)+'" stroke="'+C.grid+'"/>'+txt(L-6,y(t)+4,t,{anchor:'end',size:12.5});});
+  s+='<text transform="translate(14,'+((T0+H-B)/2)+') rotate(-90)" font-size="12" fill="'+C.muted+'" text-anchor="middle" font-family="Segoe UI,system-ui,Arial,sans-serif">'+esc(yLabel)+'</text>';
+  groups.forEach((g,i)=>{const x0=L+i*pw,xa=x0+pw*.33,xb=x0+pw*.67;
+    s+=txt(x0+pw/2,H-14,g.name,{anchor:'middle',size:13.5,fill:C.ink,weight:600});
+    if(i>0)s+='<line x1="'+x0+'" x2="'+x0+'" y1="'+T0+'" y2="'+(H-B)+'" stroke="'+C.line+'"/>';
+    if(g.a&&g.b&&fin(g.a.m)&&fin(g.b.m))s+='<line x1="'+xa+'" x2="'+xb+'" y1="'+y(g.a.m)+'" y2="'+y(g.b.m)+'" stroke="'+C.ink+'" stroke-width="2"/>';
+    [['a',xa,C.same],['b',xb,C.across]].forEach(([k,xx,col])=>{const q=g[k];if(!q||!fin(q.m))return;
+      if(fin(q.lo))s+='<line x1="'+xx+'" x2="'+xx+'" y1="'+y(q.lo)+'" y2="'+y(q.hi)+'" stroke="'+col+'" stroke-width="3"/>';
+      s+='<circle cx="'+xx+'" cy="'+y(q.m)+'" r="7" fill="'+col+'"/>';});});
+  el.innerHTML=svgWrap(W,H,s,title);}
+/* ---------- Statistics ---------- */
+function tq(df){const tab=[12.706,4.303,3.182,2.776,2.571,2.447,2.365,2.306,2.262,2.228];if(df<=10)return tab[df-1];
+  const z=1.959964;return z+(z**3+z)/(4*df)+(5*z**5+16*z**3+3*z)/(96*df*df);}
+function summ(a){a=a.filter(fin);const n=a.length;if(!n)return {n:0,m:NaN,lo:NaN,hi:NaN};const m=a.reduce((s,v)=>s+v,0)/n;if(n<2)return {n,m,lo:NaN,hi:NaN};
+  const sd=Math.sqrt(a.reduce((s,v)=>s+(v-m)**2,0)/(n-1));const h=tq(n-1)*sd/Math.sqrt(n);return {n,m,lo:m-h,hi:m+h,sd};}
+const ci=(q,d=0)=>fin(q.m)?(q.m.toFixed(d)+(fin(q.lo)?' ['+q.lo.toFixed(d)+', '+q.hi.toFixed(d)+']':'')):'';
+const cid=(q,d=0)=>fin(q.m)?(fmt(q.m,d)+(fin(q.lo)?' ['+fmt(q.lo,d)+', '+fmt(q.hi,d)+']':'')):'';
+/* ---------- My results ---------- */
+const FIELDS=WK.fields;const KEYS=FIELDS.map(f=>f.k);
+const fbox=document.getElementById('fields');
+FIELDS.forEach(f=>{const l=document.createElement('label');const isMs=f.kind==='ms';
+  l.innerHTML='<span>'+esc(f.label)+'</span><input type="number" inputmode="decimal" data-k="'+f.k+'" '+(isMs?'min="50" max="5000" step="1" placeholder="ms"':'min="0" max="100" step="0.1" placeholder="%"')+'>';fbox.appendChild(l);});
+const inputs=[...fbox.querySelectorAll('input')];
+let fromTask=false;
+function readMine(){const d={};let bad=0;inputs.forEach(i=>{const v=i.value.trim();let n=v===''?NaN:+v;const isMs=FIELDS.find(f=>f.k===i.dataset.k).kind==='ms';
+  const ok=v===''||(isFinite(n)&&(isMs?(n>=50&&n<=5000):(n>=0&&n<=100)));i.classList.toggle('bad',!ok);if(!ok){bad++;n=NaN;}d[i.dataset.k]=n;});return {d,bad};}
+function updateMine(){const {d,bad}=readMine();WK.mine(d);
+  const vals=KEYS.map(k=>d[k]);const nF=vals.filter(fin).length;
+  const line=WK.code+','+document.getElementById('hand').value+','+vals.map(v=>fin(v)?String(+v.toFixed(1)):'').join(',')+','+(fromTask?'web':'manual');
+  const lb=document.getElementById('myLine'),cb=document.getElementById('copyLine');
+  if(nF>=2&&!bad){lb.textContent=line;cb.disabled=false;}else{lb.textContent=bad?'Check the highlighted cells: percentages must be 0 to 100 and times 50 to 5000 ms.':'Run the task (or type in your results) to create your line.';cb.disabled=true;}}
+inputs.forEach(i=>i.addEventListener('input',e=>{if(e.isTrusted)fromTask=false;updateMine();}));
+document.getElementById('hand').addEventListener('change',updateMine);
+document.getElementById('copyLine').addEventListener('click',async()=>{const t=document.getElementById('myLine').textContent,m=document.getElementById('copyMsg');
+  try{await navigator.clipboard.writeText(t);m.textContent='Copied. Paste it where your tutor asks.';}
+  catch(e){const r=document.createRange();r.selectNodeContents(document.getElementById('myLine'));const s=getSelection();s.removeAllRanges();s.addRange(r);m.textContent='Selected. Press Ctrl+C (or Cmd+C) to copy.';}});
+/* ---------- Downloads ---------- */
+function downloadText(name,text){const blob=new Blob([text],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);}
+const csvCell=v=>String(v==null?'':v).replace(/[,\n\r]/g,';');
+function toCSV(rows){const head=[];rows.forEach(r=>Object.keys(r).forEach(k=>{if(!head.includes(k))head.push(k);}));
+  return [head.join(',')].concat(rows.map(r=>head.map(h=>csvCell(r[h])).join(','))).join('\n');}
+/* ---------- Class results ---------- */
+let classRows=[],classTrials=[],simulated=false;
+function parseText(text){const rows=[];let skipped=0;const tag=WK.code+',';
+  text.split(/\r?\n/).forEach(line=>{const i=line.indexOf(tag);if(i<0)return;const parts=line.slice(i+tag.length).split(',').map(s=>s.trim());
+    const nums=parts.slice(1,1+KEYS.length).map(s=>s===''?NaN:+s);if(nums.length<KEYS.length||nums.filter(isFinite).length<2){skipped++;return;}
+    const r={hand:['R','L','B','NA'].includes(parts[0])?parts[0]:'NA',src:parts[1+KEYS.length]||''};
+    KEYS.forEach((k,j)=>{let v=nums[j];const f=FIELDS[j];if(isFinite(v)&&(f.kind==='ms'?(v<50||v>5000):(v<0||v>100)))v=NaN;r[k]=v;});rows.push(r);});
+  return {rows,skipped};}
+function parseTrialCSV(text){const lines=text.split(/\r?\n/).filter(l=>l.trim());if(!lines.length)return [];
+  const head=lines[0].split(',').map(h=>h.trim());return lines.slice(1).map(l=>{const v=l.split(',');const o={};head.forEach((h,i)=>o[h]=(v[i]||'').trim());return o;});}
+function setClass(rows,isSim,msg,trials){classRows=rows;simulated=isSim;classTrials=trials||[];
+  document.getElementById('downloadTrials').disabled=!classTrials.length;document.getElementById('download').disabled=!rows.length;
+  document.getElementById('simBanner').innerHTML=isSim?'<div class="banner">Simulated class for rehearsal. These are not real data: the values were invented to look plausible.</div>':'';
+  document.getElementById('classStatus').textContent=msg;document.getElementById('classBody').hidden=!rows.length;if(rows.length)WK.drawClass(rows);}
+document.getElementById('readPaste').addEventListener('click',()=>{const {rows,skipped}=parseText(document.getElementById('paste').value);
+  setClass(rows,false,rows.length?('Read '+rows.length+' student'+(rows.length===1?'':'s')+'.'+(skipped?' Skipped '+skipped+' incomplete line'+(skipped===1?'':'s')+'.':'')):'No results lines found. Each line should contain '+WK.code+', followed by the numbers.');});
+document.getElementById('fileIn').addEventListener('change',async e=>{const files=[...e.target.files];if(!files.length)return;e.target.value='';
+  let rows=[],trials=[],skipped=0,nTF=0;
+  for(const f of files){const text=await f.text();const first=text.split(/\r?\n/,1)[0]||'';
+    if(first.indexOf(WK.marker)>=0){const t=parseTrialCSV(text);if(t.length){nTF++;trials=trials.concat(t);}}else{const r=parseText(text);rows=rows.concat(r.rows);skipped+=r.skipped;}}
+  const byP={};trials.forEach(t=>{(byP[t.participant]=byP[t.participant]||[]).push(t);});
+  Object.values(byP).forEach(ts=>{const r=WK.summariseCSV(ts);r.hand=ts[0].handedness||'NA';r.src='web';rows.push(r);});
+  setClass(rows,false,'Loaded '+rows.length+' student'+(rows.length===1?'':'s')+' from '+files.length+' file'+(files.length===1?'':'s')+(nTF?' ('+nTF+' with trial-by-trial data)':'')+'.'+(skipped?' Skipped '+skipped+' incomplete line'+(skipped===1?'':'s')+'.':''),trials);});
+document.getElementById('clearClass').addEventListener('click',()=>{document.getElementById('paste').value='';setClass([],false,'No class data yet.');});
+document.getElementById('simulate').addEventListener('click',()=>{const rows=[];for(let i=0;i<25;i++){const r=WK.simulate();r.hand=Math.random()<.88?'R':'L';r.src='sim';rows.push(r);}setClass(rows,true,'Simulated class of 25 students.');});
+document.getElementById('download').addEventListener('click',()=>{const head=['code','handedness'].concat(KEYS).concat(['source']);
+  const lines=[head.join(',')].concat(classRows.map(r=>[WK.code,r.hand].concat(KEYS.map(k=>fin(r[k])?+(+r[k]).toFixed(1):'')).concat([r.src||'']).join(',')));
+  downloadText((simulated?WK.file+'_simulated_class.csv':WK.file+'_class_summary.csv'),lines.join('\n'));});
+document.getElementById('downloadTrials').addEventListener('click',()=>{if(classTrials.length)downloadText(WK.file+'_all_trials.csv',toCSV(classTrials));});
+function classTable(head,rows,note){return '<h3>Summary</h3><table class="summary"><thead><tr>'+head.map(h=>'<th>'+h+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('')+'</tbody></table><p class="note">'+(note||'An interval that sits entirely on one side of zero gives the class average a clear direction; an interval that spans zero means our data cannot tell which direction it goes.')+'</p>';}
+const col=k=>classRows.map(r=>r[k]);
+/* ---------- Task infrastructure ---------- */
+const RUN=document.getElementById('run'),RFIX=document.getElementById('runFix'),RITEMS=document.getElementById('runItems'),RMSG=document.getElementById('runMsg'),RFB=document.getElementById('runFb');
+let frameMs=1000/60,actx=null,taskData=null;
+function measureFrames(n=45){return new Promise(res=>{const ts=[];function f(t){ts.push(t);if(ts.length<n)requestAnimationFrame(f);else{const d=[];for(let i=1;i<ts.length;i++)d.push(ts[i]-ts[i-1]);d.sort((a,b)=>a-b);res(d[Math.floor(d.length/2)]);}}requestAnimationFrame(f);});}
+function tone(freq,dur,vol){if(!actx)return;try{const o=actx.createOscillator(),gn=actx.createGain(),t=actx.currentTime;o.frequency.value=freq;
+  gn.gain.setValueAtTime(vol,t);gn.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.connect(gn);gn.connect(actx.destination);o.start(t);o.stop(t+dur+0.02);}catch(e){}}
+let screenOpen=false;
+function showScreen(html,buttons=[['Continue','go']],opts={}){
+  RUN.classList.add('screenmode');RFIX.style.display='none';RITEMS.innerHTML='';RFB.textContent='';screenOpen=true;
+  RMSG.innerHTML=html+'<div class="row" style="margin-top:16px">'+buttons.map(([t,v],i)=>'<button class="btn'+(i?' ghost':'')+'" data-v="'+v+'">'+esc(t)+'</button>').join('')+'</div>';
+  RMSG.style.display='block';const inp=RMSG.querySelector('#runInput');
+  if(inp)setTimeout(()=>inp.focus(),50);else if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
+  return new Promise(res=>{let closed=false,timer=null;const done=v=>{if(closed)return;closed=true;clearInterval(timer);const val=inp?inp.value:null;RMSG.style.display='none';RUN.classList.remove('screenmode');RFIX.style.display='';screenOpen=false;
+      window.removeEventListener('keydown',k,true);window.removeEventListener('keyup',ku,true);res(inp?{v,value:val}:v);};
+    const swallow=e=>!inp&&(e.code==='Space'||/^Key[A-Z]$/.test(e.code)||/^Digit[0-9]$/.test(e.code));
+    const ku=e=>{if(swallow(e)){e.preventDefault();e.stopPropagation();}};window.addEventListener('keyup',ku,true);
+    const k=e=>{if(swallow(e)){e.preventDefault();e.stopPropagation();return;}if(e.key==='Enter'&&!(inp&&inp.tagName==='TEXTAREA'&&!e.ctrlKey)){e.preventDefault();done(buttons[0][1]);}};
+    setTimeout(()=>{if(!closed)window.addEventListener('keydown',k,true);},300);
+    if(opts.seconds){let left=opts.seconds;const cd=RMSG.querySelector('.countdown');timer=setInterval(()=>{left--;if(cd)cd.textContent=left+' s';if(left<=0)done(buttons[0][1]);},1000);}
+    RMSG.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>done(b.dataset.v)));});}
+/* One display event. html shown at frame-accurate onset after fixMs; hidden after stimMs (null = until the trial ends).
+   codes: accepted e.code values (null = no response); windowMs: maximum time from onset (null = until response). */
+function trial(o){
+  return new Promise(resolve=>{
+    RITEMS.innerHTML='';RFIX.style.display=o.fix===false?'none':'';
+    const t0=performance.now(),onsetTarget=t0+(o.fixMs||0);
+    let state='fix',onset=null,offset=null,resp=null,stamp=null,focusLost=false;
+    const key=e=>{if(!o.codes||!o.codes.includes(e.code))return;e.preventDefault();if(e.repeat)return;
+      if(state==='fix'||state==='drawn'||resp!==null)return;let ts=e.timeStamp;const now=performance.now();if(!(ts>t0-5000&&ts<=now+5))ts=now;stamp=ts;resp=e.code;};
+    const vis=()=>{if(document.hidden)focusLost=true;};
+    window.addEventListener('keydown',key);document.addEventListener('visibilitychange',vis);
+    function finish(now){window.removeEventListener('keydown',key);document.removeEventListener('visibilitychange',vis);RITEMS.innerHTML='';RFIX.style.display=o.fix===false?'none':'';if(offset===null)offset=now;
+      resolve({resp,rt:resp?stamp-onset:NaN,stimMs:offset-onset,focusLost,fullscreen:!!document.fullscreenElement});}
+    const endAt=()=>o.codes?(o.windowMs!=null?onset+o.windowMs:Infinity):onset+(o.stimMs||0)+(o.gapMs||0);
+    function frame(now){
+      if(state==='fix'){if(now>=onsetTarget-frameMs/2){RFIX.style.display=o.keepFix?'':'none';RITEMS.innerHTML=o.html;state='drawn';}requestAnimationFrame(frame);return;}
+      if(state==='drawn'){onset=now;state='on';requestAnimationFrame(frame);return;}
+      if(resp!==null||now>=endAt()-(o.codes?0:frameMs/2)){if(state==='on'){RITEMS.innerHTML='';offset=now;}finish(now);return;}
+      if(state==='on'&&o.stimMs!=null&&now>=onset+o.stimMs-frameMs*1.5){RITEMS.innerHTML='';state='hidden';requestAnimationFrame(frame);return;}
+      if(state==='hidden'){offset=now;state='resp';}
+      requestAnimationFrame(frame);}
+    requestAnimationFrame(frame);});}
+async function startRun(){
+  try{actx=new (window.AudioContext||window.webkitAudioContext)();await actx.resume();}catch(e){actx=null;}
+  RUN.classList.add('on');document.body.style.overflow='hidden';
+  try{if(RUN.requestFullscreen)await RUN.requestFullscreen();}catch(e){}
+  RFIX.style.display='none';frameMs=await measureFrames();return frameMs;}
+async function endRun(){try{if(document.fullscreenElement)await document.exitFullscreen();}catch(e){}
+  RUN.classList.remove('on');document.body.style.overflow='';RMSG.style.display='none';RITEMS.innerHTML='';}
+function newMeta(){return {participant:'P'+Math.random().toString(36).slice(2,8).toUpperCase(),date:new Date().toISOString().slice(0,10),hand:document.getElementById('taskHand').value,
+  n:+document.getElementById('taskN').value};}
+function baseRow(meta,extra){return Object.assign({participant:meta.participant,date:meta.date},extra,{frame_ms:meta.frameMs.toFixed(2),screen_w:window.screen.width,screen_h:window.screen.height,handedness:meta.hand});}
+function finishTask(rows,meta,quit){const st=document.getElementById('taskStatus');const nTest=rows.filter(r=>r.phase!=='practice').length;
+  if(!nTest){st.textContent=quit?'Task cancelled. Start again when you are ready.':'';return;}
+  taskData={rows,meta};const sm=WK.summarise(rows);
+  inputs.forEach(i=>{const v=sm[i.dataset.k];i.value=fin(v)?(+v.toFixed(1)):'';});
+  document.getElementById('hand').value=meta.hand;fromTask=true;updateMine();
+  document.getElementById('trialDl').hidden=false;document.getElementById('pCode').textContent='Your anonymous code: '+meta.participant;
+  document.getElementById('mineIntro').textContent=quit?'You stopped the task early, so some cells may be empty. Your numbers from the trials you completed are filled in below.':'Your results from the task are filled in below. Check them, then copy your results line and download your trial data.';
+  st.textContent=quit?'Task stopped early. Partial results are on the My results tab.':'Finished. Your results are on the My results tab.';
+  showTab(document.getElementById('t-mine'));window.scrollTo(0,0);}
+document.getElementById('taskStart').addEventListener('click',async()=>{if(RUN.classList.contains('on'))return;const meta=newMeta();meta.frameMs=await startRun();
+  let rows=[],quit=false;try{const out=await WK.run(meta);rows=out.rows;quit=out.quit;}catch(e){console.error(e);}
+  await endRun();finishTask(rows,meta,quit);});
+document.getElementById('dlMine').addEventListener('click',()=>{if(!taskData)return;taskData.saved=true;downloadText(WK.file+'_'+taskData.meta.participant+'_trials.csv',toCSV(taskData.rows));});
+window.addEventListener('beforeunload',e=>{if(taskData&&!taskData.saved){e.preventDefault();e.returnValue='';}});
+/* ---------- Quiz ---------- */
+const qRun=document.getElementById('quizRun'),qStart=document.getElementById('quizStart');
+let qs=null,qi=0,score=0,log=[],qTimer=null,qLeft=0;
+document.querySelectorAll('.pick').forEach(b=>b.addEventListener('click',()=>startQuiz(b.dataset.set)));
+function startQuiz(set){qs=WK.quiz[set].map(q=>({q:q.q,ref:q.ref,o:shuffle(q.o)}));qi=0;score=0;log=[];qStart.hidden=true;qRun.hidden=false;clearInterval(qTimer);
+  if(document.getElementById('useTimer').checked){qLeft=60*qs.length;qTimer=setInterval(()=>{qLeft--;const t=document.getElementById('qClock');if(t)t.textContent=clock();if(qLeft<=0){clearInterval(qTimer);endQuiz(true);}},1000);}else qLeft=0;showQ();}
+function clock(){return Math.floor(qLeft/60)+':'+String(qLeft%60).padStart(2,'0')+' left';}
+function showQ(){const q=qs[qi];
+  qRun.innerHTML='<div class="qcard"><div class="qmeta"><span>Question '+(qi+1)+' of '+qs.length+'</span><span id="qClock">'+(qLeft?clock():'')+'</span></div><div class="progress"><div style="width:'+(qi/qs.length*100)+'%"></div></div><p class="qtext">'+esc(q.q)+'</p>'+
+   q.o.map((o,i)=>'<button class="opt" data-i="'+i+'">'+esc(o[0])+'</button>').join('')+'<div class="row"><button class="btn" id="qCheck" disabled>Check answer</button></div><div id="qFb"></div></div>';
+  let sel=null;const opts=[...qRun.querySelectorAll('.opt')];
+  opts.forEach(b=>b.addEventListener('click',()=>{opts.forEach(x=>x.classList.remove('sel'));b.classList.add('sel');sel=+b.dataset.i;document.getElementById('qCheck').disabled=false;}));
+  document.getElementById('qCheck').addEventListener('click',()=>{if(sel==null)return;const chosen=q.o[sel],cix=q.o.findIndex(o=>o[1]===1),ok=chosen[1]===1;if(ok)score++;
+    log.push({chosen:chosen[0],correct:q.o[cix][0],ok,ref:q.ref,why:q.o[cix][2]});
+    opts.forEach((b,i)=>{b.disabled=true;if(i===cix)b.classList.add('right');else if(i===sel)b.classList.add('wrong');if(i===sel||i===cix){const w=document.createElement('div');w.className='why';w.textContent=q.o[i][2];b.appendChild(w);}});
+    document.getElementById('qCheck').remove();
+    document.getElementById('qFb').innerHTML='<p class="ref">Where to read more: '+esc(q.ref)+'</p><div class="row"><button class="btn" id="qNext">'+(qi<qs.length-1?'Next question':'See my results')+'</button></div>';
+    document.getElementById('qNext').addEventListener('click',()=>{qi++;if(qi<qs.length)showQ();else endQuiz(false);});document.getElementById('qNext').focus();});}
+function endQuiz(timedOut){clearInterval(qTimer);
+  let h='<div class="qcard"><h2>'+score+' of '+qs.length+' correct</h2>'+(timedOut?'<p class="note">Time ran out. Questions you did not reach are listed as not answered.</p>':'');
+  qs.forEach((q,i)=>{const L=log[i];
+    if(L)h+='<div class="review"><p><span class="'+(L.ok?'ok':'no')+'">'+(L.ok?'Correct':'Incorrect')+'</span> '+esc(q.q)+'</p>'+(L.ok?'':'<p>Your answer: '+esc(L.chosen)+'</p>')+'<p>Answer: '+esc(L.correct)+'. '+esc(L.why.replace(/^Correct\.\s*/,''))+'</p><p class="ref">Where to read more: '+esc(L.ref)+'</p></div>';
+    else{const c=q.o.find(o=>o[1]===1);h+='<div class="review"><p><span class="no">Not answered</span> '+esc(q.q)+'</p><p>Answer: '+esc(c[0])+'. '+esc(c[2].replace(/^Correct\.\s*/,''))+'</p></div>';}});
+  h+='<div class="row"><button class="btn" id="qAgain">Back to the quiz menu</button></div></div>';qRun.innerHTML=h;
+  document.getElementById('qAgain').addEventListener('click',()=>{qRun.hidden=true;qStart.hidden=false;});}
+/* ---------- Start ---------- */
+if(WK.init)WK.init();
+updateMine();
+
+})();
+</script>
+</body>
+</html>

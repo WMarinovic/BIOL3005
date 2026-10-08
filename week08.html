@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIOL3005 Week 8: Visual imagery</title>
+<style>
+  :root{
+    --ink:#2B142D; --muted:#6B5A70; --line:#E3DAE7; --tint:#F6F2F8; --paper:#FFFFFF;
+    --same:#663366; --across:#E07B00; --across-text:#A35600; --stage:#1E1222;
+    --ok:#2E7D4F; --bad:#B3261E;
+    --head: Rockwell, "Rockwell Nova", "Roboto Slab", "Sitka Small", Georgia, serif;
+    --body: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{font-size:16px}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.55}
+  a{color:var(--same)}
+  :focus-visible{outline:3px solid var(--across);outline-offset:2px}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+  header.mast{border-bottom:1px solid var(--line);padding:28px 0 0}
+  .unit{font-size:.9rem;color:var(--muted);margin:0}
+  h1{font-family:var(--head);font-weight:700;font-size:2.3rem;line-height:1.1;margin:.2rem 0 .4rem;letter-spacing:-.01em}
+  .lede{max-width:68ch;margin:0 0 18px;color:var(--muted)}
+  nav[role=tablist]{display:flex;gap:4px;flex-wrap:wrap}
+  nav button{font:inherit;font-weight:600;background:none;border:0;border-bottom:3px solid transparent;
+    padding:10px 14px;color:var(--muted);cursor:pointer}
+  nav button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--same)}
+  nav button:hover{color:var(--ink)}
+  main section{display:none;padding:28px 0 60px}
+  main section.on{display:block}
+  h2{font-family:var(--head);font-size:1.55rem;margin:0 0 .5rem}
+  h3{font-family:var(--head);font-size:1.15rem;margin:1.6rem 0 .4rem}
+  p.note{font-size:.92rem;color:var(--muted);max-width:72ch}
+  .twocol{display:grid;grid-template-columns:1.25fr 1fr;gap:28px;align-items:start}
+  @media (max-width:820px){.twocol{grid-template-columns:1fr}h1{font-size:1.8rem}}
+  .btn{font:inherit;font-weight:600;border:2px solid var(--same);background:var(--same);color:#fff;border-radius:6px;padding:8px 16px;cursor:pointer}
+  .btn.ghost{background:#fff;color:var(--same)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0}
+  label.inline{display:flex;gap:6px;align-items:center;font-size:.95rem}
+  select,input[type=number],textarea{font:inherit;border:1px solid #CBBBD2;border-radius:5px;padding:6px 8px;background:#fff;color:var(--ink)}
+  textarea{width:100%;min-height:130px;font-family:Consolas,"Courier New",monospace;font-size:.85rem}
+
+  /* Trial stage: the split visual field is the motif */
+  .stage{position:relative;background:var(--stage);border-radius:10px;aspect-ratio:16/10;overflow:hidden;user-select:none}
+  .stage::before{content:"";position:absolute;left:50%;top:6%;bottom:6%;border-left:1px dashed rgba(255,255,255,.14)}
+  .fieldlab{position:absolute;bottom:10px;font-size:.75rem;color:rgba(255,255,255,.45)}
+  .fieldlab.l{left:14px}.fieldlab.r{right:14px}
+  .fix{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#fff;font-size:2rem;font-weight:300}
+  .item{position:absolute;width:15%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;color:#fff;
+    font-family:Arial,sans-serif;font-weight:700;font-size:clamp(1.6rem,5vw,3.2rem);border-radius:8px;border:3px solid transparent}
+  .item svg{width:78%;height:78%}
+  .pos-tl{left:17%;top:12%}.pos-tr{right:17%;top:12%}.pos-bl{left:17%;bottom:12%}.pos-br{right:17%;bottom:12%}
+  .item.hl-same,.item.fb-same{border-color:#C9A3C9}.item.hl-across,.item.fb-across{border-color:var(--across)}
+  .stagebar{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;align-items:center}
+  .verdict{min-height:3.2em;margin-top:10px;font-size:.98rem}
+  .tag{display:inline-block;font-size:.8rem;font-weight:700;padding:1px 8px;border-radius:999px;color:#fff}
+  .tag.same{background:var(--same)}.tag.across{background:var(--across)}
+  .keyfacts{background:var(--tint);border-radius:10px;padding:16px 20px}
+  .keyfacts p{margin:.2rem 0 .7rem}
+
+  /* Results table */
+  table.entry{border-collapse:collapse;width:100%;font-size:.95rem}
+  table.entry th,table.entry td{padding:6px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+  table.entry th{font-weight:600;font-size:.85rem;color:var(--muted)}
+  table.entry th.same{color:var(--same)} table.entry th.across{color:var(--across-text)}
+  table.entry input{width:5.4rem}
+  input.bad{border-color:var(--bad);background:#FDECEA}
+  .linebox{font-family:Consolas,"Courier New",monospace;font-size:.85rem;background:var(--tint);padding:8px 10px;border-radius:5px;word-break:break-all}
+  .interp p{margin:.3rem 0;max-width:75ch}
+  .chart svg{width:100%;height:auto;display:block}
+  .chartgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start}
+  @media (max-width:820px){.chartgrid{grid-template-columns:1fr}}
+  .entrywrap{max-width:780px}
+  .legend{display:flex;gap:16px;font-size:.85rem;color:var(--muted);flex-wrap:wrap;margin:4px 0}
+  .sw{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-right:5px}
+  .banner{background:#FFF4E5;border:1px solid #F3C98B;color:#6B3D00;border-radius:6px;padding:8px 12px;font-size:.92rem;margin:10px 0}
+  table.summary{border-collapse:collapse;font-size:.92rem;margin-top:8px}
+  table.summary th,table.summary td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:right}
+  table.summary th:first-child,table.summary td:first-child{text-align:left}
+  .status{font-size:.92rem;color:var(--muted)}
+
+  /* Quiz */
+  .quizpick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:720px}
+  @media (max-width:600px){.quizpick{grid-template-columns:1fr}}
+  .pick{border:1px solid var(--line);border-radius:10px;padding:16px;background:#fff;text-align:left;font:inherit;cursor:pointer}
+  .pick:hover{border-color:var(--same)}
+  .pick strong{font-family:var(--head);font-size:1.15rem;display:block;margin-bottom:4px}
+  .qcard{max-width:760px}
+  .qmeta{display:flex;justify-content:space-between;color:var(--muted);font-size:.9rem}
+  .progress{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:6px 0 18px}
+  .progress div{height:100%;background:var(--same);transition:width .25s}
+  .qtext{font-size:1.15rem;font-weight:600;margin:0 0 14px}
+  .opt{display:block;width:100%;text-align:left;font:inherit;background:#fff;border:2px solid var(--line);border-radius:8px;padding:10px 14px;margin:8px 0;cursor:pointer;color:var(--ink)}
+  .opt:hover:not(:disabled){border-color:#B9A2C2}
+  .opt.sel{border-color:var(--same);background:var(--tint)}
+  .opt.right{border-color:var(--ok);background:#EAF5EE}
+  .opt.wrong{border-color:var(--bad);background:#FDECEA}
+  .opt:disabled{cursor:default}
+  .why{font-size:.92rem;margin-top:4px;color:var(--ink)}
+  .ref{font-size:.85rem;color:var(--muted);margin-top:10px}
+  .review{border-top:1px solid var(--line);padding:12px 0}
+  .review .ok{color:var(--ok);font-weight:700}.review .no{color:var(--bad);font-weight:700}
+  /* Full task overlay */
+  #run{position:fixed;inset:0;background:var(--stage);z-index:1000;display:none;color:#fff;cursor:none}
+  #run.on{display:block}
+  #run.screenmode{cursor:auto}
+  #runFix{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:6vh;font-weight:300;line-height:1}
+  .ritem{position:absolute;transform:translate(-50%,-50%);height:12vh;width:12vh;display:flex;align-items:center;justify-content:center;
+    font-family:Arial,sans-serif;font-weight:700;font-size:10vh;line-height:1;border-radius:1.2vh;border:.4vh solid transparent}
+  .ritem svg{width:10vh;height:10vh}
+  .rp-tl{left:25%;top:30%}.rp-tr{left:75%;top:30%}.rp-bl{left:25%;top:70%}.rp-br{left:75%;top:70%}
+  .ritem.fb-same{border-color:#C9A3C9}.ritem.fb-across{border-color:var(--across)}
+  #runMsg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(680px,90vw);background:#fff;color:var(--ink);
+    border-radius:12px;padding:26px 30px;display:none;max-height:90vh;overflow:auto}
+  #runMsg h2{margin-top:0}
+  #runMsg p{margin:.4rem 0 .8rem}
+  #runFb{position:absolute;left:50%;top:88%;transform:translate(-50%,-50%);font-size:2.4vh;font-weight:600;text-align:center;width:90vw}
+  .taskcard{background:var(--tint);border-radius:10px;padding:18px 22px;max-width:760px}
+  .taskcard ol{padding-left:1.2rem;margin:.4rem 0}
+  details.tutor{margin-top:14px;font-size:.92rem}
+  details.tutor summary{cursor:pointer;color:var(--muted);font-weight:600}
+  footer{border-top:1px solid var(--line);padding:16px 0 30px;font-size:.82rem;color:var(--muted)}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  .fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 24px;max-width:780px}
+  @media (max-width:640px){.fields{grid-template-columns:1fr}}
+  .fields label{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:.95rem;border-bottom:1px solid var(--line);padding:6px 0}
+  .fields input{width:6rem}
+  .bigstim{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:Arial,sans-serif;font-weight:700;color:#fff;line-height:1;text-align:center;white-space:nowrap}
+  #run .bigstim{font-size:9vh}
+  .lstage .bigstim{font-size:16cqh}
+  .lstage{container-type:size}
+  .lstage::before{display:none}
+  .question{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#fff;font-size:4.2vh;text-align:center;width:86vw;line-height:1.3}
+  .lstage .question{font-size:7cqh;width:90%}
+  .keyhint{position:absolute;left:50%;bottom:7%;transform:translateX(-50%);color:rgba(255,255,255,.55);font-size:2.2vh;white-space:nowrap}
+  .lstage .keyhint{font-size:4.5cqh}
+  .remind{position:absolute;left:50%;top:6%;transform:translateX(-50%);color:rgba(255,255,255,.5);font-size:2.4vh}
+  #runMsg input[type=text],#runMsg textarea{width:100%;font-size:1.3rem;padding:8px 10px;margin:6px 0;font-family:Arial,sans-serif}
+  #runMsg input.letters{letter-spacing:.4em;text-transform:uppercase;font-size:1.8rem}
+  #runMsg textarea{min-height:140px;font-size:1.05rem}
+  .countdown{font-weight:700;color:var(--across-text)}
+</style>
+</head>
+<body>
+<header class="mast"><div class="wrap">
+  <p class="unit">BIOL3005 Cognition, Week 8 tutorial</p>
+  <h1>Turning things over in your mind</h1>
+  <p class="lede">Tools for the mental-rotation lab: is a rotated letter normal or mirror-reversed? (after Cooper & Shepard, 1973; Shepard & Metzler, 1971). Textbook Chapter 8, §8.2, §8.5 and §8.6.</p>
+  <nav role="tablist" aria-label="Tutorial tools"><button role="tab" id="t-demo" aria-controls="s-demo" aria-selected="true">Try a trial</button><button role="tab" id="t-task" aria-controls="s-task" aria-selected="false">Run the task</button><button role="tab" id="t-mine" aria-controls="s-mine" aria-selected="false">My results</button><button role="tab" id="t-class" aria-controls="s-class" aria-selected="false">Class results</button><button role="tab" id="t-quiz" aria-controls="s-quiz" aria-selected="false">Quiz</button></nav>
+</div></header>
+<main class="wrap">
+<section id="s-demo" class="on" role="tabpanel" aria-labelledby="t-demo">
+  <div class="twocol"><div><div class="stage lstage" id="stage"></div>
+<div class="stagebar"><button class="btn" id="dGo">Show a letter</button><button class="btn ghost" id="dF" disabled>F: mirror</button><button class="btn ghost" id="dJ" disabled>J: normal</button></div>
+<div class="verdict" id="dVerdict">A rotated letter appears. Is it the normal letter or its mirror image? J for normal, F for mirror.</div></div><div class="keyfacts"><h2>What the task is doing</h2>
+<p>A letter appears tilted at one of six angles, either as it normally looks or mirror-reversed. You decide which, as fast as you can.</p>
+<p>No rotation of the screen can turn a mirror letter into a normal one, so to answer you have to compare the letter with how it should look upright. If you do that by mentally rotating it, your decision time should rise with the angle, as though you were turning a real object at a steady rate. That is the result that made mental rotation the centrepiece of the imagery debate.</p>
+<p>At the end you rate how vivid your mental images usually are. Does vividness predict how fast you rotate?</p></div></div>
+</section>
+<section id="s-task" role="tabpanel" aria-labelledby="t-task">
+  <h2>Run the task</h2>
+  <div class="taskcard"><p>The task runs full screen and takes about 6 minutes. You need a keyboard; you will use the F and J keys.</p>
+<ol><li>A letter (F, G, J or R) appears, tilted. Press <strong>J</strong> if it is the normal letter and <strong>F</strong> if it is mirror-reversed.</li>
+<li>Be as fast as you can while staying accurate.</li>
+<li>At the end, answer two short questions about how you did it.</li></ol>
+    <div class="row"><label class="inline">Writing hand (optional) <select id="taskHand"><option value="NA">Prefer not to say</option><option value="R">Right</option><option value="L">Left</option><option value="B">Both</option></select></label></div>
+    <div class="row"><button class="btn" id="taskStart">Start the task</button><span class="status" id="taskStatus"></span></div>
+    <details class="tutor"><summary>Settings for tutors</summary>
+      <div class="row"><label class="inline">Length <select id="taskN"><option value="2" selected>Standard: 96 trials (about 6 minutes)</option><option value="1">Short: 48 trials (about 3 minutes)</option></select></label></div>
+      <p class="note">Four letters (F, G, J, R), six orientations (0, 60, 120, 180, 240 and 300 degrees clockwise) and two versions (normal, mirror), fully crossed and repeated; 8 practice trials with feedback first. Each trial: fixation 500 ms, then the letter until response (5 s limit). Analyses use angular departure from upright (0, 60, 120, 180), so 60 and 300 are pooled, as are 120 and 240. Two questions at the end: a 1 to 5 rating of how vivid the student’s mental images usually are, and the strategy they think they used.</p>
+    </details>
+  </div>
+</section>
+<section id="s-mine" role="tabpanel" aria-labelledby="t-mine">
+  <h2>Your results</h2>
+  <p class="note" id="mineIntro">Run the task first: your numbers are filled in automatically. You can also type them in.</p>
+  <div class="fields" id="fields"></div>
+  <div class="row"><label class="inline">Writing hand (optional) <select id="hand"><option value="NA">Prefer not to say</option><option value="R">Right</option><option value="L">Left</option><option value="B">Both</option></select></label></div>
+  <div class="entrywrap">
+    <h3>Share with your class</h3>
+    <p class="note">Copy this line and paste it where your tutor asks (for example, the tutorial's Teams chat). It contains no name.</p>
+    <div class="linebox" id="myLine"></div>
+    <div class="row"><button class="btn" id="copyLine" disabled>Copy my results line</button><span class="status" id="copyMsg"></span></div>
+    <div id="trialDl" hidden>
+      <h3>Your trial-by-trial data</h3>
+      <p class="note">Download your data (one row per trial) before you close this page; nothing is saved once the tab is closed. Your tutor may ask you to submit the file on Canvas.</p>
+      <div class="row"><button class="btn ghost" id="dlMine">Download my trial data (CSV)</button><span class="status" id="pCode"></span></div>
+    </div>
+  </div>
+  <h3>Your pattern</h3>
+  <div class="chartgrid"><div class="chart" id="my1"></div><div class="chart" id="my2"></div></div>
+  <div class="interp" id="myInterp"></div>
+  <p class="note">With 16 normal trials at each angle, one person’s curve can be bumpy. Look for the overall rise; the class curve is the better evidence.</p>
+</section>
+<section id="s-class" role="tabpanel" aria-labelledby="t-class">
+  <h2>Pool the class</h2>
+  <p class="note">Paste everything students posted. Lines that do not contain a results code (names, timestamps, chat messages) are ignored automatically. You can also load the trial-data files students downloaded (select several at once, for example after a bulk download from a Canvas assignment).</p>
+  <textarea id="paste" aria-label="Pasted results lines" placeholder="Paste results lines here, one per student. Each starts with MR1,"></textarea>
+  <div class="row">
+    <button class="btn" id="readPaste">Read pasted lines</button>
+    <label class="btn ghost" for="fileIn" style="display:inline-block">Load CSV files</label><input type="file" id="fileIn" accept=".csv,.txt" multiple hidden>
+    <button class="btn ghost" id="simulate">Rehearse with a simulated class</button>
+    <button class="btn ghost" id="clearClass">Clear</button>
+    <button class="btn ghost" id="download" disabled>Download class summary (CSV)</button>
+    <button class="btn ghost" id="downloadTrials" disabled>Download all trials (CSV)</button>
+  </div>
+  <p class="status" id="classStatus">No class data yet.</p>
+  <div id="simBanner"></div>
+  <div id="classBody" hidden><h3>Does time rise with angle?</h3>
+<p class="note">Decision time on correct trials with normal letters, by angular departure from upright. Faint lines are individual students; the dark line is the class mean with 95% confidence intervals.</p>
+<div class="chartgrid"><div class="chart" id="c1"></div><div class="chart" id="c2"></div></div>
+<h3>Does vividness matter?</h3>
+<p class="note">Left: each student’s rotation cost (ms per degree) against their own rating of image vividness. Right: accuracy for normal and mirror letters.</p>
+<div class="chartgrid"><div class="chart" id="c3"></div><div class="chart" id="c4"></div></div><div id="cTable"></div></div>
+</section>
+<section id="s-quiz" role="tabpanel" aria-labelledby="t-quiz">
+  <div id="quizStart">
+    <h2>Week 8 quiz</h2>
+    <p class="note">Eight questions on today’s lab and Chapter 8. You get feedback after each answer, including why the other options are wrong. Options appear in a different order each time.</p>
+    <div class="row"><label class="inline"><input type="checkbox" id="useTimer" checked> Use a timer (one minute per question)</label></div>
+    <div class="quizpick">
+      <button class="pick" data-set="core"><strong>Core</strong>Visual and spatial imagery, the imagery debate, mental rotation and scanning, and imagery in the brain.</button>
+      <button class="pick" data-set="stretch"><strong>Stretch</strong>Interpreting our data, the tacit-knowledge critique, aphantasia and what self-reports can and cannot tell us.</button>
+    </div>
+  </div>
+  <div id="quizRun" hidden></div>
+</section>
+</main>
+<div id="run" aria-live="polite"><div id="runFix">+</div><div id="runItems"></div><div id="runFb"></div><div id="runMsg" role="dialog" aria-modal="true"></div></div>
+<footer><div class="wrap">BIOL3005 Cognition, Curtin University. Licensed under CC BY-NC-SA 4.0. Design after Cooper and Shepard (1973); the code is original.</div></footer>
+<script>
+(function(){
+const WK={};
+
+WK.code='MR1';WK.file='week08';WK.marker='angle';
+WK.fields=[{k:'rt0',label:'Normal letters at 0\u00b0: time (ms)',kind:'ms'},{k:'rt60',label:'Normal letters at 60\u00b0: time (ms)',kind:'ms'},
+  {k:'rt120',label:'Normal letters at 120\u00b0: time (ms)',kind:'ms'},{k:'rt180',label:'Normal letters at 180\u00b0: time (ms)',kind:'ms'},
+  {k:'rt_mirror',label:'Mirror letters, all angles: time (ms)',kind:'ms'},{k:'acc_normal',label:'Normal letters correct (%)',kind:'pct'},
+  {k:'acc_mirror',label:'Mirror letters correct (%)',kind:'pct'},{k:'vivid',label:'Vividness of your mental images (1 to 5)',kind:'pct'}];
+const LET=['F','G','J','R'],ORI=[0,60,120,180,240,300],DEP=[0,60,120,180];
+const $=id=>document.getElementById(id);
+const dep=a=>Math.min(a,360-a);
+const lHTML=(l,a,m,unit)=>'<div class="bigstim" style="font-size:'+(unit==='cqh'?'34cqh':'18vh')+';transform:translate(-50%,-50%) rotate('+a+'deg)'+(m?' scaleX(-1)':'')+';font-family:Arial,Helvetica,sans-serif">'+l+'</div>';
+function slope(d){const x=[],y=[];DEP.forEach(a=>{const v=d['rt'+a];if(fin(v)){x.push(a);y.push(v);}});if(x.length<3)return NaN;
+  const mx=mean(x),my=mean(y);let n=0,q=0;x.forEach((v,i)=>{n+=(v-mx)*(y[i]-my);q+=(v-mx)**2;});return n/q;}
+function lineChart(el,title,lines,o={}){const W=500,H=270,L=60,R=14,T0=34,B=44;
+  let vals=[];lines.forEach(l=>l.pts.forEach(p=>{['m','lo','hi'].forEach(k=>{if(fin(p[k]))vals.push(p[k]);});}));if(!vals.length)vals=[0,1];
+  let lo=Math.min(...vals),hi=Math.max(...vals);const pad=(hi-lo)*.12||50;lo-=pad;hi+=pad;const ticks=niceTicks(lo,hi,5);lo=Math.min(lo,ticks[0]);hi=Math.max(hi,ticks[ticks.length-1]);
+  const x=a=>L+a/180*(W-L-R),y=v=>T0+(hi-v)/(hi-lo)*(H-T0-B);let s=txt(4,18,title,{size:15,fill:C.ink,weight:600});
+  ticks.forEach(t=>{s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(t)+'" y2="'+y(t)+'" stroke="'+C.grid+'"/>'+txt(L-6,y(t)+4,t,{anchor:'end',size:12.5});});
+  DEP.forEach(a=>{s+=txt(x(a),H-24,a+'\u00b0',{anchor:'middle',size:12.5});});s+=txt((L+W-R)/2,H-6,'angular departure from upright',{anchor:'middle',size:12});
+  s+='<text transform="translate(14,'+((T0+H-B)/2)+') rotate(-90)" font-size="12" fill="'+C.muted+'" text-anchor="middle" font-family="Segoe UI,system-ui,Arial,sans-serif">ms</text>';
+  lines.forEach(l=>{const p=l.pts.filter(q=>fin(q.m));if(p.length>1)s+='<polyline fill="none" stroke="'+l.col+'" stroke-width="'+(l.w||2)+'" stroke-opacity="'+(l.op||1)+'" points="'+p.map(q=>x(q.a)+','+y(q.m)).join(' ')+'"/>';
+    if(!l.faint)p.forEach(q=>{if(fin(q.lo))s+='<line x1="'+x(q.a)+'" x2="'+x(q.a)+'" y1="'+y(q.lo)+'" y2="'+y(q.hi)+'" stroke="'+l.col+'" stroke-width="3"/>';s+='<circle cx="'+x(q.a)+'" cy="'+y(q.m)+'" r="6" fill="'+l.col+'"/>';});});
+  el.innerHTML=svgWrap(W,H,s,title);}
+function scatter(el,title,pts,xl,yl){const W=500,H=270,L=60,R=14,T0=34,B=44;const ys=pts.map(p=>p[1]).filter(fin);let lo=Math.min(0,...ys),hi=Math.max(1,...ys);const pad=(hi-lo)*.12||1;lo-=pad;hi+=pad;
+  const ticks=niceTicks(lo,hi,5);lo=Math.min(lo,ticks[0]);hi=Math.max(hi,ticks[ticks.length-1]);const x=v=>L+(v-0.5)/5*(W-L-R),y=v=>T0+(hi-v)/(hi-lo)*(H-T0-B);
+  let s=txt(4,18,title,{size:15,fill:C.ink,weight:600});ticks.forEach(t=>{s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(t)+'" y2="'+y(t)+'" stroke="'+C.grid+'"/>'+txt(L-6,y(t)+4,t,{anchor:'end',size:12.5});});
+  [1,2,3,4,5].forEach(v=>s+=txt(x(v),H-24,v,{anchor:'middle',size:12.5}));s+=txt((L+W-R)/2,H-6,xl,{anchor:'middle',size:12});
+  s+='<text transform="translate(14,'+((T0+H-B)/2)+') rotate(-90)" font-size="12" fill="'+C.muted+'" text-anchor="middle" font-family="Segoe UI,system-ui,Arial,sans-serif">'+esc(yl)+'</text>';
+  pts.forEach((p,i)=>{if(fin(p[0])&&fin(p[1]))s+='<circle cx="'+(x(p[0])+((i*29)%13-6))+'" cy="'+y(p[1])+'" r="5" fill="'+C.same+'" fill-opacity=".6"/>';});el.innerHTML=svgWrap(W,H,s,title);}
+function corr(a,b){const p=a.map((v,i)=>[v,b[i]]).filter(q=>fin(q[0])&&fin(q[1]));if(p.length<4)return NaN;const mx=mean(p.map(q=>q[0])),my=mean(p.map(q=>q[1]));let n=0,sx=0,sy=0;
+  p.forEach(([u,v])=>{n+=(u-mx)*(v-my);sx+=(u-mx)**2;sy+=(v-my)**2;});return n/Math.sqrt(sx*sy);}
+WK.mine=function(d){
+  lineChart($('my1'),'Your decision time (normal letters)',[{col:C.ink,pts:DEP.map(a=>({a,m:d['rt'+a]}))}]);
+  dotChart($('my2'),'Accuracy (%)',[{name:'Normal',you:d.acc_normal},{name:'Mirror',you:d.acc_mirror}],{unit:'%',floor:0,ceil:100,fixed:[50,100]});
+  const sl=slope(d);let h='';
+  if(fin(sl))h+='<p><strong>Rotation cost:</strong> about '+sl.toFixed(1)+' ms per degree, so turning a letter all the way upside down cost you about '+(sl*180).toFixed(0)+' ms'+(sl>0?', or a mental rotation rate of roughly '+(1000/sl).toFixed(0)+' degrees per second.':'.')+'</p>';
+  if(fin(d.vivid))h+='<p><strong>Vividness:</strong> you rated your mental images '+d.vivid+' out of 5.</p>';
+  $('myInterp').innerHTML=h;};
+WK.simulate=function(){const b=640+gauss()*90,k=clamp(2.6+gauss()*1.1,0.4,6),r=v=>Math.round(clamp(v,350,3500));const v=clamp(Math.round(3.4+gauss()*1.1),1,5);
+  return {rt0:r(b+gauss()*25),rt60:r(b+k*60*0.7+gauss()*35),rt120:r(b+k*120+gauss()*45),rt180:r(b+k*180*1.1+gauss()*60),rt_mirror:r(b+k*110+90+gauss()*60),
+    acc_normal:+clamp(95+gauss()*3,60,100).toFixed(1),acc_mirror:+clamp(90+gauss()*5,50,100).toFixed(1),vivid:v};};
+WK.drawClass=function(rows){const g=k=>summ(col(k));
+  const ind=rows.map(r=>({col:C.same,faint:true,op:.18,w:1.5,pts:DEP.map(a=>({a,m:r['rt'+a]}))}));
+  lineChart($('c1'),'Decision time, normal letters',ind.concat([{col:C.ink,w:3,pts:DEP.map(a=>{const q=g('rt'+a);return {a,m:q.m,lo:q.lo,hi:q.hi};})}]));
+  const sl=rows.map(r=>slope(r)),S=summ(sl);
+  dotChart($('c2'),'Rotation cost (ms per degree)',[{name:'Students',dots:sl,mean:S.m,lo:S.lo,hi:S.hi}],{zero:true,leftLab:'\u2190 faster when tilted',rightLab:'slower when tilted \u2192'});
+  scatter($('c3'),'Vividness and rotation cost',rows.map((r,i)=>[r.vivid,sl[i]]),'self-rated vividness (1 = no image, 5 = as vivid as seeing)','ms per degree');
+  const an=g('acc_normal'),am=g('acc_mirror');
+  dotChart($('c4'),'Accuracy (%)',[{name:'Normal',dots:col('acc_normal'),mean:an.m,lo:an.lo,hi:an.hi},{name:'Mirror',dots:col('acc_mirror'),mean:am.m,lo:am.lo,hi:am.hi}],{unit:'%',floor:0,ceil:100});
+  const rr=corr(col('vivid'),sl);
+  $('cTable').innerHTML=classTable(['Measure','Class average (95% CI)'],DEP.map(a=>['Normal letters at '+a+'\u00b0, ms',ci(g('rt'+a))]).concat([
+    ['Mirror letters, ms',ci(g('rt_mirror'))],['Rotation cost, ms per degree',cid(S,2)],['Accuracy normal / mirror, %',ci(an,1)+' / '+ci(am,1)],['Vividness (1 to 5)',ci(g('vivid'),1)],
+    ['Correlation of vividness with rotation cost',fin(rr)?rr.toFixed(2):'']]),'A correlation near zero means vividness ratings tell us little about rotation speed. With a class-sized sample, treat any correlation as a rough guide only.');};
+function summRows(rows,get){const t=rows.filter(r=>get(r,'phase')==='test');const ok=r=>+get(r,'correct')===1&&get(r,'rt_ms')!=='';const o={};
+  const nor=t.filter(r=>get(r,'version')==='normal'),mir=t.filter(r=>get(r,'version')==='mirror');
+  DEP.forEach(a=>{o['rt'+a]=mean(nor.filter(r=>+get(r,'departure')===a&&ok(r)).map(r=>+get(r,'rt_ms')));});
+  o.rt_mirror=mean(mir.filter(ok).map(r=>+get(r,'rt_ms')));o.acc_normal=nor.length?pct(nor.map(r=>+get(r,'correct')===1)):NaN;o.acc_mirror=mir.length?pct(mir.map(r=>+get(r,'correct')===1)):NaN;
+  const v=rows.find(r=>get(r,'phase')==='questions');o.vivid=v?+get(v,'vividness'):NaN;return o;}
+WK.summarise=rows=>summRows(rows,(r,k)=>r[k]==null?'':String(r[k]));
+WK.summariseCSV=ts=>summRows(ts,(r,k)=>r[k]==null?'':r[k]);
+WK.run=async function(meta){const rows=[];
+  let go=await showScreen('<h2>Normal or mirror?</h2><p>A letter will appear, tilted. Decide whether it is the <strong>normal</strong> letter or its <strong>mirror image</strong>.</p><p>Press <strong>J</strong> for normal and <strong>F</strong> for mirror. Be as fast as you can while staying accurate.</p>'+
+    '<div class="stage lstage" style="max-width:420px;margin:10px auto;aspect-ratio:16/10">'+lHTML('R',120,false,'cqh')+'</div><p class="note" style="text-align:center">This is a normal R, tilted by 120 degrees.</p>',[['Start the practice','go'],['Cancel','quit']]);
+  if(go==='quit')return {rows,quit:true};
+  const one=async(l,a,m,phase,k)=>{const r=await trial({html:lHTML(l,a,m,'vh')+'<div class="keyhint">F: mirror \u00b7 J: normal</div>',fixMs:T(500),stimMs:null,codes:['KeyF','KeyJ'],windowMs:TW(5000)});
+    const correct=r.resp?((r.resp==='KeyJ')===!m):false;
+    rows.push(baseRow(meta,{phase,trial:k,letter:l,angle:a,departure:dep(a),version:m?'mirror':'normal',response:r.resp||'',correct:correct?1:0,rt_ms:fin(r.rt)?r.rt.toFixed(1):'',fullscreen:r.fullscreen?1:0,focus_lost:r.focusLost?1:0}));return {r,correct};};
+  let k=0;for(const [l,a,m] of shuffle(LET.flatMap(l=>[[l,rnd(ORI),false],[l,rnd(ORI),true]]))){const o=await one(l,a,m,'practice',++k);
+    if(!o.correct){RFB.textContent=o.r.resp?'That was a '+(m?'mirror':'normal')+' letter.':'Too slow.';await sleep(T(1200));RFB.textContent='';}await sleep(T(300));}
+  const base=[];LET.forEach(l=>ORI.forEach(a=>[false,true].forEach(m=>base.push([l,a,m]))));let trials=[];for(let i=0;i<meta.n;i++)trials=trials.concat(shuffle(base));
+  go=await showScreen('<h2>Practice finished</h2><p>Now the real trials ('+trials.length+'). No feedback from here on, except a reminder if you are too slow.</p>',[['Start','go'],['Quit the task','quit']]);
+  if(go==='quit')return {rows,quit:true};
+  k=0;for(const [l,a,m] of trials){const o=await one(l,a,m,'test',++k);if(!o.r.resp){RFB.textContent='Too slow';await sleep(T(600));RFB.textContent='';}await sleep(T(300));
+    if(k===Math.floor(trials.length/2)){go=await showScreen('<h2>Half-way</h2><p>Take a short break.</p>',[['Continue','go'],['Quit the task','quit']]);if(go==='quit')return {rows,quit:true};}}
+  const viv=await showScreen('<h2>Two quick questions</h2><p><strong>When you imagine something, such as a friend\u2019s face, how vivid is the image in your mind?</strong></p><p>1 = no image at all, I just know it \u00b7 2 = vague and dim \u00b7 3 = moderately clear \u00b7 4 = clear and fairly vivid \u00b7 5 = as vivid as actually seeing it</p>',
+    [['1','1'],['2','2'],['3','3'],['4','4'],['5','5']]);
+  const strat=await showScreen('<h2>How did you decide?</h2><p>In the task you just did, how did you usually decide whether a letter was normal or mirror?</p>',[['I turned it upright in my mind','rotate'],['Something else, such as a rule or a feature','other'],['Not sure','unsure']]);
+  rows.push(baseRow(meta,{phase:'questions',trial:'',vividness:viv,strategy:strat}));
+  return {rows,quit:false};};
+WK.init=function(){let cur=null,tm=null,t0=0;const st=$('stage');
+  const done=k=>{if(!cur)return;clearTimeout(tm);const rt=performance.now()-t0;st.innerHTML='';const ok=k?((k==='J')===!cur.m):null;
+    $('dVerdict').innerHTML=k?('<strong>'+(ok?'Correct':'Not quite')+'</strong> ('+rt.toFixed(0)+' ms). That was a '+(cur.m?'mirror':'normal')+' '+cur.l+' tilted by '+cur.a+' degrees.'):'Too slow.';cur=null;$('dF').disabled=$('dJ').disabled=true;$('dGo').disabled=false;};
+  $('dGo').addEventListener('click',async()=>{if(cur)return;$('dGo').disabled=true;st.innerHTML='';await sleep(500);cur={l:rnd(LET),a:rnd(ORI),m:Math.random()<.5};
+    st.innerHTML=lHTML(cur.l,cur.a,cur.m,'cqh');t0=performance.now();$('dF').disabled=$('dJ').disabled=false;tm=setTimeout(()=>done(null),5000);});
+  $('dF').addEventListener('click',()=>done('F'));$('dJ').addEventListener('click',()=>done('J'));
+  document.addEventListener('keydown',e=>{if(!cur||!$('s-demo').classList.contains('on'))return;if(e.code==='KeyF'){e.preventDefault();done('F');}else if(e.code==='KeyJ'){e.preventDefault();done('J');}});};
+
+WK.quiz={"core": [{"q": "What is the difference between visual and spatial imagery?", "ref": "Textbook §8.1", "o": [["Visual imagery represents how things look; spatial imagery represents where things are", 1, "Correct. They dissociate and lean on the ventral and dorsal streams respectively."], ["Visual imagery is conscious; spatial imagery is not", 0, "Both can be conscious."], ["They are the same thing", 0, "They dissociate."], ["Spatial imagery is only for maps", 0, "It covers locations and spatial relations generally."]]}, {"q": "What did Shepard and Metzler (1971) find?", "ref": "Textbook §8.2", "o": [["The time to judge whether two figures matched rose linearly with the angle between them", 1, "Correct. As if the image were being rotated at a constant rate."], ["Rotated figures were judged faster", 0, "Larger angles took longer."], ["Angle had no effect", 0, "Angle had a strong, linear effect."], ["Only mirror images took longer", 0, "The classic plot is for matching (same) pairs."]]}, {"q": "Why does the linearity of the mental-rotation function matter more than the slowing?", "ref": "Textbook §8.2", "o": [["A propositional system could be slower for harder problems, but does not obviously predict a constant rate of transformation", 1, "Correct. The constant rate is the signature of an analogue process."], ["Slowing never happens with propositions", 0, "It could, for many reasons."], ["Linearity proves images are stored in V1", 0, "Behaviour alone cannot show where."], ["It does not matter", 0, "It is the crux of the argument."]]}, {"q": "In Kosslyn, Ball and Reiser’s (1978) scanning study, what predicted scanning time?", "ref": "Textbook §8.2", "o": [["The real distance between landmarks on the memorised map", 1, "Correct. A list of facts is not traversed at a rate."], ["The number of landmarks", 0, "Distance, not number, predicted time."], ["How familiar the landmarks were", 0, "The relationship was with distance."], ["Nothing: times were constant", 0, "Times rose with distance."]]}, {"q": "What is Pylyshyn’s tacit-knowledge critique?", "ref": "Textbook §8.2", "o": [["Participants may reproduce what they know about real objects, producing image-like timings without picture-like representations", 1, "Correct. That is why the debate moved to the brain."], ["People cannot form images", 0, "He did not deny the experience."], ["Imagery is always accurate", 0, "The critique is about format, not accuracy."], ["Images are stored as pictures", 0, "That is Kosslyn’s position."]]}, {"q": "Kosslyn and colleagues (1999) found that TMS over visual cortex slowed imagery as well as perception. Why is that important?", "ref": "Textbook §8.4", "o": [["It shows visual cortex contributes causally to imagery, not just that it is active", 1, "Correct. Intervention, not correlation."], ["It shows imagery and perception are identical", 0, "They share some but not all machinery."], ["It shows TMS improves imagery", 0, "It slowed imagery."], ["It shows imagery is propositional", 0, "The finding favours a depictive contribution."]]}, {"q": "What is aphantasia?", "ref": "Textbook §8.5", "o": [["The absence of the experience of visual imagery, not the absence of visual knowledge", 1, "Correct. It affects around four per cent of people."], ["Blindness", 0, "People with aphantasia see normally."], ["A memory disorder", 0, "Standard laboratory memory tests are unaffected."], ["Being unable to recognise faces", 0, "That is prosopagnosia."]]}, {"q": "Bisiach and Luzzatti (1978) asked neglect patients to imagine a familiar square from one end. What did they find?", "ref": "Textbook §8.4", "o": [["Patients omitted details on the neglected side of the imagined scene, whichever end they imagined standing at", 1, "Correct. Neglect applies to images as to percepts."], ["Patients described both sides equally", 0, "They neglected one side."], ["Patients could not imagine at all", 0, "They described one side well."], ["Patients remembered nothing", 0, "Their memory for the square was intact."]]}], "stretch": [{"q": "In our task, angles of 60 and 300 degrees are pooled. Why?", "ref": "Today’s lab", "o": [["Both are 60 degrees from upright; people rotate the shorter way, so what matters is angular departure", 1, "Correct. Cooper and Shepard found times symmetrical around 180 degrees."], ["To make the task shorter", 0, "The trials are all still run."], ["Because 300-degree trials are always errors", 0, "They are not."], ["Because the computer cannot show 300 degrees", 0, "It can."]]}, {"q": "Why are only normal-letter trials used for the rotation curve?", "ref": "Today’s lab", "o": [["For mirror letters the answer may come from a different process, so normal trials give the cleanest read-out of rotation", 1, "Correct. Shepard and Metzler’s classic function is also for matching pairs."], ["Mirror letters cannot be rotated", 0, "They can; the decision process may differ."], ["Mirror letters were too easy", 0, "They are usually slower, not easier."], ["There were no mirror trials", 0, "Half the trials were mirror letters."]]}, {"q": "Suppose our class shows a clear rise with angle. Can Pylyshyn accept that result?", "ref": "Textbook §8.2", "o": [["Yes: tacit knowledge of how rotation works could produce the same timing, so behaviour alone cannot settle the format", 1, "Correct. That is why neural evidence was needed."], ["No: it disproves the propositional account", 0, "The critique explains why it does not."], ["Only if the curve is perfectly linear", 0, "Even a linear curve could reflect tacit knowledge."], ["Only for mirror letters", 0, "The argument applies to all timings."]]}, {"q": "Our curve may rise more steeply from 120 to 180 degrees than from 0 to 60. Why might that differ from Shepard and Metzler’s straight line?", "ref": "Today’s lab; textbook §8.2", "o": [["Their participants were highly practised, while ours are novices using varied strategies, especially for upside-down letters", 1, "Correct. Practice and strategy shape the function."], ["Letters cannot be rotated linearly", 0, "Many studies with letters show orderly functions."], ["Our computers are slower", 0, "Screen timing does not change with angle."], ["It proves mental rotation does not exist", 0, "A rise with angle is still the key signature."]]}, {"q": "Milton and colleagues (2021) found that classic mental-rotation tasks discriminated poorly between aphantasic and typical imagers. What does that suggest?", "ref": "Textbook §8.5", "o": [["Spatial transformation can succeed without the experience of a visual image", 1, "Correct. Visual reasoning survives without visual experience."], ["Aphantasia does not exist", 0, "The groups differed on other measures."], ["Mental rotation needs vivid images", 0, "The result suggests it does not."], ["Aphantasic people cannot rotate", 0, "They performed comparably."]]}, {"q": "Why should we be cautious about correlating self-rated vividness with rotation speed?", "ref": "Textbook §8.6", "o": [["Self-ratings of inner states agree poorly with objective measures between people, as the pupil studies showed", 1, "Correct. The pupil tracked vividness within people but not questionnaire scores between them."], ["Vividness cannot be measured at all", 0, "It can be measured objectively, for example through the pupil."], ["Rotation speed is not a real measure", 0, "It is a standard chronometric measure."], ["Correlations are always meaningless", 0, "They are informative with care and adequate samples."]]}, {"q": "The pupil constricts when people imagine a bright scene but not in aphantasia (Kay et al., 2022). Why is this valuable?", "ref": "Textbook §8.6", "o": [["It is a reflex rather than a report, so it cannot be produced to order", 1, "Correct. It is the first physiological validation of aphantasia."], ["It shows imagery is brighter than perception", 0, "The imagery effect is several times smaller."], ["It shows aphantasic people have damaged pupils", 0, "Their perceptual pupil responses are normal."], ["It replaces all questionnaires", 0, "It complements them."]]}, {"q": "How do Pearson and Kosslyn (2015) propose to end the imagery debate?", "ref": "Textbook §8.7", "o": [["Representation is heterogeneous: people use depictive and propositional formats flexibly", 1, "Correct. Aphantasia illustrates the point."], ["Pylyshyn was right all along", 0, "They argue neither pure position is right."], ["Images are purely depictive", 0, "They argue for both formats."], ["Imagery should not be studied", 0, "They argue for studying it differently."]]}]};
+
+"use strict";
+/* ---------- Tabs ---------- */
+const tabs=[...document.querySelectorAll('[role=tab]')];
+function showTab(t){tabs.forEach(b=>{const on=b===t;b.setAttribute('aria-selected',on);document.getElementById(b.getAttribute('aria-controls')).classList.toggle('on',on);});}
+tabs.forEach(t=>t.addEventListener('click',()=>showTab(t)));
+/* ---------- Helpers ---------- */
+const C={same:'#663366',across:'#E07B00',ink:'#2B142D',muted:'#6B5A70',line:'#E3DAE7',grid:'#EFE8F2'};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fin=v=>v!=null&&isFinite(v);
+const fmt=(x,d=0)=>(x>0?'+':x<0?'\u2212':'')+Math.abs(x).toFixed(d);
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+const mean=a=>{a=a.filter(fin);return a.length?a.reduce((s,v)=>s+v,0)/a.length:NaN;};
+const pct=a=>a.length?100*a.filter(Boolean).length/a.length:NaN;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const QA=/[?&]qa=1/.test(location.search); // testing only: shortens timings
+const T=ms=>QA?Math.min(ms,150):ms;
+const TW=ms=>QA?Math.min(ms,1500):ms;
+function gauss(){let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+/* ---------- SVG charts ---------- */
+function svgWrap(w,h,inner,label){return '<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="'+esc(label)+'">'+inner+'</svg>';}
+function txt(x,y,s,o={}){return '<text x="'+x+'" y="'+y+'" font-size="'+(o.size||13)+'" fill="'+(o.fill||C.muted)+'" text-anchor="'+(o.anchor||'start')+'" font-weight="'+(o.weight||400)+'" font-family="Segoe UI,system-ui,Arial,sans-serif">'+esc(s)+'</text>';}
+function niceTicks(lo,hi,n=5){const span=hi-lo||1;const step0=span/n;const mag=Math.pow(10,Math.floor(Math.log10(step0)));
+  const step=[1,2,2.5,5,10].map(m=>m*mag).find(s=>s>=step0)||10*mag;const out=[];for(let v=Math.ceil(lo/step)*step;v<=hi+1e-9;v+=step)out.push(+v.toFixed(6));return out;}
+function dotChart(el,title,rows,o={}){
+  const W=500,H=40+rows.length*58+36,L=o.L||132,R=16,T0=34;
+  let vals=o.zero?[0]:[];if(o.fixed)vals=vals.concat(o.fixed);
+  rows.forEach(r=>{['you','ref','mean','lo','hi'].forEach(k=>{if(fin(r[k]))vals.push(r[k]);});(r.dots||[]).forEach(v=>{if(fin(v))vals.push(v);});});
+  if(!vals.length)vals=[0,1];
+  let lo=Math.min(...vals),hi=Math.max(...vals);const pad=(hi-lo)*.12||o.minPad||10;lo-=pad;hi+=pad;
+  if(o.floor!=null)lo=Math.max(lo,o.floor);if(o.ceil!=null)hi=Math.min(hi,o.ceil);
+  const ticks=niceTicks(lo,hi,5);lo=Math.min(lo,ticks[0]);hi=Math.max(hi,ticks[ticks.length-1]);
+  const x=v=>L+(v-lo)/(hi-lo)*(W-L-R);
+  let s=txt(4,18,title,{size:15,fill:C.ink,weight:600});
+  ticks.forEach(t=>{s+='<line x1="'+x(t)+'" x2="'+x(t)+'" y1="'+T0+'" y2="'+(H-30)+'" stroke="'+C.grid+'"/>'+txt(x(t),H-17,(o.zero&&t>0?'+':'')+t,{anchor:'middle',size:12.5});});
+  if(o.zero){s+='<line x1="'+x(0)+'" x2="'+x(0)+'" y1="'+T0+'" y2="'+(H-30)+'" stroke="'+C.ink+'" stroke-width="1.4"/>';
+    if(o.leftLab)s+=txt(x(lo)+2,H-2,o.leftLab,{size:12.5,fill:C.same});if(o.rightLab)s+=txt(x(hi)-2,H-2,o.rightLab,{size:12.5,fill:'#A35600',anchor:'end'});}
+  else if(o.unit)s+=txt(W-R,H-2,o.unit,{size:12.5,anchor:'end'});
+  rows.forEach((r,i)=>{const cy=T0+22+i*58;
+    s+=txt(L-10,cy+5,r.name,{anchor:'end',size:14,fill:C.ink,weight:600})+'<line x1="'+L+'" x2="'+(W-R)+'" y1="'+cy+'" y2="'+cy+'" stroke="'+C.line+'"/>';
+    (r.dots||[]).forEach((v,j)=>{if(!fin(v))return;const jit=((j*37)%17-8)*1.6;s+='<circle cx="'+x(v)+'" cy="'+(cy+jit)+'" r="4" fill="'+(o.zero?(v>=0?C.across:C.same):C.same)+'" fill-opacity=".55"/>';});
+    if(fin(r.mean)){if(fin(r.lo))s+='<line x1="'+x(r.lo)+'" x2="'+x(r.hi)+'" y1="'+(cy+20)+'" y2="'+(cy+20)+'" stroke="'+C.ink+'" stroke-width="3"/>';
+      s+='<rect x="'+(x(r.mean)-2)+'" y="'+(cy+13)+'" width="4" height="14" fill="'+C.ink+'"/>';}
+    if(fin(r.ref))s+='<circle cx="'+x(r.ref)+'" cy="'+cy+'" r="7" fill="#fff" stroke="'+C.same+'" stroke-width="2.5" stroke-dasharray="3 2"/>';
+    if(fin(r.you))s+='<circle cx="'+x(r.you)+'" cy="'+cy+'" r="7" fill="'+C.ink+'"/>';});
+  el.innerHTML=svgWrap(W,H,s,title);}
+/* groups: [{name, a:{m,lo,hi}, b:{m,lo,hi}}]; labels: [labelA,labelB] */
+function pairChart(el,title,groups,yLabel,o={}){
+  const W=500,H=270,T0=34,B=40,L=56,R=10,pw=(W-L-R)/groups.length;
+  let vals=[];groups.forEach(g=>['a','b'].forEach(k=>{if(!g[k])return;['m','lo','hi'].forEach(q=>{if(fin(g[k][q]))vals.push(g[k][q]);});}));
+  if(!vals.length)vals=[0,1];
+  let lo=Math.min(...vals),hi=Math.max(...vals);const pad=(hi-lo)*.15||10;lo-=pad;hi+=pad;if(o.max!=null)hi=Math.min(hi,o.max);if(o.min!=null)lo=Math.max(lo,o.min);
+  const ticks=niceTicks(lo,hi,5);lo=Math.min(lo,ticks[0]);hi=Math.max(hi,ticks[ticks.length-1]);
+  const y=v=>T0+(hi-v)/(hi-lo)*(H-T0-B);
+  let s=txt(4,18,title,{size:15,fill:C.ink,weight:600});
+  if(o.labels){s+='<circle cx="'+(W-170)+'" cy="13" r="5" fill="'+C.same+'"/>'+txt(W-161,17,o.labels[0],{size:12});s+='<circle cx="'+(W-85)+'" cy="13" r="5" fill="'+C.across+'"/>'+txt(W-76,17,o.labels[1],{size:12});}
+  ticks.forEach(t=>{s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(t)+'" y2="'+y(t)+'" stroke="'+C.grid+'"/>'+txt(L-6,y(t)+4,t,{anchor:'end',size:12.5});});
+  s+='<text transform="translate(14,'+((T0+H-B)/2)+') rotate(-90)" font-size="12" fill="'+C.muted+'" text-anchor="middle" font-family="Segoe UI,system-ui,Arial,sans-serif">'+esc(yLabel)+'</text>';
+  groups.forEach((g,i)=>{const x0=L+i*pw,xa=x0+pw*.33,xb=x0+pw*.67;
+    s+=txt(x0+pw/2,H-14,g.name,{anchor:'middle',size:13.5,fill:C.ink,weight:600});
+    if(i>0)s+='<line x1="'+x0+'" x2="'+x0+'" y1="'+T0+'" y2="'+(H-B)+'" stroke="'+C.line+'"/>';
+    if(g.a&&g.b&&fin(g.a.m)&&fin(g.b.m))s+='<line x1="'+xa+'" x2="'+xb+'" y1="'+y(g.a.m)+'" y2="'+y(g.b.m)+'" stroke="'+C.ink+'" stroke-width="2"/>';
+    [['a',xa,C.same],['b',xb,C.across]].forEach(([k,xx,col])=>{const q=g[k];if(!q||!fin(q.m))return;
+      if(fin(q.lo))s+='<line x1="'+xx+'" x2="'+xx+'" y1="'+y(q.lo)+'" y2="'+y(q.hi)+'" stroke="'+col+'" stroke-width="3"/>';
+      s+='<circle cx="'+xx+'" cy="'+y(q.m)+'" r="7" fill="'+col+'"/>';});});
+  el.innerHTML=svgWrap(W,H,s,title);}
+/* ---------- Statistics ---------- */
+function tq(df){const tab=[12.706,4.303,3.182,2.776,2.571,2.447,2.365,2.306,2.262,2.228];if(df<=10)return tab[df-1];
+  const z=1.959964;return z+(z**3+z)/(4*df)+(5*z**5+16*z**3+3*z)/(96*df*df);}
+function summ(a){a=a.filter(fin);const n=a.length;if(!n)return {n:0,m:NaN,lo:NaN,hi:NaN};const m=a.reduce((s,v)=>s+v,0)/n;if(n<2)return {n,m,lo:NaN,hi:NaN};
+  const sd=Math.sqrt(a.reduce((s,v)=>s+(v-m)**2,0)/(n-1));const h=tq(n-1)*sd/Math.sqrt(n);return {n,m,lo:m-h,hi:m+h,sd};}
+const ci=(q,d=0)=>fin(q.m)?(q.m.toFixed(d)+(fin(q.lo)?' ['+q.lo.toFixed(d)+', '+q.hi.toFixed(d)+']':'')):'';
+const cid=(q,d=0)=>fin(q.m)?(fmt(q.m,d)+(fin(q.lo)?' ['+fmt(q.lo,d)+', '+fmt(q.hi,d)+']':'')):'';
+/* ---------- My results ---------- */
+const FIELDS=WK.fields;const KEYS=FIELDS.map(f=>f.k);
+const fbox=document.getElementById('fields');
+FIELDS.forEach(f=>{const l=document.createElement('label');const isMs=f.kind==='ms';
+  l.innerHTML='<span>'+esc(f.label)+'</span><input type="number" inputmode="decimal" data-k="'+f.k+'" '+(isMs?'min="50" max="5000" step="1" placeholder="ms"':'min="0" max="100" step="0.1" placeholder="%"')+'>';fbox.appendChild(l);});
+const inputs=[...fbox.querySelectorAll('input')];
+let fromTask=false;
+function readMine(){const d={};let bad=0;inputs.forEach(i=>{const v=i.value.trim();let n=v===''?NaN:+v;const isMs=FIELDS.find(f=>f.k===i.dataset.k).kind==='ms';
+  const ok=v===''||(isFinite(n)&&(isMs?(n>=50&&n<=5000):(n>=0&&n<=100)));i.classList.toggle('bad',!ok);if(!ok){bad++;n=NaN;}d[i.dataset.k]=n;});return {d,bad};}
+function updateMine(){const {d,bad}=readMine();WK.mine(d);
+  const vals=KEYS.map(k=>d[k]);const nF=vals.filter(fin).length;
+  const line=WK.code+','+document.getElementById('hand').value+','+vals.map(v=>fin(v)?String(+v.toFixed(1)):'').join(',')+','+(fromTask?'web':'manual');
+  const lb=document.getElementById('myLine'),cb=document.getElementById('copyLine');
+  if(nF>=2&&!bad){lb.textContent=line;cb.disabled=false;}else{lb.textContent=bad?'Check the highlighted cells: percentages must be 0 to 100 and times 50 to 5000 ms.':'Run the task (or type in your results) to create your line.';cb.disabled=true;}}
+inputs.forEach(i=>i.addEventListener('input',e=>{if(e.isTrusted)fromTask=false;updateMine();}));
+document.getElementById('hand').addEventListener('change',updateMine);
+document.getElementById('copyLine').addEventListener('click',async()=>{const t=document.getElementById('myLine').textContent,m=document.getElementById('copyMsg');
+  try{await navigator.clipboard.writeText(t);m.textContent='Copied. Paste it where your tutor asks.';}
+  catch(e){const r=document.createRange();r.selectNodeContents(document.getElementById('myLine'));const s=getSelection();s.removeAllRanges();s.addRange(r);m.textContent='Selected. Press Ctrl+C (or Cmd+C) to copy.';}});
+/* ---------- Downloads ---------- */
+function downloadText(name,text){const blob=new Blob([text],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);}
+const csvCell=v=>String(v==null?'':v).replace(/[,\n\r]/g,';');
+function toCSV(rows){const head=[];rows.forEach(r=>Object.keys(r).forEach(k=>{if(!head.includes(k))head.push(k);}));
+  return [head.join(',')].concat(rows.map(r=>head.map(h=>csvCell(r[h])).join(','))).join('\n');}
+/* ---------- Class results ---------- */
+let classRows=[],classTrials=[],simulated=false;
+function parseText(text){const rows=[];let skipped=0;const tag=WK.code+',';
+  text.split(/\r?\n/).forEach(line=>{const i=line.indexOf(tag);if(i<0)return;const parts=line.slice(i+tag.length).split(',').map(s=>s.trim());
+    const nums=parts.slice(1,1+KEYS.length).map(s=>s===''?NaN:+s);if(nums.length<KEYS.length||nums.filter(isFinite).length<2){skipped++;return;}
+    const r={hand:['R','L','B','NA'].includes(parts[0])?parts[0]:'NA',src:parts[1+KEYS.length]||''};
+    KEYS.forEach((k,j)=>{let v=nums[j];const f=FIELDS[j];if(isFinite(v)&&(f.kind==='ms'?(v<50||v>5000):(v<0||v>100)))v=NaN;r[k]=v;});rows.push(r);});
+  return {rows,skipped};}
+function parseTrialCSV(text){const lines=text.split(/\r?\n/).filter(l=>l.trim());if(!lines.length)return [];
+  const head=lines[0].split(',').map(h=>h.trim());return lines.slice(1).map(l=>{const v=l.split(',');const o={};head.forEach((h,i)=>o[h]=(v[i]||'').trim());return o;});}
+function setClass(rows,isSim,msg,trials){classRows=rows;simulated=isSim;classTrials=trials||[];
+  document.getElementById('downloadTrials').disabled=!classTrials.length;document.getElementById('download').disabled=!rows.length;
+  document.getElementById('simBanner').innerHTML=isSim?'<div class="banner">Simulated class for rehearsal. These are not real data: the values were invented to look plausible.</div>':'';
+  document.getElementById('classStatus').textContent=msg;document.getElementById('classBody').hidden=!rows.length;if(rows.length)WK.drawClass(rows);}
+document.getElementById('readPaste').addEventListener('click',()=>{const {rows,skipped}=parseText(document.getElementById('paste').value);
+  setClass(rows,false,rows.length?('Read '+rows.length+' student'+(rows.length===1?'':'s')+'.'+(skipped?' Skipped '+skipped+' incomplete line'+(skipped===1?'':'s')+'.':'')):'No results lines found. Each line should contain '+WK.code+', followed by the numbers.');});
+document.getElementById('fileIn').addEventListener('change',async e=>{const files=[...e.target.files];if(!files.length)return;e.target.value='';
+  let rows=[],trials=[],skipped=0,nTF=0;
+  for(const f of files){const text=await f.text();const first=text.split(/\r?\n/,1)[0]||'';
+    if(first.indexOf(WK.marker)>=0){const t=parseTrialCSV(text);if(t.length){nTF++;trials=trials.concat(t);}}else{const r=parseText(text);rows=rows.concat(r.rows);skipped+=r.skipped;}}
+  const byP={};trials.forEach(t=>{(byP[t.participant]=byP[t.participant]||[]).push(t);});
+  Object.values(byP).forEach(ts=>{const r=WK.summariseCSV(ts);r.hand=ts[0].handedness||'NA';r.src='web';rows.push(r);});
+  setClass(rows,false,'Loaded '+rows.length+' student'+(rows.length===1?'':'s')+' from '+files.length+' file'+(files.length===1?'':'s')+(nTF?' ('+nTF+' with trial-by-trial data)':'')+'.'+(skipped?' Skipped '+skipped+' incomplete line'+(skipped===1?'':'s')+'.':''),trials);});
+document.getElementById('clearClass').addEventListener('click',()=>{document.getElementById('paste').value='';setClass([],false,'No class data yet.');});
+document.getElementById('simulate').addEventListener('click',()=>{const rows=[];for(let i=0;i<25;i++){const r=WK.simulate();r.hand=Math.random()<.88?'R':'L';r.src='sim';rows.push(r);}setClass(rows,true,'Simulated class of 25 students.');});
+document.getElementById('download').addEventListener('click',()=>{const head=['code','handedness'].concat(KEYS).concat(['source']);
+  const lines=[head.join(',')].concat(classRows.map(r=>[WK.code,r.hand].concat(KEYS.map(k=>fin(r[k])?+(+r[k]).toFixed(1):'')).concat([r.src||'']).join(',')));
+  downloadText((simulated?WK.file+'_simulated_class.csv':WK.file+'_class_summary.csv'),lines.join('\n'));});
+document.getElementById('downloadTrials').addEventListener('click',()=>{if(classTrials.length)downloadText(WK.file+'_all_trials.csv',toCSV(classTrials));});
+function classTable(head,rows,note){return '<h3>Summary</h3><table class="summary"><thead><tr>'+head.map(h=>'<th>'+h+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('')+'</tbody></table><p class="note">'+(note||'An interval that sits entirely on one side of zero gives the class average a clear direction; an interval that spans zero means our data cannot tell which direction it goes.')+'</p>';}
+const col=k=>classRows.map(r=>r[k]);
+/* ---------- Task infrastructure ---------- */
+const RUN=document.getElementById('run'),RFIX=document.getElementById('runFix'),RITEMS=document.getElementById('runItems'),RMSG=document.getElementById('runMsg'),RFB=document.getElementById('runFb');
+let frameMs=1000/60,actx=null,taskData=null;
+function measureFrames(n=45){return new Promise(res=>{const ts=[];function f(t){ts.push(t);if(ts.length<n)requestAnimationFrame(f);else{const d=[];for(let i=1;i<ts.length;i++)d.push(ts[i]-ts[i-1]);d.sort((a,b)=>a-b);res(d[Math.floor(d.length/2)]);}}requestAnimationFrame(f);});}
+function tone(freq,dur,vol){if(!actx)return;try{const o=actx.createOscillator(),gn=actx.createGain(),t=actx.currentTime;o.frequency.value=freq;
+  gn.gain.setValueAtTime(vol,t);gn.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.connect(gn);gn.connect(actx.destination);o.start(t);o.stop(t+dur+0.02);}catch(e){}}
+let screenOpen=false;
+function showScreen(html,buttons=[['Continue','go']],opts={}){
+  RUN.classList.add('screenmode');RFIX.style.display='none';RITEMS.innerHTML='';RFB.textContent='';screenOpen=true;
+  RMSG.innerHTML=html+'<div class="row" style="margin-top:16px">'+buttons.map(([t,v],i)=>'<button class="btn'+(i?' ghost':'')+'" data-v="'+v+'">'+esc(t)+'</button>').join('')+'</div>';
+  RMSG.style.display='block';const inp=RMSG.querySelector('#runInput');
+  if(inp)setTimeout(()=>inp.focus(),50);else if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
+  return new Promise(res=>{let closed=false,timer=null;const done=v=>{if(closed)return;closed=true;clearInterval(timer);const val=inp?inp.value:null;RMSG.style.display='none';RUN.classList.remove('screenmode');RFIX.style.display='';screenOpen=false;
+      window.removeEventListener('keydown',k,true);window.removeEventListener('keyup',ku,true);res(inp?{v,value:val}:v);};
+    const swallow=e=>!inp&&(e.code==='Space'||/^Key[A-Z]$/.test(e.code)||/^Digit[0-9]$/.test(e.code));
+    const ku=e=>{if(swallow(e)){e.preventDefault();e.stopPropagation();}};window.addEventListener('keyup',ku,true);
+    const k=e=>{if(swallow(e)){e.preventDefault();e.stopPropagation();return;}if(e.key==='Enter'&&!(inp&&inp.tagName==='TEXTAREA'&&!e.ctrlKey)){e.preventDefault();done(buttons[0][1]);}};
+    setTimeout(()=>{if(!closed)window.addEventListener('keydown',k,true);},300);
+    if(opts.seconds){let left=opts.seconds;const cd=RMSG.querySelector('.countdown');timer=setInterval(()=>{left--;if(cd)cd.textContent=left+' s';if(left<=0)done(buttons[0][1]);},1000);}
+    RMSG.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>done(b.dataset.v)));});}
+/* One display event. html shown at frame-accurate onset after fixMs; hidden after stimMs (null = until the trial ends).
+   codes: accepted e.code values (null = no response); windowMs: maximum time from onset (null = until response). */
+function trial(o){
+  return new Promise(resolve=>{
+    RITEMS.innerHTML='';RFIX.style.display=o.fix===false?'none':'';
+    const t0=performance.now(),onsetTarget=t0+(o.fixMs||0);
+    let state='fix',onset=null,offset=null,resp=null,stamp=null,focusLost=false;
+    const key=e=>{if(!o.codes||!o.codes.includes(e.code))return;e.preventDefault();if(e.repeat)return;
+      if(state==='fix'||state==='drawn'||resp!==null)return;let ts=e.timeStamp;const now=performance.now();if(!(ts>t0-5000&&ts<=now+5))ts=now;stamp=ts;resp=e.code;};
+    const vis=()=>{if(document.hidden)focusLost=true;};
+    window.addEventListener('keydown',key);document.addEventListener('visibilitychange',vis);
+    function finish(now){window.removeEventListener('keydown',key);document.removeEventListener('visibilitychange',vis);RITEMS.innerHTML='';RFIX.style.display=o.fix===false?'none':'';if(offset===null)offset=now;
+      resolve({resp,rt:resp?stamp-onset:NaN,stimMs:offset-onset,focusLost,fullscreen:!!document.fullscreenElement});}
+    const endAt=()=>o.codes?(o.windowMs!=null?onset+o.windowMs:Infinity):onset+(o.stimMs||0)+(o.gapMs||0);
+    function frame(now){
+      if(state==='fix'){if(now>=onsetTarget-frameMs/2){RFIX.style.display=o.keepFix?'':'none';RITEMS.innerHTML=o.html;state='drawn';}requestAnimationFrame(frame);return;}
+      if(state==='drawn'){onset=now;state='on';requestAnimationFrame(frame);return;}
+      if(resp!==null||now>=endAt()-(o.codes?0:frameMs/2)){if(state==='on'){RITEMS.innerHTML='';offset=now;}finish(now);return;}
+      if(state==='on'&&o.stimMs!=null&&now>=onset+o.stimMs-frameMs*1.5){RITEMS.innerHTML='';state='hidden';requestAnimationFrame(frame);return;}
+      if(state==='hidden'){offset=now;state='resp';}
+      requestAnimationFrame(frame);}
+    requestAnimationFrame(frame);});}
+async function startRun(){
+  try{actx=new (window.AudioContext||window.webkitAudioContext)();await actx.resume();}catch(e){actx=null;}
+  RUN.classList.add('on');document.body.style.overflow='hidden';
+  try{if(RUN.requestFullscreen)await RUN.requestFullscreen();}catch(e){}
+  RFIX.style.display='none';frameMs=await measureFrames();return frameMs;}
+async function endRun(){try{if(document.fullscreenElement)await document.exitFullscreen();}catch(e){}
+  RUN.classList.remove('on');document.body.style.overflow='';RMSG.style.display='none';RITEMS.innerHTML='';}
+function newMeta(){return {participant:'P'+Math.random().toString(36).slice(2,8).toUpperCase(),date:new Date().toISOString().slice(0,10),hand:document.getElementById('taskHand').value,
+  n:+document.getElementById('taskN').value};}
+function baseRow(meta,extra){return Object.assign({participant:meta.participant,date:meta.date},extra,{frame_ms:meta.frameMs.toFixed(2),screen_w:window.screen.width,screen_h:window.screen.height,handedness:meta.hand});}
+function finishTask(rows,meta,quit){const st=document.getElementById('taskStatus');const nTest=rows.filter(r=>r.phase!=='practice').length;
+  if(!nTest){st.textContent=quit?'Task cancelled. Start again when you are ready.':'';return;}
+  taskData={rows,meta};const sm=WK.summarise(rows);
+  inputs.forEach(i=>{const v=sm[i.dataset.k];i.value=fin(v)?(+v.toFixed(1)):'';});
+  document.getElementById('hand').value=meta.hand;fromTask=true;updateMine();
+  document.getElementById('trialDl').hidden=false;document.getElementById('pCode').textContent='Your anonymous code: '+meta.participant;
+  document.getElementById('mineIntro').textContent=quit?'You stopped the task early, so some cells may be empty. Your numbers from the trials you completed are filled in below.':'Your results from the task are filled in below. Check them, then copy your results line and download your trial data.';
+  st.textContent=quit?'Task stopped early. Partial results are on the My results tab.':'Finished. Your results are on the My results tab.';
+  showTab(document.getElementById('t-mine'));window.scrollTo(0,0);}
+document.getElementById('taskStart').addEventListener('click',async()=>{if(RUN.classList.contains('on'))return;const meta=newMeta();meta.frameMs=await startRun();
+  let rows=[],quit=false;try{const out=await WK.run(meta);rows=out.rows;quit=out.quit;}catch(e){console.error(e);}
+  await endRun();finishTask(rows,meta,quit);});
+document.getElementById('dlMine').addEventListener('click',()=>{if(!taskData)return;taskData.saved=true;downloadText(WK.file+'_'+taskData.meta.participant+'_trials.csv',toCSV(taskData.rows));});
+window.addEventListener('beforeunload',e=>{if(taskData&&!taskData.saved){e.preventDefault();e.returnValue='';}});
+/* ---------- Quiz ---------- */
+const qRun=document.getElementById('quizRun'),qStart=document.getElementById('quizStart');
+let qs=null,qi=0,score=0,log=[],qTimer=null,qLeft=0;
+document.querySelectorAll('.pick').forEach(b=>b.addEventListener('click',()=>startQuiz(b.dataset.set)));
+function startQuiz(set){qs=WK.quiz[set].map(q=>({q:q.q,ref:q.ref,o:shuffle(q.o)}));qi=0;score=0;log=[];qStart.hidden=true;qRun.hidden=false;clearInterval(qTimer);
+  if(document.getElementById('useTimer').checked){qLeft=60*qs.length;qTimer=setInterval(()=>{qLeft--;const t=document.getElementById('qClock');if(t)t.textContent=clock();if(qLeft<=0){clearInterval(qTimer);endQuiz(true);}},1000);}else qLeft=0;showQ();}
+function clock(){return Math.floor(qLeft/60)+':'+String(qLeft%60).padStart(2,'0')+' left';}
+function showQ(){const q=qs[qi];
+  qRun.innerHTML='<div class="qcard"><div class="qmeta"><span>Question '+(qi+1)+' of '+qs.length+'</span><span id="qClock">'+(qLeft?clock():'')+'</span></div><div class="progress"><div style="width:'+(qi/qs.length*100)+'%"></div></div><p class="qtext">'+esc(q.q)+'</p>'+
+   q.o.map((o,i)=>'<button class="opt" data-i="'+i+'">'+esc(o[0])+'</button>').join('')+'<div class="row"><button class="btn" id="qCheck" disabled>Check answer</button></div><div id="qFb"></div></div>';
+  let sel=null;const opts=[...qRun.querySelectorAll('.opt')];
+  opts.forEach(b=>b.addEventListener('click',()=>{opts.forEach(x=>x.classList.remove('sel'));b.classList.add('sel');sel=+b.dataset.i;document.getElementById('qCheck').disabled=false;}));
+  document.getElementById('qCheck').addEventListener('click',()=>{if(sel==null)return;const chosen=q.o[sel],cix=q.o.findIndex(o=>o[1]===1),ok=chosen[1]===1;if(ok)score++;
+    log.push({chosen:chosen[0],correct:q.o[cix][0],ok,ref:q.ref,why:q.o[cix][2]});
+    opts.forEach((b,i)=>{b.disabled=true;if(i===cix)b.classList.add('right');else if(i===sel)b.classList.add('wrong');if(i===sel||i===cix){const w=document.createElement('div');w.className='why';w.textContent=q.o[i][2];b.appendChild(w);}});
+    document.getElementById('qCheck').remove();
+    document.getElementById('qFb').innerHTML='<p class="ref">Where to read more: '+esc(q.ref)+'</p><div class="row"><button class="btn" id="qNext">'+(qi<qs.length-1?'Next question':'See my results')+'</button></div>';
+    document.getElementById('qNext').addEventListener('click',()=>{qi++;if(qi<qs.length)showQ();else endQuiz(false);});document.getElementById('qNext').focus();});}
+function endQuiz(timedOut){clearInterval(qTimer);
+  let h='<div class="qcard"><h2>'+score+' of '+qs.length+' correct</h2>'+(timedOut?'<p class="note">Time ran out. Questions you did not reach are listed as not answered.</p>':'');
+  qs.forEach((q,i)=>{const L=log[i];
+    if(L)h+='<div class="review"><p><span class="'+(L.ok?'ok':'no')+'">'+(L.ok?'Correct':'Incorrect')+'</span> '+esc(q.q)+'</p>'+(L.ok?'':'<p>Your answer: '+esc(L.chosen)+'</p>')+'<p>Answer: '+esc(L.correct)+'. '+esc(L.why.replace(/^Correct\.\s*/,''))+'</p><p class="ref">Where to read more: '+esc(L.ref)+'</p></div>';
+    else{const c=q.o.find(o=>o[1]===1);h+='<div class="review"><p><span class="no">Not answered</span> '+esc(q.q)+'</p><p>Answer: '+esc(c[0])+'. '+esc(c[2].replace(/^Correct\.\s*/,''))+'</p></div>';}});
+  h+='<div class="row"><button class="btn" id="qAgain">Back to the quiz menu</button></div></div>';qRun.innerHTML=h;
+  document.getElementById('qAgain').addEventListener('click',()=>{qRun.hidden=true;qStart.hidden=false;});}
+/* ---------- Start ---------- */
+if(WK.init)WK.init();
+updateMine();
+
+})();
+</script>
+</body>
+</html>
