@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIOL3005 Cognition: Problem solving and creativity practice problems</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f4f0;
+    --surface: #ffffff;
+    --surface-alt: #f0ede8;
+    --border: #d6d0c6;
+    --text: #2c2a26;
+    --text-muted: #6b6660;
+    --accent: #b04a32;
+    --accent-light: #e8d5cf;
+    --accent-dark: #8c3926;
+    --easy: #3a7d5e;
+    --easy-bg: #e8f3ec;
+    --easy-border: #b0d6bf;
+    --medium: #c07b1a;
+    --medium-bg: #fdf3e0;
+    --medium-border: #e4c67a;
+    --hard: #9b2e4e;
+    --hard-bg: #f6e3ea;
+    --hard-border: #d4a0b3;
+    --hint-bg: #f0f4f8;
+    --hint-border: #a8bdd4;
+    --answer-bg: #f0ede8;
+    --answer-border: #c4bdb2;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  .header {
+    background: var(--text);
+    color: var(--bg);
+    padding: 28px 0 24px;
+    text-align: center;
+  }
+  .header-inner { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+  .header .unit-code { font-size: 0.8rem; letter-spacing: 2.5px; text-transform: uppercase; opacity: 0.6; margin-bottom: 6px; }
+  .header h1 { font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 1.75rem; line-height: 1.3; }
+  .header .subtitle { font-size: 0.9rem; opacity: 0.55; margin-top: 6px; }
+
+  .nav-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+  }
+  .nav-inner { max-width: 880px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-indicator { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+  .nav-indicator span { color: var(--text); font-weight: 700; }
+  .nav-buttons { display: flex; gap: 10px; }
+  .nav-btn {
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600;
+    padding: 8px 20px; border-radius: var(--radius); border: 1.5px solid var(--border);
+    background: var(--surface); color: var(--text); cursor: pointer; transition: all 0.15s ease;
+  }
+  .nav-btn:hover:not(:disabled) { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .main { max-width: 880px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  .scenario { display: none; }
+  .scenario.active { display: block; }
+
+  .scenario-label { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 8px; }
+  .scenario-title { font-family: 'Source Serif 4', serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 16px; line-height: 1.35; }
+
+  .scenario-stem {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 24px; margin-bottom: 28px; box-shadow: var(--shadow); font-size: 0.95rem;
+  }
+  .scenario-stem p { margin-bottom: 12px; }
+  .scenario-stem p:last-child { margin-bottom: 0; }
+  .scenario-stem ul { margin: 8px 0 12px 20px; }
+  .scenario-stem li { margin-bottom: 4px; }
+  .scenario-stem strong { font-weight: 600; }
+
+  .chart-container {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px 24px; margin-bottom: 32px; box-shadow: var(--shadow);
+  }
+  .chart-title { font-weight: 600; font-size: 0.9rem; text-align: center; margin-bottom: 12px; color: var(--text); }
+  .chart-wrapper { position: relative; max-width: 650px; margin: 0 auto; }
+
+  .questions-section { margin-top: 8px; }
+  .question-block { margin-bottom: 24px; }
+
+  .q-difficulty {
+    display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; padding: 3px 10px; border-radius: 4px; margin-bottom: 8px;
+  }
+  .q-difficulty.easy { background: var(--easy-bg); color: var(--easy); border: 1px solid var(--easy-border); }
+  .q-difficulty.medium { background: var(--medium-bg); color: var(--medium); border: 1px solid var(--medium-border); }
+  .q-difficulty.hard { background: var(--hard-bg); color: var(--hard); border: 1px solid var(--hard-border); }
+  .q-difficulty.applied { background: #eef3f8; color: #4a7faa; border: 1px solid #b3c8de; }
+
+  .q-text { font-family: 'Source Serif 4', serif; font-size: 1.05rem; font-weight: 400; line-height: 1.55; margin-bottom: 12px; }
+
+  .reveal-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+  .reveal-btn {
+    font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 600;
+    padding: 6px 16px; border-radius: 6px; border: 1.5px solid; cursor: pointer;
+    transition: all 0.15s ease; background: transparent;
+  }
+  .reveal-btn.hint-btn { border-color: var(--hint-border); color: #4a6b8a; }
+  .reveal-btn.hint-btn:hover { background: var(--hint-bg); }
+  .reveal-btn.answer-btn { border-color: var(--answer-border); color: var(--text-muted); }
+  .reveal-btn.answer-btn:hover { background: var(--answer-bg); }
+  .reveal-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+  .reveal-content {
+    overflow: hidden; max-height: 0; opacity: 0;
+    transition: max-height 0.35s ease, opacity 0.25s ease, margin 0.25s ease; margin-top: 0;
+  }
+  .reveal-content.open { max-height: 900px; opacity: 1; margin-top: 10px; }
+  .reveal-inner { padding: 16px 20px; border-radius: var(--radius); font-size: 0.9rem; line-height: 1.6; }
+  .reveal-inner.hint { background: var(--hint-bg); border: 1px solid var(--hint-border); color: #3a5a78; }
+  .reveal-inner.answer { background: var(--answer-bg); border: 1px solid var(--answer-border); color: var(--text); }
+  .reveal-inner p { margin-bottom: 8px; }
+  .reveal-inner p:last-child { margin-bottom: 0; }
+
+  .q-divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  .instructions {
+    background: var(--accent-light); border: 1px solid #d4b0a3; border-radius: var(--radius);
+    padding: 16px 20px; margin-bottom: 28px; font-size: 0.85rem; color: var(--accent-dark); line-height: 1.55;
+  }
+  .instructions strong { font-weight: 700; }
+
+  .applied-box {
+    background: #eef3f8; border: 1px solid #b3c8de; border-left: 4px solid #4a7faa;
+    border-radius: var(--radius); padding: 16px 20px; margin-bottom: 24px;
+    font-size: 0.88rem; line-height: 1.6; color: #2a4560;
+  }
+  .applied-box-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #4a7faa; margin-bottom: 6px; }
+  .applied-box p { margin-bottom: 8px; }
+  .applied-box p:last-child { margin-bottom: 0; }
+
+  .footer { text-align: center; padding: 24px; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 40px; }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 1.35rem; }
+    .scenario-title { font-size: 1.2rem; }
+    .nav-inner { flex-direction: column; gap: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="unit-code">BIOL3005 Cognition</div>
+    <h1>Practice problems: Problem solving and creativity</h1>
+    <div class="subtitle">Semester 1, 2026 · Curtin University · <a href="index.html" style="color:inherit;text-decoration:underline">All weeks</a></div>
+  </div>
+</div>
+
+<div class="nav-bar">
+  <div class="nav-inner">
+    <div class="nav-indicator">Scenario <span id="currentNum">1</span> of <span>2</span></div>
+    <div class="nav-buttons">
+      <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Back</button>
+      <button class="nav-btn" id="nextBtn" onclick="navigate(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="instructions">
+    <strong>How to use this page:</strong> Read each scenario and try to answer the questions on your own first, as you would in an exam. If you get stuck, click <em>Show Hint</em> for guidance. Use <em>Show Answer</em> only after you have given the question a genuine attempt.
+  </div>
+
+  <!-- ==================== SCENARIO 1 ==================== -->
+  <div class="scenario active" id="scenario1">
+    <div class="scenario-label">Scenario 1</div>
+    <div class="scenario-title">Incubation, Mental Set, and Insight</div>
+
+    <div class="applied-box">
+      <div class="applied-box-label">Why this matters for psychologists</div>
+      <p>Understanding what blocks creative problem solving is directly relevant to clinical and educational practice. Cognitive rigidity (including mental set and functional fixedness) has been associated with several psychological conditions, including obsessive-compulsive disorder, autism spectrum conditions, and frontal lobe injuries. Psychologists working in rehabilitation, educational settings, or organisational consulting benefit from knowing how cognitive barriers to insight operate and what conditions facilitate overcoming them.</p>
+    </div>
+
+    <div class="scenario-stem">
+      <p>Researchers investigated whether an incubation period helps people solve insight problems more than analytic problems. Participants attempted two types of problems:</p>
+      <ul>
+        <li><strong>Insight problems:</strong> Problems where the solution requires a sudden restructuring of the problem representation (e.g., the classic candle problem, matchstick arithmetic problems).</li>
+        <li><strong>Analytic problems:</strong> Problems that can be solved through a systematic, step-by-step approach (e.g., multi-step arithmetic, logic syllogisms).</li>
+      </ul>
+      <p>Before beginning, all participants completed a <strong>training phase</strong> designed to induce a mental set: they practised solving a series of problems using a particular strategy that worked well for those practice items but was unhelpful (or actively misleading) for the subsequent test problems.</p>
+      <p>Participants were then randomly assigned to one of three conditions:</p>
+      <ul>
+        <li><strong>No break:</strong> Worked continuously on the test problems for 20 minutes.</li>
+        <li><strong>Rest break:</strong> Worked for 5 minutes, then sat quietly for 10 minutes (doing nothing), then resumed for 5 minutes.</li>
+        <li><strong>Unrelated task break:</strong> Worked for 5 minutes, then completed an unrelated visual search task for 10 minutes, then resumed for 5 minutes.</li>
+      </ul>
+      <p>The graph below shows the mean percentage of test problems solved correctly for each problem type and break condition.</p>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Mean Percentage of Problems Solved by Problem Type and Break Condition</div>
+      <div class="chart-wrapper">
+        <canvas id="chart1"></canvas>
+      </div>
+    </div>
+
+    <div class="questions-section">
+
+      <!-- Easy -->
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">a) Define mental set and functional fixedness. Why might the training phase in this experiment have made the test problems harder to solve?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q1hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q1ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q1hint">
+          <div class="reveal-inner hint">
+            <p>Mental set is about being stuck on a particular strategy; functional fixedness is about being stuck on a particular use for an object. Think about Luchins' water jug problem for mental set, and Duncker's candle problem for functional fixedness. How does repeated practice with one approach create a barrier?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q1ans">
+          <div class="reveal-inner answer">
+            <p><strong>Mental set</strong> refers to a tendency to approach a problem using a strategy that has worked in the past, even when that strategy is no longer appropriate. It is a form of cognitive rigidity where prior experience biases the solver towards a familiar but unhelpful approach.</p>
+            <p><strong>Functional fixedness</strong> is a specific type of mental set in which a person can only see an object as serving its conventional function, preventing them from using it in a novel way to solve a problem (e.g., not seeing that a box of tacks can serve as a candle shelf).</p>
+            <p>The training phase would have made the test problems harder because it <strong>strengthened a particular problem-solving strategy</strong> through repeated successful use. When participants then encountered test problems that required a different approach, they would be biased towards applying the now-familiar but inappropriate strategy, making them less likely to discover the correct solution.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Easy -->
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">b) Based on the graph, describe the overall pattern of results. Which condition led to the highest solution rates for insight problems? Was the same pattern observed for analytic problems?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q2hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q2ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q2hint">
+          <div class="reveal-inner hint">
+            <p>Compare the three break conditions for insight problems first. Then look at whether the same ordering holds for analytic problems. Is there an interaction between problem type and break condition?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q2ans">
+          <div class="reveal-inner answer">
+            <p>For <strong>insight problems</strong>, the unrelated task break condition produced the highest solution rate, followed by the rest break, with the no break condition showing the lowest performance. This suggests that a period of incubation, particularly one involving an engaging distractor task, substantially helped participants solve insight problems.</p>
+            <p>For <strong>analytic problems</strong>, the pattern was quite different: solution rates were similar across all three conditions, with little benefit from either type of break. This creates an <strong>interaction</strong> between problem type and break condition, where incubation selectively benefits insight problems but not analytic ones.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Medium -->
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">c) Explain why incubation may have selectively benefited insight problems but not analytic problems. In your answer, refer to the role of mental set and the concept of representational restructuring.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q3hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q3ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q3hint">
+          <div class="reveal-inner hint">
+            <p>Think about what makes insight problems different from analytic ones. Insight problems require you to break free from an initial misleading representation. How might stepping away from the problem allow the mental set to weaken? And why would analytic problems, which are solved incrementally, not benefit in the same way?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q3ans">
+          <div class="reveal-inner answer">
+            <p>Insight problems require the solver to abandon an initial, misleading representation of the problem and restructure it in a fundamentally different way. The training phase in this experiment would have strengthened a particular mental set that actively interfered with this restructuring process. During an incubation period, the solver disengages from the problem, which may allow the <strong>inappropriate mental set to decay</strong>. When they return, they are less locked into the unhelpful strategy and more likely to approach the problem from a fresh perspective, facilitating the representational change needed for insight.</p>
+            <p>Analytic problems, by contrast, do not require this kind of restructuring. They are solved through <strong>incremental, step-by-step processing</strong> within a well-defined problem space. Taking a break does not help because progress on these problems depends on sustained, systematic effort rather than on breaking free from a misleading initial representation. The mental set induced by training may have been less relevant to analytic problems in the first place, or its effect does not diminish with a break because the problems do not require a shift in perspective.</p>
+            <p>The finding that the unrelated task break was more effective than the rest break further supports the idea that <strong>active distraction</strong> promotes the decay of the unhelpful mental set more effectively than simply doing nothing, perhaps because the engaging distractor task prevents the solver from continuing to ruminate on the incorrect approach during the break.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Hard -->
+      <div class="question-block">
+        <div class="q-difficulty hard">Hard</div>
+        <div class="q-text">d) Some researchers have proposed that incubation benefits arise not from the passive decay of mental set, but from <strong>unconscious spreading activation</strong> during the break period, where the mind continues to work on the problem outside of awareness. How would this alternative account explain the data? Could you design a modification to the experiment that might help distinguish between the "set decay" and "unconscious work" explanations?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q4hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q4ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q4hint">
+          <div class="reveal-inner hint">
+            <p>The unconscious work hypothesis suggests that relevant associations continue to be activated during the break. If this is correct, the break should benefit even problems where no mental set was induced. For a design modification, think about what would happen if you had a condition with no training phase (no mental set), so that any incubation benefit could not be attributed to set decay. If incubation still helps insight problems in that condition, what would that tell you?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q4ans">
+          <div class="reveal-inner answer">
+            <p>The <strong>unconscious work hypothesis</strong> proposes that during the incubation period, even though the solver is not consciously thinking about the problem, relevant semantic associations continue to spread through memory. This spreading activation might eventually reach the concept needed for the solution, so that when the solver returns, the critical connection is more accessible. This account would explain the benefit of the unrelated task break by arguing that the distractor task occupies conscious attention, leaving unconscious associative processes free to operate on the unsolved problem.</p>
+            <p>However, this account has difficulty explaining why incubation selectively benefits insight problems but not analytic problems. If unconscious processing were the key mechanism, one might expect at least some benefit for analytic problems too, since they also involve accessing relevant knowledge during solution.</p>
+            <p>To distinguish the two accounts, one could add a <strong>no-training condition</strong>: a group of participants who attempt insight and analytic problems without the initial mental set induction, with and without an incubation break. If the incubation benefit for insight problems <strong>disappears</strong> when no mental set has been induced, this would support the set decay account (the break only helps because there is a set to decay). If the incubation benefit <strong>persists</strong> even without prior set induction, this would support the unconscious work account (the break helps through continued processing, independent of any set). A mixed result, where incubation helps more with prior set induction but still helps somewhat without it, would suggest that both mechanisms contribute.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Hard -->
+      <div class="question-block">
+        <div class="q-difficulty hard">Hard</div>
+        <div class="q-text">e) Recent neuroimaging research has linked insight problem solving to activity in the <strong>default mode network (DMN)</strong>, a set of brain regions that are typically active during rest and mind-wandering but deactivated during focused external tasks. How might DMN involvement help explain why a rest break (but not continuous work) facilitates insight? Does the finding that the unrelated task break was even more effective than the rest break pose a challenge for a simple DMN-based account? Discuss.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q5hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q5ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q5hint">
+          <div class="reveal-inner hint">
+            <p>The DMN is associated with internally directed thought, including spontaneous mental simulation and the recombination of ideas. During rest, the DMN is active, which could support the kind of loose, associative processing that leads to insight. But if the DMN is suppressed during an engaging external task (like the visual search), how would you explain the even greater benefit of the unrelated task break? Consider whether the critical factor is what happens <em>during</em> the break or what happens when the solver <em>returns</em> to the problem.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q5ans">
+          <div class="reveal-inner answer">
+            <p>The DMN is associated with <strong>internally directed cognition</strong>, including mind-wandering, spontaneous thought, and the recombination of disparate ideas. These are precisely the processes that might support creative restructuring: during rest, the DMN could facilitate loose, associative processing that allows the solver to stumble upon connections that were inaccessible during focused, goal-directed problem solving. This provides a plausible neural mechanism for why a rest break facilitates insight.</p>
+            <p>However, the finding that the <strong>unrelated task break was more effective than the rest break</strong> does pose a challenge for a straightforward DMN account. If DMN-mediated mind-wandering were the primary mechanism, the rest break should be the most beneficial condition, because the DMN is most active during unoccupied rest. An engaging external task like visual search would be expected to suppress DMN activity, reducing opportunities for spontaneous associative processing.</p>
+            <p>One way to reconcile this is to recognise that the benefit of incubation may not depend on a single mechanism. The unrelated task break may be effective for a <strong>different reason</strong>: it prevents the solver from <strong>consciously rehearsing the unhelpful strategy</strong> during the break. During quiet rest, participants may continue to think about the problem and inadvertently reinforce the mental set. An engaging distractor task blocks this conscious rumination, allowing the mental set to decay more effectively. When the solver returns, they are in a better position to approach the problem freshly, and DMN-supported creative processing may then operate more effectively at that point. In this view, the unrelated task break works not because of what happens during the break (which may actually suppress DMN), but because of what it <strong>prevents</strong> (continued fixation on the wrong approach).</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Applied -->
+      <div class="question-block">
+        <div class="q-difficulty applied">Applied</div>
+        <div class="q-text">f) An occupational therapist is working with a patient recovering from a frontal lobe injury. The patient can follow step-by-step instructions and solve routine daily tasks (e.g., making a cup of tea using a standard procedure) but becomes completely stuck when an unexpected problem arises (e.g., the kettle is broken and they need to find an alternative way to heat water). The therapist observes that the patient repeatedly tries the same failed approach rather than considering alternatives. Drawing on what you know about mental set, insight, and the neural basis of flexible problem solving, explain the patient's difficulty. How might the therapist use principles from the incubation literature to support the patient's problem-solving rehabilitation?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q6hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q6ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q6hint">
+          <div class="reveal-inner hint">
+            <p>The frontal lobes, and the prefrontal cortex in particular, are critical for cognitive flexibility, the ability to shift strategies when one approach fails. Think about what happens when this capacity is damaged: the patient may be unable to inhibit a dominant but unsuccessful strategy (perseveration). How does this relate to mental set? And how might structured breaks or strategy-shifting prompts, inspired by the incubation literature, help?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q6ans">
+          <div class="reveal-inner answer">
+            <p>The patient's behaviour is consistent with an <strong>exaggerated form of mental set caused by frontal lobe damage</strong>. The prefrontal cortex plays a critical role in <strong>cognitive flexibility</strong>: the ability to monitor whether a current strategy is working, inhibit that strategy when it fails, and shift to an alternative approach. Following frontal lobe injury, patients often show <strong>perseveration</strong>, repeatedly applying the same response even when it is clearly ineffective. This is functionally similar to mental set, but arising from neurological damage rather than from the normal effects of prior experience.</p>
+            <p>The patient can handle routine, well-learned tasks (making tea with a standard procedure) because these rely on <strong>established schemas</strong> that can be executed without requiring flexible restructuring. When a novel problem arises (the kettle is broken), the patient needs to abandon the familiar approach and generate an alternative, which requires exactly the kind of representational restructuring that their injury has compromised.</p>
+            <p>Drawing on the incubation literature, the therapist could implement several strategies. When the patient becomes stuck in a repeated unsuccessful approach, the therapist could introduce a <strong>structured break</strong>, redirecting the patient to an unrelated activity for a few minutes before returning to the problem. This may help reduce the activation of the dominant but unhelpful strategy, mirroring the mechanism by which incubation benefits insight problem solving. The therapist could also use <strong>explicit prompts to consider alternatives</strong> (e.g., "Can you think of a completely different way to do this?"), which externally provides the cognitive flexibility that the patient's frontal lobes can no longer generate spontaneously. Over time, these external prompts could be gradually faded as the patient practises the strategy-shifting process.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== SCENARIO 2 ==================== -->
+  <div class="scenario" id="scenario2">
+    <div class="scenario-label">Scenario 2</div>
+    <div class="scenario-title">Analogical Transfer, Comparison, and the Problem Space</div>
+
+    <div class="applied-box">
+      <div class="applied-box-label">Why this matters for psychologists</div>
+      <p>Analogical reasoning is a core mechanism in how people learn and transfer knowledge to new situations. In educational psychology, understanding why students often fail to transfer solutions from textbook examples to novel problems has major implications for curriculum design. In clinical training, novice psychologists must learn to recognise structural similarities between cases that look superficially different. Research on expertise and analogy helps explain why some practitioners develop flexible clinical reasoning while others remain rigidly bound to familiar presentations.</p>
+    </div>
+
+    <div class="scenario-stem">
+      <p>Researchers investigated what helps people <strong>notice</strong> an analogy and use <strong>analogical transfer</strong> influences the ability to use <strong>analogical transfer</strong> to solve novel problems. The study used Duncker's radiation problem: a patient has a tumour that can be destroyed by a high-intensity ray, but a high-intensity ray will also destroy the healthy tissue it passes through. The solution is to use multiple low-intensity rays from different directions that converge on the tumour.</p>
+      <p>Before attempting the radiation problem, participants read a story about a military general who needed to capture a fortress by dividing his army into small groups and attacking from multiple directions simultaneously (the "General" analogy). The structural correspondence between the two problems was not pointed out.</p>
+      <p>Three groups were tested:</p>
+      <ul>
+        <li><strong>Novices (no hint):</strong> Undergraduate students who read the General story but received no hint that it was relevant to the radiation problem.</li>
+        <li><strong>Novices (hint):</strong> Undergraduates who read the General story and were told "think about the story you just read" before attempting the radiation problem.</li>
+        <li><strong>Novices (two stories):</strong> Undergraduates who read the General story and a second analogous story (a fire chief who puts out a blaze with many small hoses aimed from different directions), and were asked to write down what the two stories had in common. They received no hint about the radiation problem.</li>
+      </ul>
+      <p>Additionally, to explore how each group searched through the problem space, the researchers recorded the <strong>number of distinct solution strategies</strong> each participant attempted before arriving at a correct answer (or before the time limit expired). The two plots below show (1) the percentage of participants who solved the radiation problem, and (2) the mean number of strategies attempted.</p>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Percentage of Participants Solving the Radiation Problem</div>
+      <div class="chart-wrapper">
+        <canvas id="chart2a"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Mean Number of Distinct Strategies Attempted</div>
+      <div class="chart-wrapper">
+        <canvas id="chart2b"></canvas>
+      </div>
+    </div>
+
+    <div class="questions-section">
+
+      <!-- Easy -->
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">a) What is analogical transfer? Why is the General story considered a structural analogue of the radiation problem, even though the two problems involve very different surface features?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q1hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q1ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q1hint">
+          <div class="reveal-inner hint">
+            <p>Think about the distinction between surface features (armies vs. rays, fortress vs. tumour) and structural features (the underlying relational pattern: divide a large force into smaller ones and converge from multiple directions). Analogical transfer is about mapping the structure, not the surface.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q1ans">
+          <div class="reveal-inner answer">
+            <p><strong>Analogical transfer</strong> is the process of using the solution structure from a previously solved or known problem (the source) to help solve a new problem (the target). It requires recognising that two problems share a common <strong>relational structure</strong>, even if they differ in their surface details.</p>
+            <p>The General story and the radiation problem share the same deep structure: a single large force (army / high-intensity ray) cannot be used directly because it would cause collateral damage (destroying roads / destroying healthy tissue), so the solution is to divide the force into smaller units (small groups of soldiers / low-intensity rays) and converge them simultaneously on the target (fortress / tumour). Despite the completely different surface features (military vs. medical), the underlying problem and solution logic are the same.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Easy -->
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">b) Based on the first graph, compare the solution rates across the three groups. What do the results suggest about where analogical transfer usually breaks down, and about two ways of overcoming that?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q2hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q2ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q2hint">
+          <div class="reveal-inner hint">
+            <p>Which group solved the problem least often? What changed when novices were told the story was relevant? The two-story group got no hint at all: what did comparing the stories give them?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q2ans">
+          <div class="reveal-inner answer">
+            <p><strong>One story, no hint</strong> produced the lowest solution rate: most participants failed to notice that the General story was relevant. <strong>One story, hint</strong> produced the highest rate: once told the story might help, most could map its structure onto the radiation problem. <strong>Two stories compared</strong> roughly doubled the unhinted rate without any hint, falling between the other two groups.</p>
+            <p>The pattern locates the main barrier at <strong>noticing</strong>, the first of Gick and Holyoak’s three steps (noticing, mapping, applying). Participants who read one story had the right knowledge but did not retrieve it at the right moment; the hint fixed that directly. Comparing two stories fixed it indirectly: comparison forces out the shared deep structure (a problem schema, "divide and converge") and strips away surface details, so the schema is more likely to be retrieved by a new problem with different surface features. These figures follow the pattern reported in the textbook (§10.7).</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Medium -->
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">c) Using Newell and Simon’s concept of a <strong>problem space</strong>, interpret the second graph. How do the three groups differ in the number of strategies they attempted, and what does this tell us about how each group searched the problem space?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q3hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q3ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q3hint">
+          <div class="reveal-inner hint">
+            <p>The problem space is the set of all possible states from the initial state to the goal state, and the operators (strategies) that move you between them. A solver who tries many strategies is searching broadly through the space. Think about whether more strategies attempted is a sign of efficiency or inefficiency, and how expertise might change the search pattern.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q3ans">
+          <div class="reveal-inner answer">
+            <p>In Newell and Simon’s framework, the problem space consists of all possible states of the problem, from the initial state to the goal state, connected by operators that transform one state into another. Problem solving involves searching this space for a path from start to goal.</p>
+            <p>Participants with one story and no hint attempted the most strategies: a broad, relatively undirected search, without a clear sense of which part of the space was promising. Those given a hint attempted the fewest: knowing that the story was relevant pointed them straight at convergence-type solutions.</p>
+            <p>The two-story group sat in between. Comparing the stories gave many of them a schema that narrowed the search towards convergence solutions, but because nobody told them to use it, some still explored other approaches first. The general lesson is that a good representation of the problem, here supplied by an analogy, does much of the work that exhaustive search cannot.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Medium -->
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">d) Experts tend to sort problems by <strong>deep structure</strong>, while novices sort them by surface features (Chi, Feltovich & Glaser, 1981). How does this distinction help explain why the two-story group noticed the analogy more often than the one-story group, even without a hint?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q4hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q4ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q4hint">
+          <div class="reveal-inner hint">
+            <p>If you encode the General story as "a military story about armies", will a medical problem about tumours remind you of it? Now think about what writing down what two very different stories have in common does to how you encode them.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q4ans">
+          <div class="reveal-inner answer">
+            <p>People who read one story tend to encode it by its surface features: "a military story about a general and a fortress". The radiation problem is encountered as "a medical problem about a tumour". The surfaces share nothing, so the story is not retrieved. The analogy is <strong>available</strong> in memory but not <strong>accessible</strong>, because the cues generated by the new problem do not match the way the source was stored.</p>
+            <p>Comparing two stories with different surfaces but the same structure pushes encoding towards the deep structure: what the general and the fire chief have in common is not armies or fires but "divide a large force into small ones that converge on the target". That is the kind of structural encoding experts use spontaneously in their own domain. When the radiation problem arrives, its structure now matches the stored schema, so retrieval is more likely. The textbook makes the same connection: expert sorting by deep structure and comparison-driven problem schemas are the same phenomenon.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Hard -->
+      <div class="question-block">
+        <div class="q-difficulty hard">Hard</div>
+        <div class="q-text">e) Means-ends analysis is a general problem-solving heuristic in which the solver identifies the difference between the current state and the goal state, then selects an operator to reduce that difference. Could a solver use means-ends analysis to arrive at the convergence solution for the radiation problem <em>without</em> the General analogy? What are the limitations of means-ends analysis for insight problems, and how does analogical transfer provide something that means-ends analysis alone cannot?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q5hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q5ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q5hint">
+          <div class="reveal-inner hint">
+            <p>Means-ends analysis works well when the goal is clear and the operators are known. But the radiation problem is difficult precisely because the key operator (divide the ray into multiple low-intensity beams) is not obvious. Means-ends analysis can tell you "the tumour needs to be destroyed without harming tissue" but cannot easily generate a novel solution method. How does the analogy provide the missing operator?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q5ans">
+          <div class="reveal-inner answer">
+            <p>In principle, a solver could attempt means-ends analysis on the radiation problem. The initial state is "tumour present, healthy tissue intact"; the goal state is "tumour destroyed, healthy tissue intact." The solver could identify the key difference (the tumour is still present) and search for an operator to reduce it (apply radiation). However, the obvious operator (a high-intensity ray) creates a new problem (tissue damage), and the solver would then need to find an operator that delivers sufficient radiation without this side effect.</p>
+            <p>The difficulty is that means-ends analysis is a <strong>search within a defined problem space</strong>, and it can only select among operators that the solver already has available. The convergence solution (multiple low-intensity rays from different directions) is an <strong>unusual operator that most people do not spontaneously generate</strong>, because it requires restructuring the problem representation: thinking of the ray not as a single entity but as something that can be divided and recombined. Means-ends analysis has no mechanism for generating novel operators; it can only evaluate and apply known ones.</p>
+            <p>Analogical transfer provides precisely what means-ends analysis lacks: a <strong>source of new operators</strong>. The General story demonstrates the "divide and converge" strategy in a concrete, understandable context. By mapping this structure onto the radiation problem, the solver gains access to an operator they would not have generated through incremental search alone. Analogy thus expands the effective problem space by importing solution methods from a different domain.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Applied -->
+      <div class="question-block">
+        <div class="q-difficulty applied">Applied</div>
+        <div class="q-text">f) A clinical psychology programme director notices that trainees can apply therapeutic techniques effectively when a client's presentation closely matches their textbook training cases, but struggle when a client presents with an unusual combination of symptoms that does not match any familiar example. Drawing on what you know about expertise, analogical transfer, and the distinction between surface and structural encoding, explain why this difficulty arises. What training strategies, informed by the problem-solving literature, could the programme director implement to help trainees develop more flexible clinical reasoning?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q6hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q6ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q6hint">
+          <div class="reveal-inner hint">
+            <p>The trainees are behaving like novices in the analogy literature: they have encoded training cases by surface features (specific symptom presentations) rather than by deep structural features (underlying therapeutic principles or mechanisms). When the surface features of a new case don't match a stored example, they cannot retrieve the relevant knowledge. Think about what research suggests would help: exposure to structurally similar but surface-different cases, explicit prompts to identify the underlying structure of each case, and comparison exercises.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q6ans">
+          <div class="reveal-inner answer">
+            <p>The trainees' difficulty mirrors the classic finding from the analogical transfer literature: <strong>novices encode problems by surface features</strong>. The trainees have learned therapeutic techniques in the context of specific, prototypical case presentations (e.g., "a client with panic attacks who avoids shopping centres"). When a new client presents with an unfamiliar surface profile (e.g., panic-like symptoms triggered by an unusual situation), the trainee fails to retrieve the relevant therapeutic framework because the surface cues do not match their stored examples.</p>
+            <p>Several training strategies informed by the problem-solving literature could help develop more flexible clinical reasoning:</p>
+            <p><strong>Varied case exposure:</strong> Presenting trainees with multiple cases that share the same underlying therapeutic structure (e.g., exposure-based treatment rationale) but differ widely in surface presentation. Research on analogical reasoning shows that comparing two or more structurally similar examples helps learners extract the <strong>common relational structure</strong> and encode it abstractly, making it easier to transfer to novel cases.</p>
+            <p><strong>Explicit structural labelling:</strong> Training supervisors could prompt trainees to identify the <strong>underlying mechanism or principle</strong> in each case (e.g., "What is the maintaining factor here?" rather than "What does this look like?"). This encourages encoding by deep features rather than surface features, paralleling how experts spontaneously categorise problems.</p>
+            <p><strong>Comparison exercises:</strong> Asking trainees to compare two superficially different but structurally similar cases side by side has been shown to promote structural alignment and improve subsequent transfer. Over time, this shifts the trainee's default encoding from surface-based to structure-based, which is a hallmark of developing expertise.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    BIOL3005 Cognition · Curtin University · School of Population Health
+  </div>
+</div>
+
+<script>
+// ============ Navigation ============
+let currentScenario = 1;
+const totalScenarios = 2;
+
+function navigate(dir) {
+  const newScenario = currentScenario + dir;
+  if (newScenario < 1 || newScenario > totalScenarios) return;
+  document.getElementById('scenario' + currentScenario).classList.remove('active');
+  currentScenario = newScenario;
+  document.getElementById('scenario' + currentScenario).classList.add('active');
+  document.getElementById('currentNum').textContent = currentScenario;
+  document.getElementById('prevBtn').disabled = currentScenario === 1;
+  document.getElementById('nextBtn').disabled = currentScenario === totalScenarios;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============ Reveal Toggle ============
+function toggle(btn, targetId) {
+  const content = document.getElementById(targetId);
+  const isOpen = content.classList.contains('open');
+  if (isOpen) {
+    content.classList.remove('open');
+    btn.classList.remove('active');
+    btn.textContent = btn.textContent.replace('Hide', 'Show');
+  } else {
+    content.classList.add('open');
+    btn.classList.add('active');
+    btn.textContent = btn.textContent.replace('Show', 'Hide');
+  }
+}
+
+// ============ Charts ============
+const chartFont = { family: "'DM Sans', sans-serif", size: 12 };
+
+// --- Chart 1: Incubation × Problem Type ---
+new Chart(document.getElementById('chart1'), {
+  type: 'bar',
+  data: {
+    labels: ['Insight Problems', 'Analytic Problems'],
+    datasets: [
+      {
+        label: 'No Break',
+        data: [28, 55],
+        backgroundColor: '#b04a32',
+        borderColor: '#8c3926',
+        borderWidth: 1.5,
+        borderRadius: 4,
+        barPercentage: 0.7,
+        categoryPercentage: 0.7
+      },
+      {
+        label: 'Rest Break',
+        data: [45, 58],
+        backgroundColor: '#c07b1a',
+        borderColor: '#9a6215',
+        borderWidth: 1.5,
+        borderRadius: 4,
+        barPercentage: 0.7,
+        categoryPercentage: 0.7
+      },
+      {
+        label: 'Unrelated Task Break',
+        data: [62, 54],
+        backgroundColor: '#3a7d5e',
+        borderColor: '#2a5e46',
+        borderWidth: 1.5,
+        borderRadius: 4,
+        barPercentage: 0.7,
+        categoryPercentage: 0.7
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { font: chartFont, padding: 16, usePointStyle: true, pointStyle: 'rectRounded' }
+      },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}%` } }
+    },
+    scales: {
+      x: {
+        title: { display: true, text: 'Problem Type', font: { ...chartFont, weight: '600' } },
+        ticks: { font: chartFont },
+        grid: { display: false }
+      },
+      y: {
+        title: { display: true, text: 'Mean % Problems Solved', font: { ...chartFont, weight: '600' } },
+        min: 0, max: 100,
+        ticks: { font: chartFont, stepSize: 20, callback: v => v + '%' },
+        grid: { color: '#e8e4de' }
+      }
+    }
+  }
+});
+
+// --- Chart 2a: Solution rates for radiation problem ---
+new Chart(document.getElementById('chart2a'), {
+  type: 'bar',
+  data: {
+    labels: ['One story, no hint', 'One story, hint', 'Two stories compared'],
+    datasets: [
+      {
+        label: '% Solved',
+        data: [25, 72, 52],
+        backgroundColor: ['#b04a32', '#c07b1a', '#3a7d5e'],
+        borderColor: ['#8c3926', '#9a6215', '#2a5e46'],
+        borderWidth: 1.5,
+        borderRadius: 4,
+        barPercentage: 0.55,
+        categoryPercentage: 0.7
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => `${ctx.parsed.y}% solved` } }
+    },
+    scales: {
+      x: {
+        title: { display: true, text: 'Group', font: { ...chartFont, weight: '600' } },
+        ticks: { font: { ...chartFont, size: 11 }, maxRotation: 0 },
+        grid: { display: false }
+      },
+      y: {
+        title: { display: true, text: '% Participants Who Solved the Problem', font: { ...chartFont, weight: '600' } },
+        min: 0, max: 100,
+        ticks: { font: chartFont, stepSize: 20, callback: v => v + '%' },
+        grid: { color: '#e8e4de' }
+      }
+    }
+  }
+});
+
+// --- Chart 2b: Number of strategies attempted ---
+new Chart(document.getElementById('chart2b'), {
+  type: 'bar',
+  data: {
+    labels: ['One story, no hint', 'One story, hint', 'Two stories compared'],
+    datasets: [
+      {
+        label: 'Strategies Attempted',
+        data: [5.8, 3.2, 3.6],
+        backgroundColor: ['#b04a32', '#c07b1a', '#3a7d5e'],
+        borderColor: ['#8c3926', '#9a6215', '#2a5e46'],
+        borderWidth: 1.5,
+        borderRadius: 4,
+        barPercentage: 0.55,
+        categoryPercentage: 0.7
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => `${ctx.parsed.y} strategies` } }
+    },
+    scales: {
+      x: {
+        title: { display: true, text: 'Group', font: { ...chartFont, weight: '600' } },
+        ticks: { font: { ...chartFont, size: 11 }, maxRotation: 0 },
+        grid: { display: false }
+      },
+      y: {
+        title: { display: true, text: 'Mean Number of Strategies Attempted', font: { ...chartFont, weight: '600' } },
+        min: 0, max: 8,
+        ticks: { font: chartFont, stepSize: 1 },
+        grid: { color: '#e8e4de' }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>

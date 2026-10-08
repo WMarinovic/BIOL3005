@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIOL3005 Cognition: Conceptual knowledge practice problems</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f4f0;
+    --surface: #ffffff;
+    --surface-alt: #f0ede8;
+    --border: #d6d0c6;
+    --text: #2c2a26;
+    --text-muted: #6b6660;
+    --accent: #b04a32;
+    --accent-light: #e8d5cf;
+    --accent-dark: #8c3926;
+    --easy: #3a7d5e;
+    --easy-bg: #e8f3ec;
+    --easy-border: #b0d6bf;
+    --medium: #c07b1a;
+    --medium-bg: #fdf3e0;
+    --medium-border: #e4c67a;
+    --hard: #9b2e4e;
+    --hard-bg: #f6e3ea;
+    --hard-border: #d4a0b3;
+    --hint-bg: #f0f4f8;
+    --hint-border: #a8bdd4;
+    --answer-bg: #f0ede8;
+    --answer-border: #c4bdb2;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; min-height: 100vh; }
+
+  .header { background: var(--text); color: var(--bg); padding: 28px 0 24px; text-align: center; }
+  .header-inner { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+  .header .unit-code { font-size: 0.8rem; letter-spacing: 2.5px; text-transform: uppercase; opacity: 0.6; margin-bottom: 6px; }
+  .header h1 { font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 1.75rem; line-height: 1.3; }
+  .header .subtitle { font-size: 0.9rem; opacity: 0.55; margin-top: 6px; }
+
+  .nav-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 0; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+  .nav-inner { max-width: 880px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-indicator { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+  .nav-indicator span { color: var(--text); font-weight: 700; }
+  .nav-buttons { display: flex; gap: 10px; }
+  .nav-btn { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; padding: 8px 20px; border-radius: var(--radius); border: 1.5px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .main { max-width: 880px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  .scenario { display: none; }
+  .scenario.active { display: block; }
+
+  .scenario-label { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 8px; }
+  .scenario-title { font-family: 'Source Serif 4', serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 16px; line-height: 1.35; }
+
+  .scenario-stem { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 28px; box-shadow: var(--shadow); font-size: 0.95rem; }
+  .scenario-stem p { margin-bottom: 12px; }
+  .scenario-stem p:last-child { margin-bottom: 0; }
+  .scenario-stem ul { margin: 8px 0 12px 20px; }
+  .scenario-stem li { margin-bottom: 6px; }
+  .scenario-stem strong { font-weight: 600; }
+
+  .chart-container { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 32px; box-shadow: var(--shadow); }
+  .chart-title { font-weight: 600; font-size: 0.9rem; text-align: center; margin-bottom: 12px; color: var(--text); }
+  .chart-wrapper { position: relative; max-width: 680px; margin: 0 auto; }
+
+  .questions-section { margin-top: 8px; }
+  .question-block { margin-bottom: 24px; }
+
+  .q-difficulty { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 4px; margin-bottom: 8px; }
+  .q-difficulty.easy { background: var(--easy-bg); color: var(--easy); border: 1px solid var(--easy-border); }
+  .q-difficulty.medium { background: var(--medium-bg); color: var(--medium); border: 1px solid var(--medium-border); }
+  .q-difficulty.hard { background: var(--hard-bg); color: var(--hard); border: 1px solid var(--hard-border); }
+  .q-difficulty.applied { background: #eef3f8; color: #4a7faa; border: 1px solid #b3c8de; }
+
+  .q-text { font-family: 'Source Serif 4', serif; font-size: 1.05rem; font-weight: 400; line-height: 1.55; margin-bottom: 12px; }
+
+  .reveal-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+  .reveal-btn { font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 600; padding: 6px 16px; border-radius: 6px; border: 1.5px solid; cursor: pointer; transition: all 0.15s ease; background: transparent; }
+  .reveal-btn.hint-btn { border-color: var(--hint-border); color: #4a6b8a; }
+  .reveal-btn.hint-btn:hover { background: var(--hint-bg); }
+  .reveal-btn.answer-btn { border-color: var(--answer-border); color: var(--text-muted); }
+  .reveal-btn.answer-btn:hover { background: var(--answer-bg); }
+  .reveal-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+  .reveal-content { overflow: hidden; max-height: 0; opacity: 0; transition: max-height 0.35s ease, opacity 0.25s ease, margin 0.25s ease; margin-top: 0; }
+  .reveal-content.open { max-height: 1000px; opacity: 1; margin-top: 10px; }
+  .reveal-inner { padding: 16px 20px; border-radius: var(--radius); font-size: 0.9rem; line-height: 1.6; }
+  .reveal-inner.hint { background: var(--hint-bg); border: 1px solid var(--hint-border); color: #3a5a78; }
+  .reveal-inner.answer { background: var(--answer-bg); border: 1px solid var(--answer-border); color: var(--text); }
+  .reveal-inner p { margin-bottom: 8px; }
+  .reveal-inner p:last-child { margin-bottom: 0; }
+
+  .q-divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  .instructions { background: var(--accent-light); border: 1px solid #d4b0a3; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 28px; font-size: 0.85rem; color: var(--accent-dark); line-height: 1.55; }
+  .instructions strong { font-weight: 700; }
+
+  .applied-box { background: #eef3f8; border: 1px solid #b3c8de; border-left: 4px solid #4a7faa; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 24px; font-size: 0.88rem; line-height: 1.6; color: #2a4560; }
+  .applied-box-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #4a7faa; margin-bottom: 6px; }
+  .applied-box p { margin-bottom: 8px; }
+  .applied-box p:last-child { margin-bottom: 0; }
+
+  .footer { text-align: center; padding: 24px; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 40px; }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 1.35rem; }
+    .scenario-title { font-size: 1.2rem; }
+    .nav-inner { flex-direction: column; gap: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="unit-code">BIOL3005 Cognition</div>
+    <h1>Practice problems: Conceptual knowledge</h1>
+    <div class="subtitle">Semester 1, 2026 · Curtin University · <a href="index.html" style="color:inherit;text-decoration:underline">All weeks</a></div>
+  </div>
+</div>
+
+<div class="nav-bar">
+  <div class="nav-inner">
+    <div class="nav-indicator">Scenario <span id="currentNum">1</span> of <span>2</span></div>
+    <div class="nav-buttons">
+      <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Back</button>
+      <button class="nav-btn" id="nextBtn" onclick="navigate(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="instructions">
+    <strong>How to use this page:</strong> Read each scenario and try to answer the questions on your own first, as you would in an exam. If you get stuck, click <em>Show Hint</em> for guidance. Use <em>Show Answer</em> only after you have given the question a genuine attempt.
+  </div>
+
+  <!-- ==================== SCENARIO 1 ==================== -->
+  <div class="scenario active" id="scenario1">
+    <div class="scenario-label">Scenario 1</div>
+    <div class="scenario-title">The Hub-and-Spoke Model: TMS Evidence Across Three Brain Sites</div>
+
+    <div class="applied-box">
+      <div class="applied-box-label">Why this matters for psychologists</div>
+      <p>Understanding how conceptual knowledge is organised in the brain is essential for clinical neuropsychologists who assess and rehabilitate patients with semantic impairments. Conditions such as semantic dementia, stroke, and herpes simplex encephalitis can produce category-specific deficits (e.g., selectively impaired knowledge of living things or tools). The hub-and-spoke model provides a framework for predicting which categories will be affected depending on the site of brain damage, guiding both diagnosis and targeted rehabilitation strategies.</p>
+    </div>
+
+    <div class="scenario-stem">
+      <p>Researchers used Transcranial Magnetic Stimulation (TMS) to test predictions of the <strong>hub-and-spoke model</strong> of conceptual knowledge. Participants performed a picture-naming task for three categories of items:</p>
+      <ul>
+        <li><strong>Animals</strong> (whose concepts are thought to rely heavily on <em>visual</em> features, e.g., shape, colour, pattern).</li>
+        <li><strong>Tools</strong> (whose concepts are thought to rely heavily on <em>motor/functional</em> features, e.g., how the object is grasped and used).</li>
+        <li><strong>Vehicles</strong> (whose concepts involve a mixture of visual, motor, and auditory features).</li>
+      </ul>
+      <p>TMS was applied to one of three cortical sites on separate sessions:</p>
+      <ul>
+        <li><strong>Anterior Temporal Lobe (ATL)</strong>, the hypothesised amodal hub.</li>
+        <li><strong>Occipital cortex (OCC)</strong>, a spoke region associated with visual feature processing.</li>
+        <li><strong>Left Premotor Cortex (PMC)</strong>, a spoke region associated with action/motor feature processing.</li>
+      </ul>
+      <p>A <strong>sham TMS</strong> condition served as the baseline. The graph below shows mean picture-naming reaction times (ms) for correct responses in each condition.</p>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Mean Picture-Naming RT (ms) by Item Category and TMS Site</div>
+      <div class="chart-wrapper">
+        <canvas id="chart1"></canvas>
+      </div>
+    </div>
+
+    <div class="questions-section">
+
+      <!-- Easy -->
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">a) According to the hub-and-spoke model, what are the distinct roles of the "hub" and the "spokes" in representing conceptual knowledge? Why is the ATL considered the hub?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q1hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q1ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q1hint">
+          <div class="reveal-inner hint">
+            <p>Think about what "amodal" means: not tied to any single sensory modality. The hub's job is to integrate. The spokes' job is to contribute modality-specific information. What makes the ATL special is that damage to it (as in semantic dementia) impairs knowledge across all categories and modalities.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q1ans">
+          <div class="reveal-inner answer">
+            <p>In the hub-and-spoke model, the <strong>"hub"</strong> is a central, amodal region that integrates information from multiple modality-specific sources to form coherent, abstract conceptual representations. It binds together what something looks like, sounds like, how it moves, what it is used for, and so on, into a unified concept. This allows for semantic generalisation (recognising that a robin and a penguin are both "birds" despite looking very different) and differentiation (distinguishing "dog" from "wolf" despite surface similarities).</p>
+            <p>The <strong>"spokes"</strong> are modality-specific cortical regions that store and process particular types of feature information. For example, visual cortex contributes information about shape, colour, and form, while premotor cortex contributes information about actions and motor interactions with objects.</p>
+            <p>The <strong>ATL is considered the hub</strong> because patients with semantic dementia (which causes progressive ATL atrophy) show a progressive loss of conceptual knowledge that cuts across all categories and all modalities. They lose knowledge about animals, tools, foods, and people alike, and they lose both visual and functional knowledge. This pattern of generalised semantic impairment is what you would expect if the ATL serves as the central integrator for all concepts.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Easy -->
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">b) Describe the pattern of results when TMS was applied to the ATL, compared to the sham condition. Was the effect specific to one category, or did it affect all categories? What does this tell us about the ATL's role?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q2hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q2ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q2hint">
+          <div class="reveal-inner hint">
+            <p>Look at the ATL TMS bars across all three categories compared to sham. Are they all elevated by a similar amount, or is the increase selective to one category?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q2ans">
+          <div class="reveal-inner answer">
+            <p>When TMS was applied to the ATL, picture-naming reaction times <strong>increased for all three categories</strong> (animals, tools, and vehicles) relative to sham. The magnitude of the increase was roughly similar across categories, indicating a <strong>general, category-nonspecific impairment</strong>.</p>
+            <p>This is consistent with the ATL's hypothesised role as an <strong>amodal hub</strong>. If the ATL integrates conceptual information regardless of category or modality, disrupting it should impair access to all concepts, not just those in a particular category. This is exactly the pattern observed.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Medium -->
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">c) Now examine the effects of TMS to the occipital cortex (OCC) and the premotor cortex (PMC). Describe the category-specific pattern for each stimulation site. How do these results support the "spoke" component of the hub-and-spoke model?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q3hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q3ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q3hint">
+          <div class="reveal-inner hint">
+            <p>For OCC TMS, which category relies most heavily on visual features? For PMC TMS, which category relies most on motor features? Does the data show selective disruption matching these predictions? What about vehicles, which rely on a mix of both?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q3ans">
+          <div class="reveal-inner answer">
+            <p><strong>Occipital cortex (OCC) TMS</strong> produced the largest increase in RT for <strong>animals</strong> compared to sham, a smaller increase for <strong>vehicles</strong>, and little or no increase for <strong>tools</strong>. This is consistent with the spoke prediction: animal concepts depend heavily on visual features (distinguishing a tiger from a leopard requires detailed shape and pattern information), so disrupting the visual spoke selectively impairs animal naming. Tools, which are distinguished more by their function and how they are used, are relatively unaffected by visual cortex disruption.</p>
+            <p><strong>Premotor cortex (PMC) TMS</strong> produced the largest increase in RT for <strong>tools</strong>, a smaller increase for <strong>vehicles</strong>, and little or no increase for <strong>animals</strong>. This is the complementary pattern: tool concepts depend heavily on motor and functional features (knowing what a hammer does requires action-related knowledge), so disrupting the motor spoke selectively impairs tool naming. Animals, which are not defined by how we physically interact with them, are spared.</p>
+            <p><strong>Vehicles</strong> showed a moderate increase under both OCC and PMC TMS, consistent with the idea that vehicle concepts draw on a mixture of visual features (what a car looks like) and motor/functional features (how you drive it). This intermediate pattern across both spoke disruptions supports the claim that concepts vary in the <strong>weighting of different feature types</strong> depending on the category.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Medium -->
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">d) How do the findings from this TMS study relate to the <strong>sensory-functional theory</strong> (also called the sensory/functional distinction) of category-specific deficits? In what ways does the hub-and-spoke model go beyond a purely feature-based account?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q4hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q4ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q4hint">
+          <div class="reveal-inner hint">
+            <p>The sensory-functional theory says that living things depend more on visual/perceptual features while non-living things depend more on functional features, and this is why brain damage can produce category-specific deficits. The hub-and-spoke model incorporates this idea (as the spokes) but adds something extra: the amodal hub. Think about what the hub adds that a purely distributed, feature-based model lacks. What would go wrong if there were only spokes and no hub?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q4ans">
+          <div class="reveal-inner answer">
+            <p>The <strong>sensory-functional theory</strong> proposes that category-specific deficits arise because different categories of objects depend on different types of features. Living things (animals, plants) are distinguished primarily by visual and perceptual features, while non-living things (tools, artefacts) are distinguished primarily by functional and motor features. Damage to visual processing areas should therefore disproportionately affect knowledge of living things, while damage to motor/functional areas should disproportionately affect knowledge of artefacts.</p>
+            <p>The TMS data are broadly consistent with this account: OCC disruption selectively impaired animals (living, visually dependent), while PMC disruption selectively impaired tools (non-living, motor dependent). In this sense, the spoke component of the hub-and-spoke model captures the same logic as the sensory-functional theory.</p>
+            <p>However, the hub-and-spoke model goes further by adding the <strong>amodal ATL hub</strong>. A purely feature-based model with only distributed spokes would predict that category-specific deficits should always occur when modality-specific regions are damaged, but it would <strong>not predict</strong> the generalised, cross-category semantic loss seen in semantic dementia. Without a hub, there is no mechanism for integrating features into coherent concepts or for explaining why damage to a single region (ATL) could devastate knowledge across all categories simultaneously. The hub provides the computational glue that binds features from different modalities into unified representations, enabling semantic generalisation and fine-grained differentiation that no individual spoke could achieve on its own.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Hard -->
+      <div class="question-block">
+        <div class="q-difficulty hard">Hard</div>
+        <div class="q-text">e) An advocate for <strong>embodied (grounded) cognition</strong> might argue that the hub-and-spoke model still relies too heavily on an abstract, amodal hub, and that conceptual knowledge is entirely constituted by reactivation of sensorimotor experiences. How would an embodied cognition theorist interpret the OCC and PMC TMS results? Could they account for the ATL TMS results without invoking an amodal hub? What evidence from semantic dementia poses the greatest challenge for a purely embodied account?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q5hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q5ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q5hint">
+          <div class="reveal-inner hint">
+            <p>Embodied cognition claims that understanding "hammer" involves partially reactivating the motor experience of using one. The spoke results fit this view nicely. But the ATL results are harder to explain: why would disrupting a region that is not itself a sensorimotor area impair all categories? An embodied theorist might try to argue that the ATL serves as a "convergence zone" rather than a truly amodal hub, but think about whether this distinction is meaningful or just relabelling the same idea. Consider also that semantic dementia patients lose knowledge of abstract concepts (e.g., "justice," "freedom") that have no clear sensorimotor grounding.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q5ans">
+          <div class="reveal-inner answer">
+            <p>An embodied cognition theorist would have no difficulty explaining the OCC and PMC TMS results. Conceptual knowledge of animals is grounded in visual experience, so disrupting visual cortex impairs animal concepts; knowledge of tools is grounded in motor experience, so disrupting premotor cortex impairs tool concepts. This is precisely what the embodied view predicts.</p>
+            <p>The ATL results are more challenging. A strictly embodied account, in which concepts are nothing more than reactivated sensorimotor patterns, does not straightforwardly predict that disrupting a region outside the sensorimotor system should impair all categories. An embodied theorist might argue that the ATL is a <strong>convergence zone</strong> where activations from different modalities are bound together, but this is functionally very close to what the hub-and-spoke model calls a transmodal hub. Whether the two labels mark a genuine theoretical difference or a terminological one is a fair question to press.</p>
+            <p>The strongest challenge from semantic dementia is that knowledge is lost <strong>across every modality at once</strong>, for words and pictures, objects and people, whichever sense the information arrives through. A purely embodied account, with no hub, has difficulty explaining why atrophy in one non-sensorimotor region should produce such a general loss. Abstract concepts such as "justice" are also the hardest case for embodiment, as the textbook notes, because they have no obvious sensorimotor grounding. Be careful with the details, though: some patients with semantic dementia show relatively <em>better</em> preserved abstract than concrete words (a reversal of the usual concreteness effect), so the abstract-concept argument is less clean than it first appears. The cross-modal generality of the loss is the more secure point.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Applied -->
+      <div class="question-block">
+        <div class="q-difficulty applied">Applied</div>
+        <div class="q-text">f) A clinical neuropsychologist is assessing a patient with early-stage semantic dementia. The patient has difficulty naming animals and tools alike, but on closer testing, the neuropsychologist notices that the patient can still demonstrate how to use a hammer (by pantomiming the action) despite being unable to name it or describe its purpose verbally. Using the hub-and-spoke model, explain this dissociation between preserved motor knowledge and impaired naming/verbal description. What does this tell the neuropsychologist about which component of the patient's semantic system is breaking down, and which is relatively preserved? How might this guide the design of a rehabilitation programme?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q6hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q6ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q6hint">
+          <div class="reveal-inner hint">
+            <p>In the hub-and-spoke model, the hub integrates information and supports tasks that require abstract, cross-modal access (like naming and verbal description). The spokes store modality-specific knowledge. If the hub is degrading but the spokes are still relatively intact, the patient might retain modality-specific knowledge (knowing the action associated with a hammer) while losing the ability to access the integrated concept that supports naming. Think about what this implies for rehabilitation: should the therapist work through the damaged hub or try to leverage the preserved spokes?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q6ans">
+          <div class="reveal-inner answer">
+            <p>This dissociation is well explained by the hub-and-spoke model. The patient's <strong>ATL hub is degrading</strong> (as is characteristic of semantic dementia), which impairs the integrated, amodal conceptual representation that supports tasks requiring cross-modal access, such as naming (linking visual input to a phonological label) and verbal description (generating propositional knowledge about an object). Both of these tasks require the hub to bind together information from multiple sources.</p>
+            <p>However, the <strong>motor spoke (premotor cortex)</strong> remains relatively intact, allowing the patient to retain the action-based knowledge associated with tools. The pantomime of hammer use does not require the amodal hub; it can be driven directly by the preserved connection between the visual input (seeing a hammer) and the motor programme for using it, mediated by the intact spoke pathway. This is a form of <strong>modality-specific preservation</strong> in the face of hub degradation.</p>
+            <p>For the neuropsychologist, this dissociation indicates that the patient's <strong>amodal semantic integration is impaired while modality-specific knowledge channels remain functional</strong>. This has direct implications for rehabilitation. Rather than relying on verbal-semantic approaches (which depend on the damaged hub), the therapist could design a programme that <strong>leverages the preserved spokes</strong>. For example, using action-based cues and motor demonstrations to support object identification, pairing objects with their characteristic actions or sounds rather than relying on verbal definitions, and using multi-sensory cueing strategies that activate the still-functioning spoke pathways to compensate for the degrading hub. Over time, as the condition progresses and the spokes themselves become affected, the rehabilitation strategy would need to be adapted accordingly.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== SCENARIO 2 ==================== -->
+  <div class="scenario" id="scenario2">
+    <div class="scenario-label">Scenario 2</div>
+    <div class="scenario-title">Network Models, Spreading Activation, and Typicality</div>
+
+    <div class="applied-box">
+      <div class="applied-box-label">Why this matters for psychologists</div>
+      <p>The way concepts are organised and accessed in semantic memory directly affects clinical assessment and intervention. Category fluency tasks (e.g., "name as many animals as you can in 60 seconds") are among the most widely used screening tools for detecting early cognitive decline in conditions such as Alzheimer's disease. Understanding the structure of semantic networks, including spreading activation, typicality effects, and the distinction between hierarchical and associative organisation, helps clinicians interpret fluency patterns and design cognitively informed therapies for word-finding difficulties.</p>
+    </div>
+
+    <div class="scenario-stem">
+      <p>Researchers designed a semantic priming experiment to compare predictions of two network models of semantic memory:</p>
+      <ul>
+        <li><strong>Collins &amp; Quillian's (1969) hierarchical network model</strong>, which proposes that concepts are organised in a strict hierarchy (e.g., "canary" → "bird" → "animal"), with properties stored at the most general applicable level to minimise redundancy (cognitive economy). Verification time should increase with the number of hierarchical levels that must be traversed.</li>
+        <li><strong>Collins &amp; Loftus's (1975) spreading activation model</strong>, which proposes that concepts are organised in a network based on <strong>semantic similarity and association strength</strong> rather than strict hierarchy. Activation spreads from a processed concept to related concepts, with the amount of activation decreasing with semantic distance. Crucially, this model predicts that <strong>typicality</strong> (how representative an item is of its category) affects access speed.</li>
+      </ul>
+      <p>In the experiment, participants made speeded category verification judgements ("Is a [target] a [category]?") after seeing a prime. Three types of prime–target relationships were tested:</p>
+      <ul>
+        <li><strong>Closely related:</strong> Prime and target from the same basic-level category (e.g., prime: "sparrow" → target: "robin"; verify: "Is a robin a bird?").</li>
+        <li><strong>Distantly related:</strong> Prime and target from the same superordinate category but different basic-level clusters (e.g., prime: "trout" → target: "robin"; verify: "Is a robin a bird?"). Both are animals, but fish and birds are semantically distant.</li>
+        <li><strong>Unrelated:</strong> Prime from a different domain entirely (e.g., prime: "hammer" → target: "robin"; verify: "Is a robin a bird?").</li>
+      </ul>
+      <p>Additionally, targets varied in <strong>typicality</strong>: half were highly typical members of their category (e.g., "robin" for bird) and half were atypical (e.g., "penguin" for bird).</p>
+      <p>The graph below shows mean verification RT (ms) for correct "yes" responses.</p>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Mean Verification RT (ms) by Prime Relatedness and Target Typicality</div>
+      <div class="chart-wrapper">
+        <canvas id="chart2"></canvas>
+      </div>
+    </div>
+
+    <div class="questions-section">
+
+      <!-- Easy -->
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">a) Describe the main effect of prime relatedness shown in the graph. How does verification time change as the prime becomes more closely related to the target?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q1hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q1ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q1hint">
+          <div class="reveal-inner hint">
+            <p>Compare the three prime conditions (unrelated, distantly related, closely related). Is there a graded effect, or does only one level differ from the others?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q1ans">
+          <div class="reveal-inner answer">
+            <p>Verification time decreases as the prime becomes more closely related to the target. The <strong>unrelated prime</strong> condition produces the slowest responses, the <strong>distantly related prime</strong> produces intermediate responses, and the <strong>closely related prime</strong> produces the fastest responses. This is a <strong>graded priming effect</strong>: the more semantically similar the prime is to the target, the greater the facilitation in verifying category membership.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Easy -->
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">b) Describe the main effect of typicality. How do responses to typical category members (e.g., "robin" as a bird) compare to responses to atypical members (e.g., "penguin" as a bird)?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q2hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q2ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q2hint">
+          <div class="reveal-inner hint">
+            <p>Compare the two groups of bars (typical vs. atypical) across all priming conditions. Which are consistently faster?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q2ans">
+          <div class="reveal-inner answer">
+            <p>Across all three priming conditions, <strong>typical category members are verified faster</strong> than atypical members. For example, participants confirm that "robin" is a bird more quickly than they confirm that "penguin" is a bird. This is the <strong>typicality effect</strong>: items that are more representative of their category are accessed and verified more readily.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Medium -->
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">c) Collins and Quillian's hierarchical model predicts that verification time depends on the number of hierarchical levels traversed, not on typicality or association strength. Can this model account for the typicality effect observed in the data? Explain why or why not. How does Collins and Loftus's spreading activation model handle this finding more successfully?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q3hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q3ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q3hint">
+          <div class="reveal-inner hint">
+            <p>In Collins and Quillian's model, "robin" and "penguin" are both stored at the same level (one step below "bird"), so verification should take the same time for both. But it doesn't. In Collins and Loftus's model, the distance between nodes is not determined by hierarchical level but by semantic similarity and frequency of co-occurrence. How would robin and penguin differ in their connection strength to "bird"?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q3ans">
+          <div class="reveal-inner answer">
+            <p>Collins and Quillian's hierarchical model <strong>cannot easily account for the typicality effect</strong>. In a strict hierarchy, "robin" and "penguin" are both stored at the same level, one link below "bird." Verifying that either is a bird requires traversing the same number of levels (one step), so the model predicts equal verification times. The robust finding that typical items are verified faster violates this prediction.</p>
+            <p>Collins and Loftus's <strong>spreading activation model</strong> handles typicality naturally. In this model, the strength of the link between two nodes depends on their <strong>semantic similarity and the frequency with which they co-occur</strong>, not their position in a rigid hierarchy. "Robin" is a more typical bird, so its node has a <strong>stronger, shorter link</strong> to the "bird" node than "penguin" does. When activation spreads from "bird" (or from a closely related prime like "sparrow"), it reaches "robin" more quickly and with greater intensity than "penguin." This produces faster verification for typical items, precisely as observed.</p>
+            <p>The spreading activation model also naturally explains the graded priming effect: activation from "sparrow" spreads more strongly to nearby nodes like "robin" (closely related) than to distant nodes like "trout" (same superordinate but different cluster), and not at all to unrelated nodes like "hammer."</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Medium -->
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">d) Look at the interaction in the data: is the priming effect (difference between unrelated and closely related conditions) the same size for typical and atypical items, or does one group benefit more? What does this pattern suggest about how typicality and spreading activation interact in the semantic network?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q4hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q4ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q4hint">
+          <div class="reveal-inner hint">
+            <p>Estimate the priming benefit (unrelated RT minus closely related RT) for typical vs. atypical items. If atypical items show a larger priming benefit, this could mean that they have more room for facilitation because their baseline activation is lower. If typical items show a larger benefit, that might mean they are more tightly connected to the network and receive more spreading activation. What does the graph suggest?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q4ans">
+          <div class="reveal-inner answer">
+            <p>The graph shows that the <strong>priming effect is larger for atypical items</strong> than for typical items. Typical items are already verified relatively quickly even in the unrelated condition (because their strong connection to the category node provides a high baseline level of activation), so the additional boost from a related prime produces a modest further improvement. Atypical items, by contrast, have a weaker baseline connection and are verified more slowly in the unrelated condition, so the spreading activation from a related prime has <strong>more room to facilitate processing</strong>.</p>
+            <p>This interaction suggests that spreading activation and typicality operate on a <strong>shared activation mechanism</strong>. The total activation reaching a target node is the sum of its resting-level activation (influenced by typicality) and the activation received from the prime (influenced by semantic distance). For typical items, resting activation is already high, so priming adds less. For atypical items, resting activation is low, and priming provides a proportionally greater boost. This is analogous to the frequency-by-priming interaction observed in lexical decision: items that are harder to access on their own benefit more from contextual support.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Hard -->
+      <div class="question-block">
+        <div class="q-difficulty hard">Hard</div>
+        <div class="q-text">e) How would <strong>prototype theory</strong> (Rosch) and <strong>exemplar theory</strong> each account for the typicality effect observed in this data? Do either of these approaches explain the graded priming effect as naturally as the spreading activation model does? Discuss the strengths and limitations of each account in explaining the full pattern of results.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q5hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q5ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q5hint">
+          <div class="reveal-inner hint">
+            <p>Prototype theory says we compare items to an abstract summary (the prototype) and that typical items are more similar to the prototype, so they are verified faster. Exemplar theory says we compare items to stored memories of individual examples, and typical items resemble more stored exemplars. Both can explain the typicality effect. But think about whether they naturally predict the graded priming effect across different levels of semantic relatedness. Does seeing "sparrow" change your prototype or your set of active exemplars in a way that facilitates "robin" more than "penguin"?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q5ans">
+          <div class="reveal-inner answer">
+            <p><strong>Prototype theory</strong> explains the typicality effect by proposing that categories are represented by an abstract summary (the prototype) capturing the most common features. Category verification involves comparing the target item to the prototype: typical items (e.g., "robin") share more features with the bird prototype and produce a higher similarity match, leading to faster verification. Atypical items (e.g., "penguin") share fewer features and are verified more slowly. This account handles the typicality effect well, but it is <strong>less naturally equipped to explain the graded priming effect</strong>. Prototype theory does not have a built-in mechanism for how processing "sparrow" should facilitate subsequent processing of "robin" more than "trout" does, since the theory focuses on comparison to a fixed prototype rather than on activation spreading between individual concepts.</p>
+            <p><strong>Exemplar theory</strong> proposes that categories are represented by stored memories of individual instances. Verification involves comparing the target to all stored exemplars of the category, and typical items activate more exemplars (because they resemble more stored instances). This explains the typicality effect. Exemplar theory can also partially account for priming: processing "sparrow" may activate stored bird exemplars, making them more accessible when "robin" is subsequently presented. However, the mechanism for the <strong>graded effect across semantic distances</strong> (closely related > distantly related > unrelated) is less explicitly specified than in the spreading activation model, where graded facilitation falls out directly from the network architecture.</p>
+            <p>The <strong>spreading activation model</strong> provides the most integrated account of both effects simultaneously. Typicality is captured by link strength (typical items have stronger connections to the category node), and priming is captured by the spread of activation through the network (closer nodes receive more activation). The interaction between the two also follows naturally from the shared activation mechanism. Neither prototype nor exemplar theory provides as parsimonious an account of the full pattern, though both can explain the typicality component effectively.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Applied -->
+      <div class="question-block">
+        <div class="q-difficulty applied">Applied</div>
+        <div class="q-text">f) A neuropsychologist is using a category fluency task ("name as many animals as you can in 60 seconds") to screen for early cognitive decline in an elderly patient. The patient produces 12 items, which is within the normal range for their age. However, the neuropsychologist notices that the patient names only highly typical animals (dog, cat, horse, bird, fish) and fails to produce any atypical or less common examples (e.g., platypus, salamander, seahorse), even with encouragement. The patient also shows <strong>no clustering</strong>, that is, they do not produce runs of semantically related items (e.g., several farm animals in a row, then several ocean animals). Drawing on what you know about spreading activation, typicality, and semantic network structure, interpret this pattern. What might it suggest about the state of the patient's semantic network, and how does this differ from what you would expect in healthy ageing?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q6hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q6ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q6hint">
+          <div class="reveal-inner hint">
+            <p>In healthy people, category fluency relies on two processes: (1) clustering (producing items from a subcategory, driven by spreading activation within a local neighbourhood of the network) and (2) switching (jumping to a new subcategory when the current cluster is exhausted). If the patient produces only typical items and shows no clustering, think about what this means for the structure of their semantic network. Are the densely connected local neighbourhoods (where related animals are tightly linked) still intact? In healthy ageing, total output may decline, but clustering typically remains. What would a loss of clustering suggest about the fine-grained connections within the network?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q6ans">
+          <div class="reveal-inner answer">
+            <p>In healthy category fluency, participants rely on <strong>spreading activation within local clusters</strong> of the semantic network: they activate a subcategory (e.g., "farm animals"), name several items as activation spreads between closely connected neighbours (cow, horse, pig, sheep), then switch to a new subcategory when that cluster is exhausted. This produces a characteristic pattern of <strong>clustering</strong> (runs of related items) and <strong>switching</strong> (jumps between subcategories). In healthy ageing, total output may decline slightly, but the clustering-and-switching structure typically remains intact.</p>
+            <p>The patient's profile is concerning because it shows <strong>two abnormalities</strong>. First, the restriction to only highly typical items suggests that the patient can still access the strongest, most central nodes in the "animal" network (those with the highest resting activation, such as "dog" and "cat") but cannot reach less typical, more peripheral nodes. This is consistent with a <strong>degradation of the network's finer-grained structure</strong>: the strong central connections remain, but the weaker links to atypical items have been lost or become too weak to activate.</p>
+            <p>Second, the <strong>absence of clustering</strong> suggests that the local neighbourhood structure within the network has broken down. In a healthy network, naming "cow" would spread activation to "horse," "pig," and "sheep," producing a farm-animal cluster. If this spreading activation within subcategories is not occurring, it implies that the <strong>associative links between related concepts have weakened</strong>, even though the concepts themselves may still be individually accessible from the central category node.</p>
+            <p>This pattern is more consistent with <strong>early semantic network degradation</strong> (as seen in conditions such as Alzheimer's disease or early semantic dementia) than with normal ageing. It should prompt the neuropsychologist to conduct more detailed semantic testing, such as picture-word matching tasks, definitions, and assessments like the Pyramids and Palm Trees test, to evaluate the integrity of the patient's conceptual knowledge more thoroughly.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    BIOL3005 Cognition · Curtin University · School of Population Health
+  </div>
+</div>
+
+<script>
+// ============ Navigation ============
+let currentScenario = 1;
+const totalScenarios = 2;
+
+function navigate(dir) {
+  const newScenario = currentScenario + dir;
+  if (newScenario < 1 || newScenario > totalScenarios) return;
+  document.getElementById('scenario' + currentScenario).classList.remove('active');
+  currentScenario = newScenario;
+  document.getElementById('scenario' + currentScenario).classList.add('active');
+  document.getElementById('currentNum').textContent = currentScenario;
+  document.getElementById('prevBtn').disabled = currentScenario === 1;
+  document.getElementById('nextBtn').disabled = currentScenario === totalScenarios;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============ Reveal Toggle ============
+function toggle(btn, targetId) {
+  const content = document.getElementById(targetId);
+  const isOpen = content.classList.contains('open');
+  if (isOpen) {
+    content.classList.remove('open');
+    btn.classList.remove('active');
+    btn.textContent = btn.textContent.replace('Hide', 'Show');
+  } else {
+    content.classList.add('open');
+    btn.classList.add('active');
+    btn.textContent = btn.textContent.replace('Show', 'Hide');
+  }
+}
+
+// ============ Charts ============
+const chartFont = { family: "'DM Sans', sans-serif", size: 12 };
+
+// --- Chart 1: Hub-and-spoke TMS study ---
+// Sham baseline ~680ms for all. ATL TMS: +120 all. OCC TMS: +110 animals, +50 vehicles, +10 tools. PMC TMS: +10 animals, +50 vehicles, +110 tools.
+new Chart(document.getElementById('chart1'), {
+  type: 'bar',
+  data: {
+    labels: ['Animals', 'Tools', 'Vehicles'],
+    datasets: [
+      {
+        label: 'Sham TMS',
+        data: [685, 690, 680],
+        backgroundColor: '#8a8a8a',
+        borderColor: '#6a6a6a',
+        borderWidth: 1.5,
+        borderRadius: 4,
+        barPercentage: 0.7,
+        categoryPercentage: 0.75
+      },
+      {
+        label: 'ATL TMS',
+        data: [805, 810, 800],
+        backgroundColor: '#b04a32',
+        borderColor: '#8c3926',
+        borderWidth: 1.5,
+        borderRadius: 4,
+        barPercentage: 0.7,
+        categoryPercentage: 0.75
+      },
+      {
+        label: 'Occipital (OCC) TMS',
+        data: [795, 700, 730],
+        backgroundColor: '#3a7d5e',
+        borderColor: '#2a5e46',
+        borderWidth: 1.5,
+        borderRadius: 4,
+        barPercentage: 0.7,
+        categoryPercentage: 0.75
+      },
+      {
+        label: 'Premotor (PMC) TMS',
+        data: [695, 800, 735],
+        backgroundColor: '#c07b1a',
+        borderColor: '#9a6215',
+        borderWidth: 1.5,
+        borderRadius: 4,
+        barPercentage: 0.7,
+        categoryPercentage: 0.75
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: { position: 'bottom', labels: { font: chartFont, padding: 14, usePointStyle: true, pointStyle: 'rectRounded' } },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y} ms` } }
+    },
+    scales: {
+      x: {
+        title: { display: true, text: 'Item Category', font: { ...chartFont, weight: '600' } },
+        ticks: { font: chartFont },
+        grid: { display: false }
+      },
+      y: {
+        title: { display: true, text: 'Mean Picture-Naming RT (ms)', font: { ...chartFont, weight: '600' } },
+        min: 600, max: 900,
+        ticks: { font: chartFont, stepSize: 50 },
+        grid: { color: '#e8e4de' }
+      }
+    }
+  }
+});
+
+// --- Chart 2: Spreading activation – priming × typicality ---
+// Typical: Unrelated 620, Distant 570, Close 530
+// Atypical: Unrelated 720, Distant 640, Close 580
+new Chart(document.getElementById('chart2'), {
+  type: 'bar',
+  data: {
+    labels: ['Unrelated Prime', 'Distantly Related Prime', 'Closely Related Prime'],
+    datasets: [
+      {
+        label: 'Typical Items',
+        data: [620, 570, 530],
+        backgroundColor: '#3a7d5e',
+        borderColor: '#2a5e46',
+        borderWidth: 1.5,
+        borderRadius: 4,
+        barPercentage: 0.65,
+        categoryPercentage: 0.65
+      },
+      {
+        label: 'Atypical Items',
+        data: [720, 640, 580],
+        backgroundColor: '#b04a32',
+        borderColor: '#8c3926',
+        borderWidth: 1.5,
+        borderRadius: 4,
+        barPercentage: 0.65,
+        categoryPercentage: 0.65
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: { position: 'bottom', labels: { font: chartFont, padding: 16, usePointStyle: true, pointStyle: 'rectRounded' } },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y} ms` } }
+    },
+    scales: {
+      x: {
+        title: { display: true, text: 'Prime–Target Relatedness', font: { ...chartFont, weight: '600' } },
+        ticks: { font: { ...chartFont, size: 11 } },
+        grid: { display: false }
+      },
+      y: {
+        title: { display: true, text: 'Mean Verification RT (ms)', font: { ...chartFont, weight: '600' } },
+        min: 450, max: 800,
+        ticks: { font: chartFont, stepSize: 50 },
+        grid: { color: '#e8e4de' }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIOL3005 Cognition: Visual imagery practice problems</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f4f0;
+    --surface: #ffffff;
+    --surface-alt: #f0ede8;
+    --border: #d6d0c6;
+    --text: #2c2a26;
+    --text-muted: #6b6660;
+    --accent: #b04a32;
+    --accent-light: #e8d5cf;
+    --accent-dark: #8c3926;
+    --easy: #3a7d5e;
+    --easy-bg: #e8f3ec;
+    --easy-border: #b0d6bf;
+    --medium: #c07b1a;
+    --medium-bg: #fdf3e0;
+    --medium-border: #e4c67a;
+    --hard: #9b2e4e;
+    --hard-bg: #f6e3ea;
+    --hard-border: #d4a0b3;
+    --hint-bg: #f0f4f8;
+    --hint-border: #a8bdd4;
+    --answer-bg: #f0ede8;
+    --answer-border: #c4bdb2;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-lg: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .header {
+    background: var(--text);
+    color: var(--bg);
+    padding: 28px 0 24px;
+    text-align: center;
+  }
+  .header-inner {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .header .unit-code {
+    font-size: 0.8rem;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 6px;
+  }
+  .header h1 {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 700;
+    font-size: 1.75rem;
+    line-height: 1.3;
+  }
+  .header .subtitle {
+    font-size: 0.9rem;
+    opacity: 0.55;
+    margin-top: 6px;
+  }
+
+  /* Navigation bar */
+  .nav-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+  }
+  .nav-inner {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-indicator {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .nav-indicator span {
+    color: var(--text);
+    font-weight: 700;
+  }
+  .nav-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  .nav-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 8px 20px;
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .nav-btn:hover:not(:disabled) {
+    background: var(--text);
+    color: var(--bg);
+    border-color: var(--text);
+  }
+  .nav-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  /* Main content */
+  .main {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+
+  /* Scenario */
+  .scenario {
+    display: none;
+  }
+  .scenario.active {
+    display: block;
+  }
+
+  /* Scenario intro */
+  .scenario-label {
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .scenario-title {
+    font-family: 'Source Serif 4', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    line-height: 1.35;
+  }
+  .scenario-stem {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 28px;
+    box-shadow: var(--shadow);
+    font-size: 0.95rem;
+  }
+  .scenario-stem p {
+    margin-bottom: 12px;
+  }
+  .scenario-stem p:last-child {
+    margin-bottom: 0;
+  }
+  .scenario-stem ul {
+    margin: 8px 0 12px 20px;
+  }
+  .scenario-stem li {
+    margin-bottom: 4px;
+  }
+  .scenario-stem strong {
+    font-weight: 600;
+  }
+
+  /* Chart container */
+  .chart-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    box-shadow: var(--shadow);
+  }
+  .chart-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  .chart-wrapper {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .chart-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .chart-row .chart-wrapper {
+    flex: 1;
+    min-width: 260px;
+  }
+
+  /* Questions */
+  .questions-section {
+    margin-top: 8px;
+  }
+  .question-block {
+    margin-bottom: 24px;
+  }
+  .q-difficulty {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+  .q-difficulty.easy { background: var(--easy-bg); color: var(--easy); border: 1px solid var(--easy-border); }
+  .q-difficulty.medium { background: var(--medium-bg); color: var(--medium); border: 1px solid var(--medium-border); }
+  .q-difficulty.hard { background: var(--hard-bg); color: var(--hard); border: 1px solid var(--hard-border); }
+  .q-difficulty.applied { background: #eef3f8; color: #4a7faa; border: 1px solid #b3c8de; }
+
+  .q-text {
+    font-family: 'Source Serif 4', serif;
+    font-size: 1.05rem;
+    font-weight: 400;
+    line-height: 1.55;
+    margin-bottom: 12px;
+  }
+
+  /* Reveal buttons */
+  .reveal-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .reveal-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 6px;
+    border: 1.5px solid;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    background: transparent;
+  }
+  .reveal-btn.hint-btn {
+    border-color: var(--hint-border);
+    color: #4a6b8a;
+  }
+  .reveal-btn.hint-btn:hover {
+    background: var(--hint-bg);
+  }
+  .reveal-btn.answer-btn {
+    border-color: var(--answer-border);
+    color: var(--text-muted);
+  }
+  .reveal-btn.answer-btn:hover {
+    background: var(--answer-bg);
+  }
+  .reveal-btn.active {
+    background: var(--text);
+    color: var(--bg);
+    border-color: var(--text);
+  }
+
+  /* Collapsible content */
+  .reveal-content {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.35s ease, opacity 0.25s ease, margin 0.25s ease;
+    margin-top: 0;
+  }
+  .reveal-content.open {
+    max-height: 600px;
+    opacity: 1;
+    margin-top: 10px;
+  }
+  .reveal-inner {
+    padding: 16px 20px;
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+  .reveal-inner.hint {
+    background: var(--hint-bg);
+    border: 1px solid var(--hint-border);
+    color: #3a5a78;
+  }
+  .reveal-inner.answer {
+    background: var(--answer-bg);
+    border: 1px solid var(--answer-border);
+    color: var(--text);
+  }
+  .reveal-inner p {
+    margin-bottom: 8px;
+  }
+  .reveal-inner p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Divider */
+  .q-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 28px 0;
+  }
+
+  /* Instructions callout */
+  .instructions {
+    background: var(--accent-light);
+    border: 1px solid #d4b0a3;
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.85rem;
+    color: var(--accent-dark);
+    line-height: 1.55;
+  }
+  .instructions strong {
+    font-weight: 700;
+  }
+
+  /* Applied relevance box */
+  .applied-box {
+    background: #eef3f8;
+    border: 1px solid #b3c8de;
+    border-left: 4px solid #4a7faa;
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: #2a4560;
+  }
+  .applied-box-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #4a7faa;
+    margin-bottom: 6px;
+  }
+  .applied-box p {
+    margin-bottom: 8px;
+  }
+  .applied-box p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 1.35rem; }
+    .scenario-title { font-size: 1.2rem; }
+    .chart-row { flex-direction: column; }
+    .nav-inner { flex-direction: column; gap: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="unit-code">BIOL3005 Cognition</div>
+    <h1>Practice problems: Visual imagery</h1>
+    <div class="subtitle">Semester 1, 2026 · Curtin University · <a href="index.html" style="color:inherit;text-decoration:underline">All weeks</a></div>
+  </div>
+</div>
+
+<div class="nav-bar">
+  <div class="nav-inner">
+    <div class="nav-indicator">Scenario <span id="currentNum">1</span> of <span>2</span></div>
+    <div class="nav-buttons">
+      <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Back</button>
+      <button class="nav-btn" id="nextBtn" onclick="navigate(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="instructions">
+    <strong>How to use this page:</strong> Read each scenario and try to answer the questions on your own first, as you would in an exam. If you get stuck, click <em>Show Hint</em> for guidance. Use <em>Show Answer</em> only after you have given the question a genuine attempt.
+  </div>
+
+  <!-- ==================== SCENARIO 1 ==================== -->
+  <div class="scenario active" id="scenario1">
+    <div class="scenario-label">Scenario 1</div>
+    <div class="scenario-title">Mental Rotation Under Different Conditions</div>
+
+    <div class="applied-box">
+      <div class="applied-box-label">Why this matters for psychologists</div>
+      <p>Mental rotation ability is routinely assessed in clinical neuropsychology to evaluate visuospatial functioning after brain injury, stroke, or neurodegenerative disease. Performance on mental rotation tasks can help identify lateralised parietal damage and track cognitive recovery. Beyond clinical settings, understanding how spatial imagery works informs the design of cognitive training programmes and has implications for fields such as occupational therapy, where clients must mentally visualise movements and spatial relationships during rehabilitation.</p>
+    </div>
+
+    <div class="scenario-stem">
+      <p>Researchers investigated the mental rotation of 3D block figures (similar to Shepard &amp; Metzler's classic paradigm). Participants judged whether two simultaneously presented figures were identical or mirror-image versions of each other, with the second figure rotated by varying degrees (0°, 40°, 80°, 120°, 160°).</p>
+      <p>To examine whether visual complexity affects the rotation process, two groups of participants were tested:</p>
+      <ul>
+        <li><strong>Group 1 (Simple Figures):</strong> judged figures composed of 6 blocks.</li>
+        <li><strong>Group 2 (Complex Figures):</strong> judged figures composed of 12 blocks.</li>
+      </ul>
+      <p>Mean reaction times (ms) for <em>correct "same" judgements</em> are plotted below as a function of the angle of rotation for each group.</p>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Mean Reaction Time by Angle of Rotation and Figure Complexity</div>
+      <div class="chart-wrapper">
+        <canvas id="chart1"></canvas>
+      </div>
+    </div>
+
+    <div class="questions-section">
+
+      <!-- Easy -->
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">a) Identify the independent variable(s) and the dependent variable in this experiment.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q1hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q1ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q1hint">
+          <div class="reveal-inner hint">
+            <p>Think about what the researchers manipulated (there are two things varying across conditions) and what they measured on each trial.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q1ans">
+          <div class="reveal-inner answer">
+            <p>There are two independent variables: (1) the <strong>angle of rotation</strong> (0°, 40°, 80°, 120°, 160°) and (2) <strong>figure complexity</strong> (simple 6-block vs. complex 12-block).</p>
+            <p>The dependent variable is the <strong>mean reaction time (ms)</strong> for correct "same" judgements.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Easy -->
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">b) Describe the overall pattern of results for both groups. What happens to reaction time as the angle of rotation increases?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q2hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q2ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q2hint">
+          <div class="reveal-inner hint">
+            <p>Look at the direction of each line. Do they go up, down, or stay flat? Do both groups follow a similar trend?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q2ans">
+          <div class="reveal-inner answer">
+            <p>For both groups, reaction time increases approximately linearly as the angle of rotation increases. Participants take longer to respond when the angular disparity between the two figures is greater. The complex figures group shows consistently higher reaction times than the simple figures group at every angle, but both lines follow a similar upward trend.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Medium -->
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">c) Explain how the pattern of results for <em>both</em> groups supports the analogue theory of mental imagery. What does the linear increase specifically tell us about the nature of mental representations?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q3hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q3ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q3hint">
+          <div class="reveal-inner hint">
+            <p>The analogue theory claims that mental images preserve the spatial properties of real objects. If that is the case, what should mental rotation look like in terms of time? Think about the analogy to physically rotating an object in your hands.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q3ans">
+          <div class="reveal-inner answer">
+            <p>The analogue theory of mental imagery proposes that mental images are <strong>depictive representations</strong> that preserve the spatial and metric properties of the objects they represent. Mental operations on these images (such as rotation) unfold in a manner analogous to performing the same operation on a physical object.</p>
+            <p>The linear increase in reaction time with increasing angle supports this: just as it takes proportionally more time to physically rotate an object through a larger angle, it takes proportionally more time to mentally rotate one. This suggests that participants are performing a continuous, incremental transformation of their mental image rather than using an abstract, all-or-nothing comparison strategy. The spatial structure of the object is preserved in the representation.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Medium -->
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">d) Consider the difference between the two groups. What does the offset between the simple and complex figure lines suggest about the mental rotation process? Does figure complexity appear to affect the <em>rate</em> of rotation, the <em>baseline</em> processing time, or both?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q4hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q4ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q4hint">
+          <div class="reveal-inner hint">
+            <p>Compare the two lines carefully. Look at (1) the intercept: where each line starts at 0°, and (2) the slope: how steeply each line rises. Are the slopes similar or different? What would each pattern imply?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q4ans">
+          <div class="reveal-inner answer">
+            <p>The complex-figures line sits above the simple-figures line at every angle, indicating a higher baseline processing time for more complex stimuli. However, the two lines are roughly parallel, meaning their slopes are similar.</p>
+            <p>This suggests that figure complexity mainly affects the time needed to encode and compare the figures (the intercept), not the rate of rotation (the slope). Once rotation begins, the time cost per degree is similar regardless of complexity. That pattern fits a holistic rotation of the whole figure. Be cautious, though: other studies have found that people sometimes rotate complex objects piece by piece, which raises the slope, so whether rotation is holistic may depend on the stimuli and on strategy.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Hard -->
+      <div class="question-block">
+        <div class="q-difficulty hard">Hard</div>
+        <div class="q-text">e) A proponent of the propositional theory might argue that these results do not require an analogue explanation. How might they account for the linear RT increase without invoking depictive mental images? What kind of experimental evidence could help distinguish between the analogue and propositional accounts?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q5hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q5ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q5hint">
+          <div class="reveal-inner hint">
+            <p>Pylyshyn argued that the mind could use abstract, language-like descriptions rather than picture-like images. Could a propositional system produce a linear RT function if it had to process more relational descriptions for larger rotations? Also think about what kind of neuroscience evidence (e.g., brain imaging) could speak to this debate.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q5ans">
+          <div class="reveal-inner answer">
+            <p>A propositional theorist might argue that participants represent the figures as sets of abstract propositions about the spatial relations between parts (for example, "block A is above and to the left of block B"). As the angle increases, more relational descriptions must be transformed and checked, producing a rise in time without any picture-like image. Pylyshyn added the <strong>tacit-knowledge</strong> critique: participants know that rotating a real object takes longer the further it turns, and may reproduce that timing without anything actually rotating.</p>
+            <p>Because any timing pattern a depictive image would produce could also be produced by a well-informed participant, behaviour alone cannot settle the question. The decisive evidence came from the brain: visual cortex is active during imagery; transcranial magnetic stimulation over visual cortex slows imagery as well as perception (Kosslyn et al., 1999), showing a causal contribution; and early visual cortex is recruited according to imagined size, in a retinotopic way. Spatial transformations such as rotation also depend heavily on parietal cortex, which is consistent with the textbook’s point that much classic imagery evidence is really about <em>spatial</em> imagery.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Applied -->
+      <div class="question-block">
+        <div class="q-difficulty applied">Applied</div>
+        <div class="q-text">f) A clinical neuropsychologist assesses a patient who has recently suffered a right parietal stroke. On a mental rotation task, the patient's reaction times are uniformly slow across all angles of rotation, showing no linear increase. In contrast, a healthy age-matched control shows the typical linear pattern. What does the patient's flat RT profile suggest about the integrity of their mental rotation process? How might this finding, combined with what you know about the neural basis of imagery, inform the neuropsychologist's understanding of the patient's visuospatial deficits?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q6hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q6ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q6hint">
+          <div class="reveal-inner hint">
+            <p>Think about what the linear function represents. If it disappears, does that mean the patient cannot do the task at all, or that they are approaching it with a different (possibly less efficient) strategy? Consider which brain regions are involved in mental rotation and what a right parietal lesion might disrupt.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q6ans">
+          <div class="reveal-inner answer">
+            <p>The absence of a linear RT–angle relationship suggests that the patient is <strong>not performing analogue mental rotation</strong> in the typical way. Rather than incrementally rotating a depictive mental image (which would produce angle-dependent RTs), the patient may be relying on an alternative, non-spatial strategy, such as attempting to match individual features of the two figures without rotating the whole image. This strategy would be slower overall but insensitive to the angle of rotation.</p>
+            <p>This is consistent with what we know about the neural basis of mental rotation. Neuroimaging research has identified the <strong>posterior parietal cortex</strong> (particularly in the right hemisphere) as critical for spatial transformations, including mental rotation. A right parietal stroke could disrupt the ability to perform these transformations, forcing the patient to fall back on less efficient compensatory strategies.</p>
+            <p>For the neuropsychologist, this finding would help characterise the <strong>specific nature of the visuospatial deficit</strong>: the patient's difficulty lies not in visual perception per se, but in the ability to mentally manipulate spatial representations. This distinction has practical implications for rehabilitation planning, since interventions could be targeted at supporting spatial transformation skills or teaching compensatory strategies that work around the deficit.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== SCENARIO 2 ==================== -->
+  <div class="scenario" id="scenario2">
+    <div class="scenario-label">Scenario 2</div>
+    <div class="scenario-title">Image Scanning and Perception: Shared or Separate?</div>
+
+    <div class="applied-box">
+      <div class="applied-box-label">Why this matters for psychologists</div>
+      <p>Many evidence-based psychological therapies rely on the client's ability to generate and manipulate mental images. Imagery rescripting is used in the treatment of PTSD, social anxiety, and depression. Mental practice and motor imagery are employed in physical rehabilitation. Exposure therapy sometimes uses imaginal exposure when in-vivo exposure is impractical. Understanding the nature of mental imagery, including individual differences such as aphantasia, is therefore directly relevant to clinical practice: if a client cannot generate vivid visual images, standard imagery-based protocols may need to be adapted.</p>
+    </div>
+
+    <div class="scenario-stem">
+      <p>Researchers adapted Kosslyn's classic image scanning paradigm to compare mental imagery with visual perception. Participants memorised a map of a fictional island containing seven landmarks at various distances from one another. They were then tested in two conditions on separate blocks:</p>
+      <ul>
+        <li><strong>Imagery condition:</strong> Participants closed their eyes, formed a mental image of the map, focused on one landmark, and then mentally scanned to a second named landmark. They pressed a button when they "arrived."</li>
+        <li><strong>Perception condition:</strong> Participants looked at the actual map, fixated a starting landmark, and then visually scanned to the target landmark, pressing a button upon arrival.</li>
+      </ul>
+      <p>Additionally, half the participants were a <strong>neurotypical control group</strong>, and the other half were individuals with <strong>congenital aphantasia</strong> (who report being unable to form voluntary visual mental images). Scanning time (ms) is plotted below for each group and condition as a function of the straight-line distance (cm) between landmarks on the original map.</p>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Scanning Time by Distance, Condition, and Group</div>
+      <div class="chart-wrapper">
+        <canvas id="chart2"></canvas>
+      </div>
+    </div>
+
+    <div class="questions-section">
+
+      <!-- Easy -->
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">a) For the neurotypical control group, describe the relationship between scanning distance and scanning time in both the imagery and perception conditions.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q1hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q1ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q1hint">
+          <div class="reveal-inner hint">
+            <p>Focus on the two lines for the control group. Do both show a similar trend? How close are they to each other?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q1ans">
+          <div class="reveal-inner answer">
+            <p>For the neurotypical control group, scanning time increases linearly with the distance between landmarks in <strong>both</strong> the imagery and perception conditions. The two lines are very similar in both slope and intercept, indicating that mentally scanning across a greater distance takes proportionally more time, much as visually scanning a greater distance does.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Easy -->
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">b) How does this pattern for the control group support the idea that mental images share functional properties with visual perception?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q2hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q2ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q2hint">
+          <div class="reveal-inner hint">
+            <p>If imagery and perception produce nearly identical time–distance functions, what does that say about the underlying representations? Think about the concept of functional equivalence.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q2ans">
+          <div class="reveal-inner answer">
+            <p>The close correspondence between imagery and perception scanning times supports the principle of <strong>functional equivalence</strong>: mental images behave as though they preserve the metric spatial layout of the scene. Because it takes proportionally longer to scan greater distances in imagery, just as it does in perception, the underlying mental representation appears to maintain real spatial distances. This is consistent with the analogue theory's claim that mental images are depictive, not abstract.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Medium -->
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">c) Now examine the results for the aphantasia group. How does their performance compare with the control group’s in each condition? What does this suggest about whether the scanning effect depends on the <em>experience</em> of a visual image?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q3hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q3ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q3hint">
+          <div class="reveal-inner hint">
+            <p>Compare the aphantasia group’s imagery line with the controls’ imagery line. Are the slopes similar? If people who report no visual images still take longer to "scan" longer distances, what must be producing the distance effect?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q3ans">
+          <div class="reveal-inner answer">
+            <p>The aphantasia group shows the same linear relationship between distance and scanning time as controls in <strong>both</strong> conditions. In the imagery condition their times are slightly longer overall, but the slope is very similar.</p>
+            <p>This suggests that the distance effect does not depend on the conscious <em>experience</em> of a visual image. People who report no imagery still represent the map in a way that preserves metric spatial structure, so that longer distances take longer to traverse. This fits the textbook’s distinction between visual imagery (how things look) and spatial imagery (where things are): aphantasia removes the visual experience, but spatial representation can survive. It also matches Milton and colleagues (2021), who found that classic rotation and scanning tasks discriminated poorly between aphantasic and typical imagers.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Hard -->
+      <div class="question-block">
+        <div class="q-difficulty hard">Hard</div>
+        <div class="q-text">d) A critic argues that the controls’ imagery results could be explained by <strong>tacit knowledge</strong>: participants know that scanning further should take longer, so they unconsciously delay their responses. Can the aphantasia data rule this out? If not, what kind of evidence could?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q4hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q4ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q4hint">
+          <div class="reveal-inner hint">
+            <p>Both groups know how maps and distances work, and both show the same distance effect. Is that more or less helpful to the tacit-knowledge critic? Then think about evidence that a participant could not produce simply by knowing what is expected.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q4ans">
+          <div class="reveal-inner answer">
+            <p>The aphantasia data cannot rule out tacit knowledge. Both groups know that further distances take longer, and both show the same distance effect, so the result is exactly what the tacit-knowledge account predicts. If anything, the fact that people with no visual experience still produce the effect makes it harder to argue that the effect reflects a picture-like image specifically.</p>
+            <p>This is why Pylyshyn’s critique is so hard to defeat with behaviour: any timing pattern a depictive representation would produce can also be produced by a participant simulating what they expect. The debate therefore moved to the brain. Visual cortex is active during imagery; TMS over visual cortex slows imagery as well as perception, showing a causal role; and early visual cortex is recruited retinotopically according to imagined size. Tacit knowledge has no obvious way to fake a retinotopic map. A further objective measure is the pupil: imagining a bright scene constricts the pupil in typical imagers but not in aphantasia, and because it is a reflex it cannot be produced to order (Kay et al., 2022).</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Hard -->
+      <div class="question-block">
+        <div class="q-difficulty hard">Hard</div>
+        <div class="q-text">e) Consider the broader implications of the aphantasia findings for the imagery debate. If some individuals can navigate, remember layouts, and function normally without voluntary visual imagery, does this undermine the analogue theory? Or can the analogue theory accommodate these findings? Justify your position.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q5hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q5ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q5hint">
+          <div class="reveal-inner hint">
+            <p>Think carefully about what the analogue theory actually claims. Does it claim that depictive images are the <em>only</em> form of spatial representation? Or does it claim that they are <em>one</em> form of representation that exists and is used when available? Consider also whether there might be different types of spatial processing (e.g., object imagery vs. spatial imagery) and whether aphantasia affects all of them equally.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q5ans">
+          <div class="reveal-inner answer">
+            <p>The aphantasia findings do not undermine the analogue theory’s core claim, which is that when visual images are formed they are depictive and preserve spatial properties. The theory does not require that depictive images are the only way to represent space.</p>
+            <p>What the findings do show is that spatial tasks such as scanning and rotation can be performed without the experience of a visual image, presumably using spatial representations that preserve metric structure without looking like anything. That is consistent with Pearson and Kosslyn’s (2015) argument that representation is heterogeneous: people use depictive and propositional formats flexibly, and aphantasia illustrates the point, since visual reasoning survives without visual experience.</p>
+            <p>The findings also caution against treating classic behavioural imagery tasks as tests of visual imagery at all. If they work just as well without visual experience, they are measuring spatial representation. Questions about the visual format of images need measures that do depend on visual experience, such as the pupillary light response or patterns of activity in early visual cortex.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Applied -->
+      <div class="question-block">
+        <div class="q-difficulty applied">Applied</div>
+        <div class="q-text">f) A clinical psychologist is treating a client with PTSD using imagery rescripting, a technique that involves the client vividly imagining a traumatic memory and then mentally altering key elements of the scene (e.g., introducing a protective figure, changing the outcome). During an early session, the client discloses that they have never been able to "see" things in their mind's eye. Drawing on what you know about aphantasia and the nature of mental imagery, discuss how this might affect the therapy. What adaptations could the psychologist consider, and what does this scenario illustrate about the importance of understanding individual differences in imagery for clinical practice?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q6hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q6ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q6hint">
+          <div class="reveal-inner hint">
+            <p>Think about what imagery rescripting requires the client to do mentally. If the client has aphantasia, which component of the process is likely to be disrupted? Consider whether the therapeutic mechanism depends specifically on <em>visual</em> imagery, or whether other modalities (e.g., verbal narrative, emotional re-experiencing, spatial sense) might also contribute. What could a clinician do differently?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q6ans">
+          <div class="reveal-inner answer">
+            <p>Imagery rescripting relies heavily on the client's ability to generate vivid, detailed mental images of past events and then deliberately transform those images. A client with aphantasia would likely struggle with the <strong>visual component</strong> of this process, since they cannot voluntarily create picture-like representations in their mind.</p>
+            <p>However, this does not necessarily mean the therapy cannot work at all. Research on aphantasia suggests that individuals may still have access to <strong>non-visual forms of representation</strong>, such as spatial awareness, semantic knowledge, and emotional memory. A psychologist could adapt the protocol by emphasising <strong>verbal narrative rescripting</strong> (describing the scene and changes in words rather than visualising them), focusing on <strong>emotional and bodily sensations</strong> associated with the memory, or drawing on <strong>other sensory modalities</strong> (e.g., sounds, physical sensations) that the client can access.</p>
+            <p>This scenario illustrates a broader clinical point: <strong>imagery-based interventions assume a capacity that varies across individuals</strong>. Assessing a client's imagery ability (e.g., using the VVIQ or simply asking about their subjective experience) before beginning imagery-heavy protocols would allow clinicians to tailor their approach. It also highlights how findings from cognitive psychology, such as the discovery of aphantasia and the understanding that imagery is not a unitary capacity, have direct practical implications for evidence-based therapeutic practice.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    BIOL3005 Cognition · Curtin University · School of Population Health
+  </div>
+</div>
+
+<script>
+// ============ Navigation ============
+let currentScenario = 1;
+const totalScenarios = 2;
+
+function navigate(dir) {
+  const newScenario = currentScenario + dir;
+  if (newScenario < 1 || newScenario > totalScenarios) return;
+
+  document.getElementById('scenario' + currentScenario).classList.remove('active');
+  currentScenario = newScenario;
+  document.getElementById('scenario' + currentScenario).classList.add('active');
+  document.getElementById('currentNum').textContent = currentScenario;
+  document.getElementById('prevBtn').disabled = currentScenario === 1;
+  document.getElementById('nextBtn').disabled = currentScenario === totalScenarios;
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============ Reveal Toggle ============
+function toggle(btn, targetId) {
+  const content = document.getElementById(targetId);
+  const isOpen = content.classList.contains('open');
+
+  if (isOpen) {
+    content.classList.remove('open');
+    btn.classList.remove('active');
+    btn.textContent = btn.textContent.replace('Hide', 'Show');
+  } else {
+    content.classList.add('open');
+    btn.classList.add('active');
+    btn.textContent = btn.textContent.replace('Show', 'Hide');
+  }
+}
+
+// ============ Charts ============
+const chartFont = { family: "'DM Sans', sans-serif", size: 12 };
+
+// --- Chart 1: Mental Rotation ---
+const angles1 = [0, 40, 80, 120, 160];
+// Simple: intercept ~550, slope ~3.8ms/deg
+const simpleRT = [550, 700, 860, 1010, 1160];
+// Complex: intercept ~750, slope ~4.0ms/deg (parallel but offset)
+const complexRT = [750, 910, 1080, 1230, 1390];
+
+new Chart(document.getElementById('chart1'), {
+  type: 'line',
+  data: {
+    labels: angles1,
+    datasets: [
+      {
+        label: 'Simple Figures (6 blocks)',
+        data: simpleRT,
+        borderColor: '#3a7d5e',
+        backgroundColor: '#3a7d5e',
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        borderWidth: 2.5,
+        tension: 0.05
+      },
+      {
+        label: 'Complex Figures (12 blocks)',
+        data: complexRT,
+        borderColor: '#b04a32',
+        backgroundColor: '#b04a32',
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        borderWidth: 2.5,
+        tension: 0.05
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { font: chartFont, padding: 16, usePointStyle: true, pointStyle: 'circle' }
+      },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y} ms` } }
+    },
+    scales: {
+      x: {
+        title: { display: true, text: 'Angle of Rotation (degrees)', font: { ...chartFont, weight: '600' } },
+        ticks: { font: chartFont },
+        grid: { color: '#e8e4de' }
+      },
+      y: {
+        title: { display: true, text: 'Mean Reaction Time (ms)', font: { ...chartFont, weight: '600' } },
+        min: 400,
+        max: 1600,
+        ticks: { font: chartFont, stepSize: 200 },
+        grid: { color: '#e8e4de' }
+      }
+    }
+  }
+});
+
+// --- Chart 2: Image Scanning ---
+const distances2 = [2, 4, 6, 8, 10, 12, 14];
+// Control Imagery: linear, intercept ~400, slope ~85ms/cm
+const controlImagery = [560, 740, 900, 1070, 1250, 1410, 1580];
+// Control Perception: very similar to imagery
+const controlPerception = [530, 700, 870, 1040, 1200, 1370, 1530];
+// Aphantasia Perception: similar to control perception
+const aphantasiaPerception = [550, 720, 890, 1060, 1220, 1390, 1550];
+// Aphantasia Imagery: same distance effect as controls, slightly slower overall (consistent with Milton et al., 2021)
+const aphantasiaImagery = [620, 800, 975, 1150, 1330, 1500, 1680];
+
+new Chart(document.getElementById('chart2'), {
+  type: 'line',
+  data: {
+    labels: distances2,
+    datasets: [
+      {
+        label: 'Control, imagery',
+        data: controlImagery,
+        borderColor: '#3a7d5e',
+        backgroundColor: '#3a7d5e',
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        borderWidth: 2.5,
+        tension: 0.05,
+        borderDash: []
+      },
+      {
+        label: 'Control, perception',
+        data: controlPerception,
+        borderColor: '#3a7d5e',
+        backgroundColor: '#3a7d5e',
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        borderWidth: 2.5,
+        tension: 0.05,
+        borderDash: [8, 4],
+        pointStyle: 'triangle'
+      },
+      {
+        label: 'Aphantasia, imagery',
+        data: aphantasiaImagery,
+        borderColor: '#b04a32',
+        backgroundColor: '#b04a32',
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        borderWidth: 2.5,
+        tension: 0.05,
+        borderDash: []
+      },
+      {
+        label: 'Aphantasia, perception',
+        data: aphantasiaPerception,
+        borderColor: '#b04a32',
+        backgroundColor: '#b04a32',
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        borderWidth: 2.5,
+        tension: 0.05,
+        borderDash: [8, 4],
+        pointStyle: 'triangle'
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { font: chartFont, padding: 14, usePointStyle: true }
+      },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y} ms` } }
+    },
+    scales: {
+      x: {
+        title: { display: true, text: 'Distance Between Landmarks (cm)', font: { ...chartFont, weight: '600' } },
+        ticks: { font: chartFont },
+        grid: { color: '#e8e4de' }
+      },
+      y: {
+        title: { display: true, text: 'Scanning Time (ms)', font: { ...chartFont, weight: '600' } },
+        min: 400,
+        max: 1800,
+        ticks: { font: chartFont, stepSize: 200 },
+        grid: { color: '#e8e4de' }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIOL3005 Cognition: Judgement, decisions and reasoning practice problems</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f4f0;
+    --surface: #ffffff;
+    --surface-alt: #f0ede8;
+    --border: #d6d0c6;
+    --text: #2c2a26;
+    --text-muted: #6b6660;
+    --accent: #b04a32;
+    --accent-light: #e8d5cf;
+    --accent-dark: #8c3926;
+    --easy: #3a7d5e;
+    --easy-bg: #e8f3ec;
+    --easy-border: #b0d6bf;
+    --medium: #c07b1a;
+    --medium-bg: #fdf3e0;
+    --medium-border: #e4c67a;
+    --hard: #9b2e4e;
+    --hard-bg: #f6e3ea;
+    --hard-border: #d4a0b3;
+    --hint-bg: #f0f4f8;
+    --hint-border: #a8bdd4;
+    --answer-bg: #f0ede8;
+    --answer-border: #c4bdb2;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  .header { background: var(--text); color: var(--bg); padding: 28px 0 24px; text-align: center; }
+  .header-inner { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+  .header .unit-code { font-size: 0.8rem; letter-spacing: 2.5px; text-transform: uppercase; opacity: 0.6; margin-bottom: 6px; }
+  .header h1 { font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 1.75rem; line-height: 1.3; }
+  .header .subtitle { font-size: 0.9rem; opacity: 0.55; margin-top: 6px; }
+
+  .nav-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 0; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+  .nav-inner { max-width: 880px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-indicator { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+  .nav-indicator span { color: var(--text); font-weight: 700; }
+  .nav-buttons { display: flex; gap: 10px; }
+  .nav-btn { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; padding: 8px 20px; border-radius: var(--radius); border: 1.5px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .main { max-width: 880px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  .scenario { display: none; }
+  .scenario.active { display: block; }
+
+  .scenario-label { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 8px; }
+  .scenario-title { font-family: 'Source Serif 4', serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 16px; line-height: 1.35; }
+
+  .scenario-stem { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 28px; box-shadow: var(--shadow); font-size: 0.95rem; }
+  .scenario-stem p { margin-bottom: 12px; }
+  .scenario-stem p:last-child { margin-bottom: 0; }
+  .scenario-stem ul { margin: 8px 0 12px 20px; }
+  .scenario-stem li { margin-bottom: 6px; }
+  .scenario-stem strong { font-weight: 600; }
+  .scenario-stem .framing-box { background: var(--surface-alt); border: 1px solid var(--border); border-radius: 6px; padding: 14px 18px; margin: 12px 0; font-size: 0.93rem; line-height: 1.6; }
+  .scenario-stem .framing-box .frame-label { font-family: 'DM Sans', sans-serif; font-size: 0.7rem; font-weight: 700; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 4px; }
+
+  .chart-container { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 32px; box-shadow: var(--shadow); }
+  .chart-title { font-weight: 600; font-size: 0.9rem; text-align: center; margin-bottom: 12px; color: var(--text); }
+  .chart-wrapper { position: relative; max-width: 650px; margin: 0 auto; }
+
+  .questions-section { margin-top: 8px; }
+  .question-block { margin-bottom: 24px; }
+
+  .q-difficulty { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 4px; margin-bottom: 8px; }
+  .q-difficulty.easy { background: var(--easy-bg); color: var(--easy); border: 1px solid var(--easy-border); }
+  .q-difficulty.medium { background: var(--medium-bg); color: var(--medium); border: 1px solid var(--medium-border); }
+  .q-difficulty.hard { background: var(--hard-bg); color: var(--hard); border: 1px solid var(--hard-border); }
+  .q-difficulty.applied { background: #eef3f8; color: #4a7faa; border: 1px solid #b3c8de; }
+
+  .q-text { font-family: 'Source Serif 4', serif; font-size: 1.05rem; font-weight: 400; line-height: 1.55; margin-bottom: 12px; }
+
+  .reveal-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+  .reveal-btn { font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 600; padding: 6px 16px; border-radius: 6px; border: 1.5px solid; cursor: pointer; transition: all 0.15s ease; background: transparent; }
+  .reveal-btn.hint-btn { border-color: var(--hint-border); color: #4a6b8a; }
+  .reveal-btn.hint-btn:hover { background: var(--hint-bg); }
+  .reveal-btn.answer-btn { border-color: var(--answer-border); color: var(--text-muted); }
+  .reveal-btn.answer-btn:hover { background: var(--answer-bg); }
+  .reveal-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+  .reveal-content { overflow: hidden; max-height: 0; opacity: 0; transition: max-height 0.35s ease, opacity 0.25s ease, margin 0.25s ease; margin-top: 0; }
+  .reveal-content.open { max-height: 900px; opacity: 1; margin-top: 10px; }
+  .reveal-inner { padding: 16px 20px; border-radius: var(--radius); font-size: 0.9rem; line-height: 1.6; }
+  .reveal-inner.hint { background: var(--hint-bg); border: 1px solid var(--hint-border); color: #3a5a78; }
+  .reveal-inner.answer { background: var(--answer-bg); border: 1px solid var(--answer-border); color: var(--text); }
+  .reveal-inner p { margin-bottom: 8px; }
+  .reveal-inner p:last-child { margin-bottom: 0; }
+
+  .q-divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  .instructions { background: var(--accent-light); border: 1px solid #d4b0a3; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 28px; font-size: 0.85rem; color: var(--accent-dark); line-height: 1.55; }
+  .instructions strong { font-weight: 700; }
+
+  .applied-box { background: #eef3f8; border: 1px solid #b3c8de; border-left: 4px solid #4a7faa; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 24px; font-size: 0.88rem; line-height: 1.6; color: #2a4560; }
+  .applied-box-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #4a7faa; margin-bottom: 6px; }
+  .applied-box p { margin-bottom: 8px; }
+  .applied-box p:last-child { margin-bottom: 0; }
+
+  .term-bridge { background: #f3f0e6; border: 1px solid #d8cda0; border-left: 4px solid #b89a3e; border-radius: var(--radius); padding: 14px 18px; margin: 16px 0; font-size: 0.88rem; line-height: 1.6; color: #4a3f24; }
+  .term-bridge-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #9a7d2e; margin-bottom: 6px; }
+  .term-bridge p { margin-bottom: 8px; }
+  .term-bridge p:last-child { margin-bottom: 0; }
+  .term-bridge strong { font-weight: 600; }
+
+  .footer { text-align: center; padding: 24px; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 40px; }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 1.35rem; }
+    .scenario-title { font-size: 1.2rem; }
+    .nav-inner { flex-direction: column; gap: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="unit-code">BIOL3005 Cognition</div>
+    <h1>Practice problems: Judgement, decisions and reasoning</h1>
+    <div class="subtitle">Semester 1, 2026 · Curtin University · <a href="index.html" style="color:inherit;text-decoration:underline">All weeks</a></div>
+  </div>
+</div>
+
+<div class="nav-bar">
+  <div class="nav-inner">
+    <div class="nav-indicator">Scenario <span id="currentNum">1</span> of <span>2</span></div>
+    <div class="nav-buttons">
+      <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Back</button>
+      <button class="nav-btn" id="nextBtn" onclick="navigate(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="instructions">
+    <strong>How to use this page:</strong> Read each scenario and try to answer the questions on your own first, as you would in an exam. If you get stuck, click <em>Show Hint</em> for guidance. Use <em>Show Answer</em> only after you have given the question a genuine attempt.
+  </div>
+
+  <!-- ==================== SCENARIO 1 ==================== -->
+  <div class="scenario active" id="scenario1">
+    <div class="scenario-label">Scenario 1</div>
+    <div class="scenario-title">Framing Effects, Cognitive Load, and Prospect Theory</div>
+
+    <div class="applied-box">
+      <div class="applied-box-label">Why this matters for psychologists</div>
+      <p>Framing effects have profound implications for health psychology, clinical communication, and public policy. How a treatment option is described (e.g., "90% survival rate" vs. "10% mortality rate") can dramatically shift patients' decisions about surgery, medication, and screening. Psychologists working in health settings, organisational consulting, or forensic contexts need to understand how framing biases operate and when people are most vulnerable to them.</p>
+    </div>
+
+    <div class="scenario-stem">
+      <p>Researchers investigated the framing effect using a scenario modelled on Tversky and Kahneman's classic disease problem. Participants imagined that a new disease was expected to kill 600 people, and they had to choose between two treatment programmes. The options were presented in one of two frames:</p>
+
+      <div class="framing-box">
+        <span class="frame-label">Gain frame</span>
+        <strong>Programme A:</strong> 200 people will be saved.<br>
+        <strong>Programme B:</strong> There is a 1/3 probability that all 600 will be saved, and a 2/3 probability that nobody will be saved.
+      </div>
+
+      <div class="framing-box">
+        <span class="frame-label">Loss frame</span>
+        <strong>Programme A:</strong> 400 people will die.<br>
+        <strong>Programme B:</strong> There is a 1/3 probability that nobody will die, and a 2/3 probability that all 600 will die.
+      </div>
+
+      <p>Notice that the options are <strong>objectively identical</strong> across the two frames: Programme A always results in 200 saved / 400 dead, and Programme B always has the same expected value.</p>
+
+      <div class="term-bridge">
+        <div class="term-bridge-label">A note on terminology</div>
+        <p>You met the core finding in the lecture as the <strong>framing effect</strong>: gain-framed choices push people towards caution, loss-framed choices push them towards risk-taking (Tversky &amp; Kahneman, 1981). <strong>Prospect theory</strong> is simply the name for the broader account that explains <em>why</em> this happens. It is not a new topic, it is the umbrella term for the framing and loss-aversion ideas you already have. The questions below use that explanation; the technical vocabulary is introduced as you need it, so don't worry if a particular phrase wasn't a heading in the lecture slides.</p>
+      </div>
+
+      <p>To examine the role of deliberative processing, the researchers added a <strong>cognitive load manipulation</strong>. Half the participants in each frame condition made their choice while simultaneously holding an 8-digit number in memory (high cognitive load), while the other half had no secondary task (low cognitive load).</p>
+
+      <p>The graph below shows the percentage of participants choosing the <strong>certain option (Programme A)</strong> in each condition.</p>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">% Choosing the Certain Option (Programme A) by Frame and Cognitive Load</div>
+      <div class="chart-wrapper">
+        <canvas id="chart1"></canvas>
+      </div>
+    </div>
+
+    <div class="questions-section">
+
+      <!-- Easy -->
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">a) What is a framing effect? Using the data in the graph, describe the basic framing effect observed in the low cognitive load condition.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q1hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q1ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q1hint">
+          <div class="reveal-inner hint">
+            <p>A framing effect occurs when the way information is presented changes people's decisions, even though the underlying facts are the same. Compare the two bars in the low cognitive load condition. Which frame leads to more people choosing the certain option?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q1ans">
+          <div class="reveal-inner answer">
+            <p>A <strong>framing effect</strong> occurs when people's choices are influenced by how the options are described (the "frame"), even when the objective outcomes are identical. The same information, presented in terms of gains versus losses, leads to systematically different preferences.</p>
+            <p>In the low cognitive load condition, the graph shows that a <strong>higher percentage of participants chose the certain option (Programme A) in the gain frame</strong> (approximately 72%) compared to the <strong>loss frame</strong> (approximately 38%). This means that when the outcome was described as "200 people will be saved," participants preferred the sure thing, but when the identical outcome was described as "400 people will die," they shifted towards the risky gamble. This is the classic framing effect.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Easy -->
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">b) In the gain frame, most people take the sure thing; in the loss frame, the same people gamble. Before naming any theory, reason it through: why might describing an identical outcome as a <em>loss</em> rather than a <em>gain</em> flip someone from cautious to risk-taking? Then connect your reasoning to the account from the lecture. This explanation is what Kahneman and Tversky called <strong>prospect theory</strong>, and its central idea is a <strong>value function</strong> that bends differently for gains than for losses. What feature of that function accounts for the asymmetry you described?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q2hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q2ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q2hint">
+          <div class="reveal-inner hint">
+            <p>Start in plain terms: as a gain gets bigger, does each extra person saved feel as valuable as the first? Probably not, the impact of each additional gain shrinks. The same is true on the loss side. That "shrinking impact" is what psychologists capture with the <strong>S-shaped value function</strong>: it is concave for gains (each extra gain matters less) and convex for losses (each extra loss matters less), and the loss side is steeper than the gain side. Now think: if each extra person saved adds less value, is a certain 200 saved worth more or less than a gamble on 600? And if a certain loss feels disproportionately heavy, does gambling to avoid it start to look attractive?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q2ans">
+          <div class="reveal-inner answer">
+            <p>Prospect theory proposes that people evaluate outcomes relative to a reference point (usually the status quo), with a value function that is concave for gains and convex for losses.</p>
+            <p>In the gain frame, outcomes are evaluated as gains. Because the function is <strong>concave</strong> for gains, the step from saving nobody to saving 200 feels larger than the further step from 200 to 600, so a certain 200 is worth more subjectively than a one-in-three chance of 600. People take the sure thing: <strong>risk aversion</strong>.</p>
+            <p>In the loss frame, outcomes are evaluated as losses. Because the function is <strong>convex</strong> for losses, a certain loss of 400 feels almost as bad as a loss of 600, so a gamble offering a chance of losing nobody becomes attractive. People gamble: <strong>risk seeking</strong>.</p>
+            <p>Note what does and does not explain the reversal. It comes from the <em>curvature</em> of the value function, not from loss aversion. Loss aversion, the finding that the loss side is steeper so that losses loom larger than equivalent gains, is a separate property, seen most clearly when people refuse a 50–50 bet to win or lose the same amount (textbook §11.5).</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Medium -->
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">c) Now examine the effect of cognitive load on the framing effect. Compare the difference between gain-frame and loss-frame choices under low cognitive load versus high cognitive load. What does this pattern suggest about the relationship between framing effects and dual-process theory (System 1 and System 2)?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q3hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q3ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q3hint">
+          <div class="reveal-inner hint">
+            <p>Cognitive load occupies System 2 (the slow, deliberative system), leaving people more reliant on System 1 (the fast, intuitive system). If framing effects are driven by System 1, what should happen to the size of the framing effect when System 2 is occupied? Look at whether the gap between the gain and loss bars is bigger or smaller under high cognitive load.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q3ans">
+          <div class="reveal-inner answer">
+            <p>Under <strong>high cognitive load</strong>, the framing effect is <strong>amplified</strong>: the gap between gain-frame and loss-frame choices is larger than under low cognitive load. Under high load, an even greater proportion of participants chose the certain option in the gain frame, and an even smaller proportion chose it in the loss frame, compared to the low-load condition.</p>
+            <p>This pattern maps neatly onto <strong>dual-process theory</strong>. <strong>System 1</strong> is fast, automatic, and emotion-driven; it is the system that responds intuitively to the affective tone of the frame (gains feel good → play it safe; losses feel bad → take a risk). <strong>System 2</strong> is slow, deliberative, and analytical; it is capable of recognising that the two frames describe identical outcomes and therefore that preferences should not differ.</p>
+            <p>When cognitive load occupies System 2 resources, participants are <strong>less able to override the intuitive, frame-dependent response generated by System 1</strong>. The result is a stronger framing effect. When System 2 is free (low cognitive load), at least some participants can recognise the equivalence of the two frames and resist the bias, reducing (but not eliminating) the framing effect. This supports the view that framing effects originate in automatic, affective processing and that deliberative reasoning can partially correct them.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Hard -->
+      <div class="question-block">
+        <div class="q-difficulty hard">Hard</div>
+        <div class="q-text">d) A critic argues that the framing effect does not necessarily reflect irrational bias, because the gain and loss frames may activate genuinely different psychological goals. In the gain frame, the goal might be "secure what we can," while in the loss frame, the goal might be "avoid the worst-case scenario." Evaluate this argument. Does it undermine the claim that framing effects are a cognitive bias? How might a proponent of the heuristics-and-biases tradition respond?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q4hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q4ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q4hint">
+          <div class="reveal-inner hint">
+            <p>The key question is whether "rational" means "consistent with expected utility theory" or "adaptive given the psychological context." The critic is suggesting the latter. But Kahneman and Tversky would point out that the objective outcomes are identical across frames, and a fully rational agent (by normative standards) should not reverse their preference based on wording alone. Think about the tension between descriptive and normative accounts of rationality.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q4ans">
+          <div class="reveal-inner answer">
+            <p>The critic raises a legitimate point. From a <strong>pragmatic or ecological rationality</strong> perspective, it is reasonable to argue that different frames highlight different aspects of a situation and activate different goals. Humans did not evolve to maximise expected utility across formally identical descriptions; they evolved to respond to contextual cues about threats and opportunities. In this view, the gain frame signals an opportunity (activating a "secure gains" goal) and the loss frame signals a threat (activating an "avoid losses" goal), and it is adaptive to respond differently to threats than to opportunities.</p>
+            <p>However, a proponent of the <strong>heuristics-and-biases tradition</strong> would respond that this argument does not rescue framing effects from the charge of irrationality, at least by normative standards. The two frames describe <strong>objectively identical outcomes</strong>. A decision-maker who chooses Programme A in the gain frame and Programme B in the loss frame is expressing contradictory preferences: they simultaneously prefer a certain outcome of 200 saved and reject a certain outcome of 400 dead, even though these are the same thing. This <strong>preference reversal</strong> violates the principle of <strong>descriptive invariance</strong>, which states that rational preferences should not depend on how options are described.</p>
+            <p>The cognitive load data in the current experiment adds weight to the bias interpretation: if framing effects increase when System 2 is occupied, this suggests that the frame-dependent response is a default that deliberative reasoning can partially correct, consistent with the idea that it is a bias rather than a considered judgement.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Hard -->
+      <div class="question-block">
+        <div class="q-difficulty hard">Hard</div>
+        <div class="q-text">e) The value function is <strong>convex</strong> for losses: each additional loss hurts a little less than the one before. Suppose a second experiment changed the loss frame so that the certain option became "200 people will die" (instead of 400). The sure loss is now much smaller than the gamble’s average outcome. If risk seeking in the loss frame really comes from the shape of the value function, predict what happens: do people still gamble, or shift to the certain option? Justify your prediction.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q5hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q5ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q5hint">
+          <div class="reveal-inner hint">
+            <p>In the original loss frame, the certain option (400 die) has the same expected value as the gamble (2/3 chance that 600 die). In the modified version, the certain loss (200 die) is objectively better than the gamble's expected value (400 die). Think about where 200 and 400 sit on the convex loss curve. The convexity of the loss function makes people gamble when the certain and expected losses are similar, but if the certain loss is much smaller, even a loss-averse person might prefer the sure thing. Would the reduced certain loss shift preferences?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q5ans">
+          <div class="reveal-inner answer">
+            <p>In the original loss frame, the certain option (400 die) and the gamble (expected value of 400 deaths) have the same expected value. The convexity of the value function in the loss region makes the certain loss feel disproportionately painful, pushing people towards the gamble.</p>
+            <p>In the modified version, the certain loss (200 die) is <strong>objectively much better</strong> than the gamble's expected value (400 deaths). On the value function, the subjective pain of losing 200 is considerably less than the subjective pain associated with the gamble's possible outcomes (0 or 600 deaths). The convexity of the loss function is still present, but the <strong>magnitude difference</strong> between the certain loss and the gamble's expected loss is now large enough that the certain option should look attractive even in the loss frame.</p>
+            <p>The prediction is that the framing effect would be <strong>substantially reduced or eliminated</strong> in this modified version. Participants would likely shift towards preferring the certain option even in the loss frame, because the certain loss is now clearly better than the gamble by a wide enough margin to overcome the risk-seeking tendency generated by loss convexity. This illustrates that the framing effect depends not just on whether outcomes are described as losses, but on the <strong>relative magnitude</strong> of the certain and uncertain options within the value function. When the certain option is sufficiently attractive, even loss-framed descriptions cannot push people towards the gamble.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Applied -->
+      <div class="question-block">
+        <div class="q-difficulty applied">Applied</div>
+        <div class="q-text">f) A health psychologist is helping design the consent form for a new surgical procedure. The surgical team wants to present the risk information in a way that helps patients make well-informed decisions, free from framing bias. The current draft states: "This procedure has a 95% survival rate." Drawing on what you know about framing effects, loss aversion, and dual-process theory, identify the potential problem with this single-frame presentation. What alternative approach would you recommend, and why? Consider also whether patient factors (e.g., anxiety, cognitive capacity) might moderate vulnerability to framing effects.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q6hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q6ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q6hint">
+          <div class="reveal-inner hint">
+            <p>"95% survival rate" is a gain frame. If the same information were presented as "5% mortality rate," patients might react very differently. Think about what best practice would look like for informed consent: should both frames be presented? How might anxiety (which occupies cognitive resources similarly to cognitive load) affect a patient's ability to see through the frame?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q6ans">
+          <div class="reveal-inner answer">
+            <p>The current wording, "95% survival rate," presents the information in a <strong>pure gain frame</strong>. Prospect theory predicts that this will make the procedure seem more attractive than if the same information were presented as "5% mortality rate" (loss frame). By providing only one frame, the consent form may inadvertently bias patients towards agreeing to the procedure, undermining truly informed consent.</p>
+            <p>The recommended approach is to present the information in <strong>both frames simultaneously</strong>: "This procedure has a 95% survival rate (equivalently, a 5% mortality rate)." Providing both descriptions gives patients access to the full picture and reduces the likelihood that their decision is driven by the affective tone of a single frame. This approach encourages <strong>System 2 engagement</strong> by making the equivalence explicit, which helps patients evaluate the actual risk rather than responding to how it feels.</p>
+            <p>Patient factors are important moderators. <strong>Anxious patients</strong> are likely to have reduced cognitive resources available for deliberative processing, much as the cognitive load manipulation in the experiment reduced System 2's ability to override framing effects. Highly anxious patients may therefore be more vulnerable to framing bias. Similarly, patients with <strong>lower health literacy or cognitive capacity</strong> (e.g., elderly patients, those under the influence of medication) may be more reliant on System 1 processing and more susceptible to the frame in which information is presented. For these patients, additional support such as visual aids, simplified language, decision aids, or structured conversations with a health professional may be needed to help them process the information more deliberatively.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== SCENARIO 2 ==================== -->
+  <div class="scenario" id="scenario2">
+    <div class="scenario-label">Scenario 2</div>
+    <div class="scenario-title">Deductive Reasoning, the Wason Selection Task, and Emotion</div>
+
+    <div class="applied-box">
+      <div class="applied-box-label">Why this matters for psychologists</div>
+      <p>Logical reasoning underpins evidence-based practice. Clinicians routinely evaluate conditional rules (e.g., "If a patient has symptom X, then they should receive treatment Y") and must detect violations of such rules (e.g., a patient with symptom X who was not given treatment Y). Research on the Wason selection task reveals that people are much better at detecting rule violations in social and professional contexts than in abstract ones, which has direct implications for how clinical protocols, diagnostic criteria, and audit procedures should be designed.</p>
+    </div>
+
+    <div class="scenario-stem">
+      <p>Researchers investigated performance on the <strong>Wason selection task</strong> across different contexts. In the standard task, participants are shown four cards and a conditional rule of the form "If P, then Q." Each card has information about P on one side and Q on the other. Participants must select only those cards that need to be turned over to determine whether the rule has been violated (the logically correct answer is P and not-Q).</p>
+      <p>Three versions of the task were used:</p>
+      <ul>
+        <li><strong>Abstract version:</strong> "If a card has a vowel on one side, then it has an even number on the other side." Cards: A, K, 4, 7.</li>
+        <li><strong>Social contract version:</strong> "If a person is drinking beer, then they must be 18 or older." Cards: Drinking beer, Drinking water, 25 years old, 16 years old.</li>
+        <li><strong>Precaution (threat) version:</strong> "If a person enters the restricted zone, then they must wear a protective mask." The zone is described as containing a dangerous pathogen. Cards: Entered the restricted zone, Stayed outside, Wearing a mask, Not wearing a mask.</li>
+      </ul>
+      <p>A separate group of participants completed each version. The researchers also measured <strong>self-reported emotional arousal</strong> after the task using a 1–10 scale. The two graphs below show (1) the percentage of participants selecting the logically correct card combination (P and not-Q), and (2) mean emotional arousal ratings.</p>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">% Selecting the Logically Correct Cards (P and not-Q)</div>
+      <div class="chart-wrapper">
+        <canvas id="chart2a"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Mean Self-Reported Emotional Arousal (1–10)</div>
+      <div class="chart-wrapper">
+        <canvas id="chart2b"></canvas>
+      </div>
+    </div>
+
+    <div class="questions-section">
+
+      <!-- Easy -->
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">a) In the abstract version of the Wason selection task ("If vowel, then even number"), explain why the logically correct cards to turn over are "A" and "7" (i.e., P and not-Q). Why are "K" and "4" (not-P and Q) logically uninformative?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1aHint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1aAns')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1aHint">
+          <div class="reveal-inner hint">
+            <p>The rule says "If P, then Q." The only way to violate a conditional rule is to have P true and Q false (P and not-Q). Think about what you would find if you turned over each card. Which cards could reveal P on one side and not-Q on the other?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1aAns">
+          <div class="reveal-inner answer">
+            <p>The rule states: "If a card has a vowel on one side (P), then it has an even number on the other side (Q)." The only way to violate this rule is to find a card with a vowel on one side and an <strong>odd</strong> number on the other (P and not-Q).</p>
+            <p><strong>"A" (P):</strong> This card shows a vowel. If you turn it over and find an odd number, the rule is violated. This card must be checked.</p>
+            <p><strong>"7" (not-Q):</strong> This card shows an odd number. If you turn it over and find a vowel, the rule is violated. This card must be checked.</p>
+            <p><strong>"K" (not-P):</strong> This card shows a consonant. The rule says nothing about what must be on the other side of consonant cards, so whatever you find is irrelevant.</p>
+            <p><strong>"4" (Q):</strong> This card shows an even number. Even if there is a vowel on the other side, this would <em>confirm</em> the rule, not violate it. And if there is a consonant, the rule is silent about consonants. So this card is uninformative for detecting violations.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Easy -->
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">b) Based on the first graph, describe the differences in correct performance across the three versions. Which version produced the highest performance, and which the lowest?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1bHint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1bAns')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1bHint">
+          <div class="reveal-inner hint">
+            <p>Compare the three bars directly. The abstract version is the classic finding. How do the social contract and precaution versions compare to each other and to the abstract version?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1bAns">
+          <div class="reveal-inner answer">
+            <p>The <strong>abstract version</strong> produced the lowest correct performance (approximately 10%), consistent with the well-established finding that people perform poorly on the Wason task when the content is abstract.</p>
+            <p>The <strong>social contract version</strong> produced substantially higher performance (approximately 72%), showing that when the rule involves a familiar social regulation (drinking age), people are much better at identifying which cards could reveal a violation.</p>
+            <p>The <strong>precaution version</strong> produced the highest performance (approximately 82%), suggesting that when the rule involves a potential danger to personal safety, reasoning about violations is even further enhanced.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Medium -->
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">c) The dramatic improvement in performance on the social contract version has been explained by the idea that humans have evolved a specialised cognitive mechanism for detecting cheaters in social exchanges. Explain this account. Why would an evolved "cheater detection" module improve performance on the drinking-age version but not the abstract version?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1cHint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1cAns')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1cHint">
+          <div class="reveal-inner hint">
+            <p>Cosmides and Tooby argued that social exchange (cooperation, reciprocity) was so important in human evolution that the brain developed specialised reasoning mechanisms for detecting people who take benefits without meeting the required conditions. "If you drink alcohol, you must be 18 or older" is a social contract: the benefit is drinking, the condition is being of age. Detecting someone who drinks while underage is detecting a cheater. Why would this module not activate for arbitrary rules about vowels and numbers?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1cAns">
+          <div class="reveal-inner answer">
+            <p>The social contract account (Cosmides and Tooby) proposes that humans have evolved a specialised mechanism for detecting <strong>cheaters</strong> in social exchange: people who take a benefit without meeting the requirement attached to it. In ancestral environments, cooperation was critical for survival, and individuals who could spot cheats had an advantage.</p>
+            <p>The drinking-age rule is a social contract: "If you take the benefit (drink beer), you must meet the requirement (be 18 or older)." A cheater is someone drinking while under age. Looking for cheaters means checking the beer drinker and the 16-year-old, which is exactly the logically correct P and not-Q selection. The abstract rule involves no benefit, no requirement and no possibility of cheating, so the mechanism is not engaged, and people fall back on a matching or confirming strategy (P and Q).</p>
+            <p>The textbook sets this against a rival explanation, the <strong>permission schema</strong>: a lifetime of practice with rules of the form "to do X you must satisfy Y" gives us a learned schema that guides the search. Both accounts explain the drinking-age result; they differ in whether the ability is evolved and specific to social exchange, or learned and more general.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Medium -->
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">d) Now consider the emotional arousal data in the second graph alongside the performance data. The precaution version produced both the highest arousal and the highest performance. Does this mean that emotional arousal <em>caused</em> the improved reasoning? What alternative explanation is possible? How might you redesign the experiment to test whether arousal plays a causal role?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1dHint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1dAns')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1dHint">
+          <div class="reveal-inner hint">
+            <p>Correlation does not imply causation. The threat version differs from the other versions in both emotional content <em>and</em> in the type of rule (hazard detection vs. social contract vs. abstract). Could the improved performance be due to the hazard-detection content rather than arousal per se? To test the causal role of arousal, you would need to manipulate arousal independently of the task content.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1dAns">
+          <div class="reveal-inner answer">
+            <p>The fact that the precaution version produced both higher arousal and higher performance does not establish that <strong>arousal caused the improvement</strong>. This is a <strong>correlational observation</strong>: the threat version differs from the other versions in multiple ways simultaneously. The improved performance could be driven by the <strong>content of the rule</strong> (hazard detection may activate a specialised reasoning mechanism, similar to but distinct from cheater detection), with the higher arousal being a by-product of the threatening content rather than the cause of better reasoning.</p>
+            <p>An alternative explanation is that the threat version engages a <strong>precautionary reasoning module</strong> (analogous to the cheater detection module) that is specialised for detecting situations where safety rules have been violated. The arousal may simply reflect the emotional salience of the content without contributing to the reasoning process itself.</p>
+            <p>To test the causal role of arousal, the researchers could <strong>manipulate arousal independently</strong> of task content. For example, they could induce high arousal through an unrelated means (e.g., physical exercise, an arousing film clip, or a stress induction procedure) before participants complete the <strong>abstract</strong> version of the Wason task. If arousal causally improves reasoning, performance on the abstract version should improve under induced arousal compared to a calm control group. If performance remains poor despite high arousal, this would suggest that the content of the rule (social contract, hazard), not arousal itself, is the critical factor.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Hard -->
+      <div class="question-block">
+        <div class="q-difficulty hard">Hard</div>
+        <div class="q-text">e) Dual-process theory offers a different perspective from the evolutionary (cheater detection) account. From a dual-process standpoint, how might you explain the difference in performance across the three versions of the Wason task? Is it possible that both accounts are partially correct? Discuss how System 1 and System 2 might each contribute differently depending on the task version.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1eHint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1eAns')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1eHint">
+          <div class="reveal-inner hint">
+            <p>In the abstract version, System 1 might default to a confirmation strategy (check P and Q), and System 2 must intervene to override this. In the social contract version, System 1 might intuitively generate the correct "cheater detection" response without needing System 2 correction. Think about whether the two theories are truly competing or whether they explain different aspects of the phenomenon.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1eAns">
+          <div class="reveal-inner answer">
+            <p>From a <strong>dual-process perspective</strong>, the abstract Wason task is difficult because <strong>System 1 generates a default response</strong> that is logically incorrect: people intuitively select the P card and the Q card (a confirmation strategy), and System 2 must effortfully override this to arrive at the correct P and not-Q selection. Since System 2 processing is effortful and error-prone, most people fail the abstract version.</p>
+            <p>In the <strong>social contract version</strong>, the cheater detection mechanism may function as a <strong>specialised System 1 process</strong>: it generates the correct card selections automatically and intuitively, without requiring System 2 intervention. People "just know" that they need to check the beer drinker and the 16-year-old, because this matches a deeply ingrained pattern of social monitoring. The correct answer is the intuitive answer, so System 2 does not need to correct anything.</p>
+            <p>In the <strong>precaution version</strong>, a similar process may occur: the threatening content triggers an intuitive hazard-detection response that happens to align with the logically correct selection. The emotional arousal may additionally <strong>increase attentional focus</strong>, making participants more careful in their card selection.</p>
+            <p>The two accounts are not necessarily competing. The evolutionary account explains <strong>why</strong> certain contents make the task easy (because they activate domain-specific reasoning mechanisms shaped by natural selection). Dual-process theory explains <strong>how</strong> these mechanisms interact with general cognitive architecture (as fast, automatic System 1 processes that produce the correct answer without requiring effortful System 2 correction). The evolutionary account specifies the content of the specialised modules; dual-process theory specifies their processing characteristics.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Applied -->
+      <div class="question-block">
+        <div class="q-difficulty applied">Applied</div>
+        <div class="q-text">f) A hospital quality improvement team is trying to increase compliance with a hand hygiene rule: "If a healthcare worker enters a patient room, then they must sanitise their hands." Despite clear signage, audit data show that violations are common and often go unreported by colleagues. Drawing on the Wason selection task findings and what you know about cheater detection, social contracts, and emotional reasoning, explain why healthcare workers may fail to detect (or report) violations of this rule. What changes to the framing or presentation of the rule, informed by the reasoning literature, might improve violation detection?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1fHint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1fAns')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1fHint">
+          <div class="reveal-inner hint">
+            <p>The hand hygiene rule is framed as a procedural requirement, which may feel more like an abstract rule than a social contract or a threat. Think about how the hospital could reframe it to activate cheater detection (e.g., emphasising that non-compliance puts vulnerable patients at risk) or emotional threat reasoning (e.g., linking non-compliance to specific patient harm). Also consider whether making violations socially visible might activate social monitoring mechanisms.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1fAns">
+          <div class="reveal-inner answer">
+            <p>The hand hygiene rule, as currently framed, may function psychologically more like an <strong>abstract conditional rule</strong> than a social contract or a threat. "If you enter a patient room, sanitise your hands" is a procedural requirement. People are poor at monitoring compliance with abstract rules (as the Wason task shows), which may explain why colleagues fail to notice or report violations: the rule does not intuitively trigger the cheater detection or hazard-detection mechanisms that improve violation monitoring.</p>
+            <p>Several changes informed by the reasoning literature could improve detection:</p>
+            <p><strong>Reframe as a social contract:</strong> Emphasise the reciprocal nature of the obligation. For example, "Patients trust that everyone who enters their room has clean hands. If you enter, you owe them that protection." This frames hand hygiene as a <strong>social obligation to a vulnerable person</strong>, which is more likely to activate cheater detection reasoning. Colleagues who observe a violation would intuitively recognise it as someone "cheating" a vulnerable patient.</p>
+            <p><strong>Reframe as an emotional threat:</strong> Make the consequences of non-compliance vivid and personal. For example, signage that reads "Unsanitised hands carry bacteria that can kill immunocompromised patients" reframes the rule in terms of <strong>danger and harm</strong>, activating the same hazard-detection reasoning that boosted performance in the precaution version of the Wason task.</p>
+            <p><strong>Increase social visibility:</strong> Making hand hygiene behaviour <strong>publicly observable</strong> (e.g., hand sanitiser stations at room entrances where compliance is visible to others) leverages the social monitoring mechanisms that evolved for tracking cooperation. When behaviour is visible, social evaluation processes are more likely to be engaged, making both compliance and violation detection more automatic.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    BIOL3005 Cognition · Curtin University · School of Population Health
+  </div>
+</div>
+
+<script>
+// ============ Navigation ============
+let currentScenario = 1;
+const totalScenarios = 2;
+
+function navigate(dir) {
+  const newScenario = currentScenario + dir;
+  if (newScenario < 1 || newScenario > totalScenarios) return;
+  document.getElementById('scenario' + currentScenario).classList.remove('active');
+  currentScenario = newScenario;
+  document.getElementById('scenario' + currentScenario).classList.add('active');
+  document.getElementById('currentNum').textContent = currentScenario;
+  document.getElementById('prevBtn').disabled = currentScenario === 1;
+  document.getElementById('nextBtn').disabled = currentScenario === totalScenarios;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============ Reveal Toggle ============
+function toggle(btn, targetId) {
+  const content = document.getElementById(targetId);
+  const isOpen = content.classList.contains('open');
+  if (isOpen) {
+    content.classList.remove('open');
+    btn.classList.remove('active');
+    btn.textContent = btn.textContent.replace('Hide', 'Show');
+  } else {
+    content.classList.add('open');
+    btn.classList.add('active');
+    btn.textContent = btn.textContent.replace('Show', 'Hide');
+  }
+}
+
+// ============ Charts ============
+const chartFont = { family: "'DM Sans', sans-serif", size: 12 };
+
+// --- Chart 1: Framing × Cognitive Load ---
+new Chart(document.getElementById('chart1'), {
+  type: 'bar',
+  data: {
+    labels: ['Gain Frame', 'Loss Frame'],
+    datasets: [
+      {
+        label: 'Low Cognitive Load',
+        data: [72, 38],
+        backgroundColor: '#3a7d5e',
+        borderColor: '#2a5e46',
+        borderWidth: 1.5,
+        borderRadius: 4,
+        barPercentage: 0.65,
+        categoryPercentage: 0.6
+      },
+      {
+        label: 'High Cognitive Load',
+        data: [85, 22],
+        backgroundColor: '#b04a32',
+        borderColor: '#8c3926',
+        borderWidth: 1.5,
+        borderRadius: 4,
+        barPercentage: 0.65,
+        categoryPercentage: 0.6
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: { position: 'bottom', labels: { font: chartFont, padding: 16, usePointStyle: true, pointStyle: 'rectRounded' } },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}%` } }
+    },
+    scales: {
+      x: {
+        title: { display: true, text: 'Frame', font: { ...chartFont, weight: '600' } },
+        ticks: { font: chartFont },
+        grid: { display: false }
+      },
+      y: {
+        title: { display: true, text: '% Choosing Certain Option (Programme A)', font: { ...chartFont, weight: '600' } },
+        min: 0, max: 100,
+        ticks: { font: chartFont, stepSize: 20, callback: v => v + '%' },
+        grid: { color: '#e8e4de' }
+      }
+    }
+  }
+});
+
+// --- Chart 2a: Wason selection task performance ---
+new Chart(document.getElementById('chart2a'), {
+  type: 'bar',
+  data: {
+    labels: ['Abstract', 'Social contract', 'Precaution (threat)'],
+    datasets: [{
+      label: '% Correct',
+      data: [10, 72, 82],
+      backgroundColor: ['#b04a32', '#c07b1a', '#3a7d5e'],
+      borderColor: ['#8c3926', '#9a6215', '#2a5e46'],
+      borderWidth: 1.5,
+      borderRadius: 4,
+      barPercentage: 0.55,
+      categoryPercentage: 0.7
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => `${ctx.parsed.y}% correct` } }
+    },
+    scales: {
+      x: {
+        title: { display: true, text: 'Task Version', font: { ...chartFont, weight: '600' } },
+        ticks: { font: chartFont },
+        grid: { display: false }
+      },
+      y: {
+        title: { display: true, text: '% Selecting Correct Cards (P and not-Q)', font: { ...chartFont, weight: '600' } },
+        min: 0, max: 100,
+        ticks: { font: chartFont, stepSize: 20, callback: v => v + '%' },
+        grid: { color: '#e8e4de' }
+      }
+    }
+  }
+});
+
+// --- Chart 2b: Emotional arousal ratings ---
+new Chart(document.getElementById('chart2b'), {
+  type: 'bar',
+  data: {
+    labels: ['Abstract', 'Social contract', 'Precaution (threat)'],
+    datasets: [{
+      label: 'Arousal',
+      data: [2.3, 4.1, 7.4],
+      backgroundColor: ['#b04a32', '#c07b1a', '#3a7d5e'],
+      borderColor: ['#8c3926', '#9a6215', '#2a5e46'],
+      borderWidth: 1.5,
+      borderRadius: 4,
+      barPercentage: 0.55,
+      categoryPercentage: 0.7
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => `Arousal: ${ctx.parsed.y}/10` } }
+    },
+    scales: {
+      x: {
+        title: { display: true, text: 'Task Version', font: { ...chartFont, weight: '600' } },
+        ticks: { font: chartFont },
+        grid: { display: false }
+      },
+      y: {
+        title: { display: true, text: 'Mean Emotional Arousal Rating (1–10)', font: { ...chartFont, weight: '600' } },
+        min: 0, max: 10,
+        ticks: { font: chartFont, stepSize: 2 },
+        grid: { color: '#e8e4de' }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>

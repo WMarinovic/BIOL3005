@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIOL3005 Cognition: Language and reading practice problems</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f4f0;
+    --surface: #ffffff;
+    --surface-alt: #f0ede8;
+    --border: #d6d0c6;
+    --text: #2c2a26;
+    --text-muted: #6b6660;
+    --accent: #b04a32;
+    --accent-light: #e8d5cf;
+    --accent-dark: #8c3926;
+    --easy: #3a7d5e;
+    --easy-bg: #e8f3ec;
+    --easy-border: #b0d6bf;
+    --medium: #c07b1a;
+    --medium-bg: #fdf3e0;
+    --medium-border: #e4c67a;
+    --hard: #9b2e4e;
+    --hard-bg: #f6e3ea;
+    --hard-border: #d4a0b3;
+    --hint-bg: #f0f4f8;
+    --hint-border: #a8bdd4;
+    --answer-bg: #f0ede8;
+    --answer-border: #c4bdb2;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-lg: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  .header {
+    background: var(--text);
+    color: var(--bg);
+    padding: 28px 0 24px;
+    text-align: center;
+  }
+  .header-inner {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .header .unit-code {
+    font-size: 0.8rem;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 6px;
+  }
+  .header h1 {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 700;
+    font-size: 1.75rem;
+    line-height: 1.3;
+  }
+  .header .subtitle {
+    font-size: 0.9rem;
+    opacity: 0.55;
+    margin-top: 6px;
+  }
+
+  .nav-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+  }
+  .nav-inner {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-indicator {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .nav-indicator span {
+    color: var(--text);
+    font-weight: 700;
+  }
+  .nav-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  .nav-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 8px 20px;
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .nav-btn:hover:not(:disabled) {
+    background: var(--text);
+    color: var(--bg);
+    border-color: var(--text);
+  }
+  .nav-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .main {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+
+  .scenario { display: none; }
+  .scenario.active { display: block; }
+
+  .scenario-label {
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .scenario-title {
+    font-family: 'Source Serif 4', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    line-height: 1.35;
+  }
+  .scenario-stem {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 28px;
+    box-shadow: var(--shadow);
+    font-size: 0.95rem;
+  }
+  .scenario-stem p { margin-bottom: 12px; }
+  .scenario-stem p:last-child { margin-bottom: 0; }
+  .scenario-stem ul { margin: 8px 0 12px 20px; }
+  .scenario-stem li { margin-bottom: 4px; }
+  .scenario-stem strong { font-weight: 600; }
+  .scenario-stem .sentence-example {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  .scenario-stem .sentence-example .region-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .chart-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    box-shadow: var(--shadow);
+  }
+  .chart-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  .chart-wrapper {
+    position: relative;
+    max-width: 650px;
+    margin: 0 auto;
+  }
+
+  .questions-section { margin-top: 8px; }
+  .question-block { margin-bottom: 24px; }
+
+  .q-difficulty {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+  .q-difficulty.easy { background: var(--easy-bg); color: var(--easy); border: 1px solid var(--easy-border); }
+  .q-difficulty.medium { background: var(--medium-bg); color: var(--medium); border: 1px solid var(--medium-border); }
+  .q-difficulty.hard { background: var(--hard-bg); color: var(--hard); border: 1px solid var(--hard-border); }
+  .q-difficulty.applied { background: #eef3f8; color: #4a7faa; border: 1px solid #b3c8de; }
+
+  .q-text {
+    font-family: 'Source Serif 4', serif;
+    font-size: 1.05rem;
+    font-weight: 400;
+    line-height: 1.55;
+    margin-bottom: 12px;
+  }
+
+  .reveal-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .reveal-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 6px;
+    border: 1.5px solid;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    background: transparent;
+  }
+  .reveal-btn.hint-btn { border-color: var(--hint-border); color: #4a6b8a; }
+  .reveal-btn.hint-btn:hover { background: var(--hint-bg); }
+  .reveal-btn.answer-btn { border-color: var(--answer-border); color: var(--text-muted); }
+  .reveal-btn.answer-btn:hover { background: var(--answer-bg); }
+  .reveal-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+  .reveal-content {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.35s ease, opacity 0.25s ease, margin 0.25s ease;
+    margin-top: 0;
+  }
+  .reveal-content.open {
+    max-height: 800px;
+    opacity: 1;
+    margin-top: 10px;
+  }
+  .reveal-inner {
+    padding: 16px 20px;
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+  .reveal-inner.hint { background: var(--hint-bg); border: 1px solid var(--hint-border); color: #3a5a78; }
+  .reveal-inner.answer { background: var(--answer-bg); border: 1px solid var(--answer-border); color: var(--text); }
+  .reveal-inner p { margin-bottom: 8px; }
+  .reveal-inner p:last-child { margin-bottom: 0; }
+
+  .q-divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  .instructions {
+    background: var(--accent-light);
+    border: 1px solid #d4b0a3;
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.85rem;
+    color: var(--accent-dark);
+    line-height: 1.55;
+  }
+  .instructions strong { font-weight: 700; }
+
+  .applied-box {
+    background: #eef3f8;
+    border: 1px solid #b3c8de;
+    border-left: 4px solid #4a7faa;
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: #2a4560;
+  }
+  .applied-box-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #4a7faa;
+    margin-bottom: 6px;
+  }
+  .applied-box p { margin-bottom: 8px; }
+  .applied-box p:last-child { margin-bottom: 0; }
+
+  .footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 1.35rem; }
+    .scenario-title { font-size: 1.2rem; }
+    .nav-inner { flex-direction: column; gap: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="unit-code">BIOL3005 Cognition</div>
+    <h1>Practice problems: Language and reading</h1>
+    <div class="subtitle">Semester 1, 2026 · Curtin University · <a href="index.html" style="color:inherit;text-decoration:underline">All weeks</a></div>
+  </div>
+</div>
+
+<div class="nav-bar">
+  <div class="nav-inner">
+    <div class="nav-indicator">Scenario <span id="currentNum">1</span> of <span>2</span></div>
+    <div class="nav-buttons">
+      <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Back</button>
+      <button class="nav-btn" id="nextBtn" onclick="navigate(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="instructions">
+    <strong>How to use this page:</strong> Read each scenario and try to answer the questions on your own first, as you would in an exam. If you get stuck, click <em>Show Hint</em> for guidance. Use <em>Show Answer</em> only after you have given the question a genuine attempt.
+  </div>
+
+  <!-- ==================== SCENARIO 1 ==================== -->
+  <div class="scenario active" id="scenario1">
+    <div class="scenario-label">Scenario 1</div>
+    <div class="scenario-title">Eye Movements and Garden-Path Sentences</div>
+
+    <div class="applied-box">
+      <div class="applied-box-label">Why this matters for psychologists</div>
+      <p>Eye-tracking during reading is widely used in clinical and developmental psychology to assess reading difficulties, track the effects of interventions for dyslexia, and evaluate language comprehension in populations with acquired brain injury or neurodegenerative conditions. Understanding how fixation patterns reflect online sentence processing helps clinicians interpret these measures meaningfully, rather than treating them as simple "reading speed" scores.</p>
+    </div>
+
+    <div class="scenario-stem">
+      <p>Researchers used eye-tracking to investigate how readers process temporarily ambiguous sentences. Participants read whole sentences on a screen while their eye movements were recorded. Two types of sentences were presented:</p>
+      <div class="sentence-example">
+        <span class="region-label">Garden-path sentence:</span>
+        <em>"While the man <strong>hunted</strong> | the deer | <strong>ran</strong> into the woods."</em>
+      </div>
+      <div class="sentence-example">
+        <span class="region-label">Non-ambiguous control:</span>
+        <em>"While the man <strong>hunted</strong>, | the deer | <strong>ran</strong> into the woods."</em>
+      </div>
+      <p>In the garden-path version, the absence of a comma after "hunted" leads readers to initially interpret "the deer" as the direct object of "hunted" (i.e., the man hunted the deer). When readers encounter "ran," they must revise this interpretation because "the deer" is actually the subject of a new clause.</p>
+      <p>The researchers measured <strong>first-pass reading time</strong> (the total time spent fixating a region the first time the eyes pass through it) at three critical regions: the ambiguous verb ("hunted"), the ambiguous noun phrase ("the deer"), and the disambiguating verb ("ran into the woods"). The plot below shows mean first-pass reading times for each region and sentence type.</p>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Mean First-Pass Reading Time by Sentence Region and Sentence Type</div>
+      <div class="chart-wrapper">
+        <canvas id="chart1"></canvas>
+      </div>
+    </div>
+
+    <div class="questions-section">
+
+      <!-- Easy -->
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">a) What is a "garden-path" sentence? Why is the sentence "While the man hunted the deer ran into the woods" considered a garden-path sentence?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q1hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q1ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q1hint">
+          <div class="reveal-inner hint">
+            <p>Think about what "led down the garden path" means as a metaphor. What initial interpretation does the reader commit to, and where does it go wrong?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q1ans">
+          <div class="reveal-inner answer">
+            <p>A garden-path sentence is one that leads the reader towards an initial syntactic interpretation that turns out to be incorrect, forcing them to go back and reanalyse the sentence structure. The reader is "led down the garden path" by the early part of the sentence.</p>
+            <p>In "While the man hunted the deer ran into the woods," readers initially parse "the deer" as the direct object of "hunted" (the man hunted the deer). When they reach "ran," this interpretation fails, because "ran" has no subject. The reader must then reinterpret "the deer" as the subject of "ran," not the object of "hunted." The comma in the control version ("hunted, the deer") prevents this misparse by signalling the clause boundary early.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Easy -->
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">b) Based on the graph, at which sentence region do the garden-path and control conditions diverge most clearly in first-pass reading time? Describe the pattern.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q2hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q2ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q2hint">
+          <div class="reveal-inner hint">
+            <p>Compare the bar heights for the two sentence types at each of the three regions. Where is the gap between the two bars largest?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q2ans">
+          <div class="reveal-inner answer">
+            <p>The two conditions diverge most clearly at the <strong>disambiguating region</strong> ("ran into the woods"). Here, first-pass reading time is substantially longer for garden-path sentences compared to the control. There is also a modest increase at the ambiguous noun phrase ("the deer"), but the largest difference appears at the point where the reader's initial parse is definitively disconfirmed.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Medium -->
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">c) The garden-path model of sentence processing proposes that the parser initially commits to a single syntactic analysis based on structural simplicity. How does this model explain the pattern of increased reading times at the disambiguating region? What specific cognitive process is reflected in the longer fixation times?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q3hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q3ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q3hint">
+          <div class="reveal-inner hint">
+            <p>The garden-path model is a "serial" model: the parser builds one structure first and only revises if forced. What principle guides the initial parse (think minimal attachment or late closure)? What must happen when the parser hits "ran"?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q3ans">
+          <div class="reveal-inner answer">
+            <p>According to the garden-path model, the parser uses structural principles such as <strong>late closure</strong> (attach new words to the clause currently being processed) to build a single initial parse as efficiently as possible. When reading "hunted the deer," late closure favours attaching "the deer" as the direct object of "hunted," since this continues the current clause without starting a new one.</p>
+            <p>When the reader then encounters "ran," this initial analysis fails: there is no grammatical way to integrate "ran" if "the deer" is already assigned as the object of "hunted." The parser must <strong>reanalyse</strong> the sentence structure, reassigning "the deer" as the subject of a new clause. This reanalysis is cognitively costly, and the longer first-pass reading times at the disambiguating region reflect the time taken to detect the error, abandon the initial parse, and construct an alternative analysis.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Hard -->
+      <div class="question-block">
+        <div class="q-difficulty hard">Hard</div>
+        <div class="q-text">d) A constraint-based theorist would offer a different account of garden-path effects. How does the constraint-based approach differ from the garden-path model in explaining sentence processing? Could a constraint-based model also explain the data shown in the graph? Explain your reasoning.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q5hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q5ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q5hint">
+          <div class="reveal-inner hint">
+            <p>The constraint-based approach is a "parallel" model: multiple analyses are activated simultaneously and weighted by various sources of information (syntax, semantics, verb bias, context). Under this view, what determines whether a garden-path effect occurs? Think about what happens when the dominant interpretation loses the competition.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q5ans">
+          <div class="reveal-inner answer">
+            <p>The <strong>constraint-based approach</strong> differs from the garden-path model in a fundamental way. Rather than building a single initial parse and revising it only when it fails, the constraint-based model proposes that <strong>multiple syntactic analyses are activated in parallel</strong> from the outset. These competing analyses are weighted by a range of constraints, including syntactic structure, semantic plausibility, verb argument structure, discourse context, and frequency information.</p>
+            <p>A constraint-based model can still explain the garden-path effect in this data. In the ambiguous sentence, the verb "hunted" is biased towards a transitive reading (taking a direct object), which would make "the deer as direct object" the more strongly activated interpretation. The alternative analysis ("the deer" as subject of a new clause) is activated but weakly weighted. When "ran" is encountered, the dominant interpretation must be suppressed and the weaker alternative boosted. This <strong>competition resolution</strong> takes time, producing the elevated reading times at the disambiguating region.</p>
+            <p>The key difference from the garden-path model is in the mechanism: the garden-path model attributes the difficulty to <strong>structural reanalysis</strong> of a single committed parse, whereas the constraint-based model attributes it to <strong>competition between co-activated alternatives</strong> where the ultimately correct analysis was initially weakly supported. Both predict elevated reading times at the disambiguating region, making the current data consistent with either account.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Hard -->
+      <div class="question-block">
+        <div class="q-difficulty hard">Hard</div>
+        <div class="q-text">e) The researchers also measured <strong>regression rates</strong> (the proportion of trials on which readers made a backward eye movement from a given region to re-read an earlier part of the sentence). Suppose that regression rates were significantly elevated in the garden-path condition specifically from the disambiguating region back to the ambiguous noun phrase. What would this pattern tell us about the nature of the reprocessing that occurs during garden-path recovery, beyond what reading times alone reveal?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q4hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q4ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q4hint">
+          <div class="reveal-inner hint">
+            <p>Regressions show where the eyes physically go back to. If the eyes return specifically to "the deer" after encountering "ran," what does that suggest about what the parser is trying to do? Think about the difference between knowing something is wrong (detected at the disambiguating region) and fixing it (which requires re-examining earlier material).</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q4ans">
+          <div class="reveal-inner answer">
+            <p>Elevated regression rates from the disambiguating region back to the ambiguous noun phrase would indicate that readers do not simply slow down at the point of difficulty; they <strong>actively return to the source of the ambiguity</strong> to reprocess it. This tells us that garden-path recovery involves a <strong>targeted reanalysis</strong>: the parser identifies not just that something has gone wrong, but <em>where</em> in the sentence the misinterpretation originated.</p>
+            <p>This is informative beyond reading times because first-pass reading time at the disambiguating region only tells us that processing was disrupted. The regressions reveal the <strong>spatial structure of the repair process</strong>. The reader's eyes go back specifically to "the deer" because that is the phrase whose syntactic role must be reassigned (from object of "hunted" to subject of "ran"). This is consistent with the idea that the parser maintains a record of the sentence regions it has processed and can selectively revisit the locus of the misparse rather than re-reading the entire sentence from the beginning.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Applied -->
+      <div class="question-block">
+        <div class="q-difficulty applied">Applied</div>
+        <div class="q-text">f) A speech pathologist is working with a patient who has a mild acquired brain injury affecting language comprehension. The patient reads slowly but can eventually understand simple sentences. However, the patient reports great difficulty with longer, more complex sentences, often losing track of "who did what." Eye-tracking during a reading assessment reveals that the patient shows normal first-pass reading times across all regions but <em>almost never makes regressions</em>, even when reading garden-path sentences. Drawing on what you know about the role of regressions in sentence reprocessing, explain what this pattern might suggest about the patient's comprehension difficulty. How might this inform the speech pathologist's approach to rehabilitation?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q6hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q6ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q6hint">
+          <div class="reveal-inner hint">
+            <p>If the patient never regresses, what repair mechanism is missing? Recall that regressions allow readers to return to the source of a misinterpretation and revise their parse. If this process is impaired, the patient might be building initial interpretations normally but failing to correct them when they go wrong. Think about what this means for understanding complex or ambiguous sentences.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q6ans">
+          <div class="reveal-inner answer">
+            <p>The patient's profile suggests that their <strong>initial, forward-moving sentence processing</strong> is relatively intact (normal first-pass reading times), but their ability to <strong>monitor for comprehension failures and execute corrective reprocessing</strong> is impaired. Regressions are the oculomotor signature of detecting that something has gone wrong and revisiting earlier material to repair the interpretation. Without this mechanism, the patient would be "stuck" with whatever initial parse they committed to, even if subsequent information indicates it is incorrect.</p>
+            <p>This would explain why the patient struggles specifically with complex sentences: simple sentences rarely require reanalysis, but longer sentences with embedded clauses, temporary ambiguities, or complex argument structures frequently do. The patient's complaint of losing track of "who did what" is consistent with a failure to revise thematic role assignments when the initial interpretation turns out to be wrong.</p>
+            <p>For the speech pathologist, this understanding could inform rehabilitation in several ways. The therapist might use <strong>explicit strategy training</strong> to encourage the patient to consciously re-read earlier parts of a sentence when they feel confused, compensating for the impaired spontaneous regression mechanism. Presenting sentences with <strong>reduced ambiguity</strong> (e.g., using clear punctuation, simpler structures) during early recovery could reduce the demand for reanalysis. The eye-tracking data itself could serve as a <strong>biofeedback tool</strong>, helping the patient and clinician monitor progress as reprocessing ability recovers.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== SCENARIO 2 ==================== -->
+  <div class="scenario" id="scenario2">
+    <div class="scenario-label">Scenario 2</div>
+    <div class="scenario-title">Lexical Decision, Word Frequency, and Semantic Priming</div>
+
+    <div class="applied-box">
+      <div class="applied-box-label">Why this matters for psychologists</div>
+      <p>Lexical decision and priming tasks are foundational tools in both research and clinical assessment. They are used to evaluate the integrity of the mental lexicon following stroke or in the early detection of semantic memory decline in dementia. Understanding how word frequency and semantic context influence word recognition helps clinicians interpret patterns of naming and comprehension difficulty, and informs the design of language interventions that capitalise on preserved lexical networks.</p>
+    </div>
+
+    <div class="scenario-stem">
+      <p>Researchers investigated how <strong>word frequency</strong> and <strong>semantic priming</strong> interact during word recognition using a lexical decision task. On each trial, participants saw a prime word briefly (200 ms), followed by a target letter string. They had to decide as quickly and accurately as possible whether the target was a real English word or a nonword.</p>
+      <p>The experiment used a 2 × 2 design:</p>
+      <ul>
+        <li><strong>Word frequency:</strong> Targets were either high-frequency words (e.g., "house," "water") or low-frequency words (e.g., "cairn," "thatch").</li>
+        <li><strong>Priming:</strong> The prime was either semantically related to the target (e.g., "building" → "house"; "stone" → "cairn") or unrelated (e.g., "purple" → "house"; "salad" → "cairn").</li>
+      </ul>
+      <p>Mean response times (ms) for correct "word" decisions are plotted below.</p>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Mean Lexical Decision Time by Word Frequency and Priming Condition</div>
+      <div class="chart-wrapper">
+        <canvas id="chart2"></canvas>
+      </div>
+    </div>
+
+    <div class="questions-section">
+
+      <!-- Easy -->
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">a) What is a lexical decision task, and what does it measure? Identify the independent and dependent variables in this experiment.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q1hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q1ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q1hint">
+          <div class="reveal-inner hint">
+            <p>Think about what the participant has to do on each trial (decide if a letter string is a real word or not) and what this tells us about how words are stored and accessed in the mind.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q1ans">
+          <div class="reveal-inner answer">
+            <p>A lexical decision task requires participants to judge whether a presented letter string is a real word or a nonword, as quickly and accurately as possible. It measures how efficiently participants can <strong>access their mental lexicon</strong>, the internal store of word knowledge. Faster responses indicate that a word was recognised more easily.</p>
+            <p>The independent variables are <strong>word frequency</strong> (high vs. low) and <strong>priming condition</strong> (semantically related vs. unrelated prime). The dependent variable is the <strong>mean response time (ms)</strong> for correct "word" decisions.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Easy -->
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">b) Describe the main effect of word frequency visible in the graph. What does this pattern tell us about how words are represented in the mental lexicon?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q2hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q2ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q2hint">
+          <div class="reveal-inner hint">
+            <p>Compare the response times for high-frequency and low-frequency words, averaging across both priming conditions. Which are recognised faster? What does this suggest about the activation thresholds or accessibility of different words?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q2ans">
+          <div class="reveal-inner answer">
+            <p>High-frequency words are recognised faster than low-frequency words in both priming conditions. This is the <strong>word frequency effect</strong>: words that are encountered more often in everyday language are accessed more quickly from the mental lexicon.</p>
+            <p>This pattern suggests that word representations are not all equally accessible. High-frequency words may have <strong>lower activation thresholds</strong> (requiring less input to be recognised) or <strong>stronger resting-level activation</strong> than low-frequency words, reflecting the cumulative effect of repeated exposure over a lifetime.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Medium -->
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">c) Describe the main effect of semantic priming visible in the graph. Explain the mechanism behind semantic priming using the concept of spreading activation in semantic networks.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q3hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q3ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q3hint">
+          <div class="reveal-inner hint">
+            <p>Compare the related and unrelated conditions at each frequency level. Then think about Collins and Loftus's model: when a word is activated, what happens to other words that are semantically connected to it?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q3ans">
+          <div class="reveal-inner answer">
+            <p>In both the high-frequency and low-frequency conditions, words preceded by a semantically related prime are recognised faster than words preceded by an unrelated prime. This is the <strong>semantic priming effect</strong>.</p>
+            <p>Spreading activation theory explains this by proposing that words are stored in a <strong>semantic network</strong> where related concepts are connected by associative links. When the prime word (e.g., "building") is processed, its node in the network is activated, and activation spreads along the links to semantically related nodes (e.g., "house"). By the time the target appears, its node is already partially activated, so less additional input is needed to push it above the recognition threshold. This results in faster lexical decisions for related targets compared to targets preceded by unrelated primes, where no such pre-activation has occurred.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Medium -->
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">d) Examine the graph more closely. Is the priming effect (the difference between unrelated and related conditions) the same size for high-frequency and low-frequency words, or does one group show a larger benefit from priming? What does this interaction (or lack of one) suggest about how frequency and semantic context jointly influence word recognition?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q4hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q4ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q4hint">
+          <div class="reveal-inner hint">
+            <p>Calculate or visually estimate the difference between unrelated and related bars for each frequency group. Is the gap larger for low-frequency words? If so, what does that imply about the relative benefit of contextual support for words that are harder to access on their own?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q4ans">
+          <div class="reveal-inner answer">
+            <p>The graph shows that the <strong>priming effect is larger for low-frequency words</strong> than for high-frequency words. High-frequency words benefit from priming, but the reduction in RT is modest because they are already recognised quickly. Low-frequency words show a larger priming benefit: semantic context provides a proportionally greater boost for words that are otherwise harder to access.</p>
+            <p>This interaction suggests that <strong>frequency and semantic context influence overlapping stages</strong> of word recognition. High-frequency words are already close to their recognition threshold, so the additional activation from a related prime produces a relatively small further gain. Low-frequency words sit further from threshold, so the pre-activation provided by a related prime has more room to assist recognition. This is consistent with models where word recognition depends on the <strong>cumulative activation reaching a threshold</strong>, with both frequency and context contributing to that activation.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Hard -->
+      <div class="question-block">
+        <div class="q-difficulty hard">Hard</div>
+        <div class="q-text">e) A researcher replaces some of the primes with <strong>ambiguous words</strong>. For example, the prime "bank" is followed either by "money" (its dominant meaning) or by "river" (its subordinate meaning), with the target appearing either 100 ms or 1000 ms after the prime. Using what you know about how ambiguous words are processed, predict the pattern of priming at each delay. How would adding a sentence context before the prime ("She sat on the bank") change your prediction?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q5hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q5ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q5hint">
+          <div class="reveal-inner hint">
+            <p>Recall Tanenhaus and colleagues (1979): on first meeting an ambiguous word, do we access one meaning or several? Then think about what happens a little later, and about meaning dominance: what if one meaning is much more frequent than the other? Finally, consider what a biasing context does over time.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q5ans">
+          <div class="reveal-inner answer">
+            <p>At the short delay (100 ms), both "money" and "river" should be primed. On first encountering an ambiguous word, people briefly access <strong>all</strong> of its meanings (Tanenhaus et al., 1979), so activation spreads to associates of both senses.</p>
+            <p>At the long delay (1000 ms), priming should be largest for the dominant meaning. Without context, "bank" is a <strong>biased</strong> ambiguous word: the money sense is far more frequent, so it wins the competition, and activation for the river sense fades. With a balanced ambiguous word, whose two meanings are about equally frequent, both might remain partly active for longer, and readers are briefly slowed while the competition resolves.</p>
+            <p>A biasing sentence context ("She sat on the bank") should leave the short-delay result largely unchanged if access to all meanings is truly exhaustive, but at the long delay it should favour the context-appropriate meaning, so "river" rather than "money" is primed. Meaning is therefore a race between frequency and context, as the textbook puts it. A finding that context removed priming for the inappropriate meaning even at the shortest delay would be evidence that context acts earlier than the exhaustive-access account allows.</p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="q-divider">
+
+      <!-- Applied -->
+      <div class="question-block">
+        <div class="q-difficulty applied">Applied</div>
+        <div class="q-text">f) A neuropsychologist is assessing an elderly patient suspected of early-stage semantic dementia. The patient performs a lexical decision task with high- and low-frequency words, both with and without semantic primes. Results show that the patient's word frequency effect is normal (high-frequency words are still recognised faster), but the semantic priming effect is <em>absent</em> for both high- and low-frequency words. Drawing on what you know about the mechanisms underlying frequency effects and priming, interpret this pattern. What does it suggest about which component of the patient's lexical processing is impaired and which is preserved? How might this inform the neuropsychologist's diagnosis?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q6hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q6ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q6hint">
+          <div class="reveal-inner hint">
+            <p>The word frequency effect depends on the strength of individual word representations (how easily each word is accessed on its own). Semantic priming depends on the connections <em>between</em> words in the semantic network. If one is preserved and the other is lost, think about what this implies about the integrity of individual word entries versus the associative links between them. What is the hallmark of semantic dementia?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q6ans">
+          <div class="reveal-inner answer">
+            <p>This dissociation is revealing. The <strong>preserved word frequency effect</strong> indicates that the patient's individual word representations are still largely intact and that access to the mental lexicon based on familiarity and exposure is functioning normally. The patient can still recognise that a string of letters forms a real word, and high-frequency words are still easier to access than low-frequency ones.</p>
+            <p>However, the <strong>absent semantic priming effect</strong> suggests that the <strong>associative connections between words in the semantic network have deteriorated</strong>. The prime "building" no longer pre-activates "house" because the semantic relationship between them has weakened or been lost. This pattern is consistent with early <strong>semantic dementia</strong>, where the degradation of conceptual knowledge erodes the meaningful relationships between words while the surface-level ability to recognise words as familiar entries in the lexicon may be relatively spared in the early stages.</p>
+            <p>For the neuropsychologist, this pattern would help distinguish semantic dementia from other conditions that affect language. In conditions such as Broca's aphasia, for example, semantic knowledge is typically better preserved while production or syntactic processing is impaired. The selective loss of priming with preserved frequency effects points specifically towards a <strong>breakdown of semantic organisation</strong> rather than a general deficit in lexical access, and would support further investigation with tasks that assess conceptual knowledge more directly (e.g., picture-word matching, category fluency, or assessments like the Pyramids and Palm Trees test).</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    BIOL3005 Cognition · Curtin University · School of Population Health
+  </div>
+</div>
+
+<script>
+// ============ Navigation ============
+let currentScenario = 1;
+const totalScenarios = 2;
+
+function navigate(dir) {
+  const newScenario = currentScenario + dir;
+  if (newScenario < 1 || newScenario > totalScenarios) return;
+  document.getElementById('scenario' + currentScenario).classList.remove('active');
+  currentScenario = newScenario;
+  document.getElementById('scenario' + currentScenario).classList.add('active');
+  document.getElementById('currentNum').textContent = currentScenario;
+  document.getElementById('prevBtn').disabled = currentScenario === 1;
+  document.getElementById('nextBtn').disabled = currentScenario === totalScenarios;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============ Reveal Toggle ============
+function toggle(btn, targetId) {
+  const content = document.getElementById(targetId);
+  const isOpen = content.classList.contains('open');
+  if (isOpen) {
+    content.classList.remove('open');
+    btn.classList.remove('active');
+    btn.textContent = btn.textContent.replace('Hide', 'Show');
+  } else {
+    content.classList.add('open');
+    btn.classList.add('active');
+    btn.textContent = btn.textContent.replace('Show', 'Hide');
+  }
+}
+
+// ============ Charts ============
+const chartFont = { family: "'DM Sans', sans-serif", size: 12 };
+
+// --- Chart 1: Garden-path eye tracking ---
+new Chart(document.getElementById('chart1'), {
+  type: 'bar',
+  data: {
+    labels: ['Ambiguous Verb\n("hunted")', 'Ambiguous NP\n("the deer")', 'Disambiguating Region\n("ran into the woods")'],
+    datasets: [
+      {
+        label: 'Garden-path',
+        data: [265, 310, 420],
+        backgroundColor: '#b04a32',
+        borderColor: '#8c3926',
+        borderWidth: 1.5,
+        borderRadius: 4,
+        barPercentage: 0.7,
+        categoryPercentage: 0.65
+      },
+      {
+        label: 'Non-ambiguous control',
+        data: [255, 270, 285],
+        backgroundColor: '#3a7d5e',
+        borderColor: '#2a5e46',
+        borderWidth: 1.5,
+        borderRadius: 4,
+        barPercentage: 0.7,
+        categoryPercentage: 0.65
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { font: chartFont, padding: 16, usePointStyle: true, pointStyle: 'rectRounded' }
+      },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y} ms` } }
+    },
+    scales: {
+      x: {
+        title: { display: true, text: 'Sentence Region', font: { ...chartFont, weight: '600' } },
+        ticks: { font: { ...chartFont, size: 11 }, maxRotation: 0 },
+        grid: { display: false }
+      },
+      y: {
+        title: { display: true, text: 'Mean First-Pass Reading Time (ms)', font: { ...chartFont, weight: '600' } },
+        min: 0,
+        max: 500,
+        ticks: { font: chartFont, stepSize: 100 },
+        grid: { color: '#e8e4de' }
+      }
+    }
+  }
+});
+
+// --- Chart 2: Lexical decision – frequency × priming ---
+// High-freq related: fast; High-freq unrelated: moderate
+// Low-freq related: moderate; Low-freq unrelated: slow
+// Interaction: bigger priming for low-freq
+new Chart(document.getElementById('chart2'), {
+  type: 'bar',
+  data: {
+    labels: ['High Frequency', 'Low Frequency'],
+    datasets: [
+      {
+        label: 'Related Prime',
+        data: [520, 590],
+        backgroundColor: '#3a7d5e',
+        borderColor: '#2a5e46',
+        borderWidth: 1.5,
+        borderRadius: 4,
+        barPercentage: 0.65,
+        categoryPercentage: 0.6
+      },
+      {
+        label: 'Unrelated Prime',
+        data: [570, 690],
+        backgroundColor: '#b04a32',
+        borderColor: '#8c3926',
+        borderWidth: 1.5,
+        borderRadius: 4,
+        barPercentage: 0.65,
+        categoryPercentage: 0.6
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { font: chartFont, padding: 16, usePointStyle: true, pointStyle: 'rectRounded' }
+      },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y} ms` } }
+    },
+    scales: {
+      x: {
+        title: { display: true, text: 'Word Frequency', font: { ...chartFont, weight: '600' } },
+        ticks: { font: chartFont },
+        grid: { display: false }
+      },
+      y: {
+        title: { display: true, text: 'Mean Lexical Decision Time (ms)', font: { ...chartFont, weight: '600' } },
+        min: 400,
+        max: 800,
+        ticks: { font: chartFont, stepSize: 50 },
+        grid: { color: '#e8e4de' }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>
