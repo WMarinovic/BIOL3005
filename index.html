@@ -3,160 +3,58 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contents | Cognition: An open textbook for BIOL3005</title>
-<style>:root{--ink:#2B142D;--muted:#6B5A70;--line:#E3DAE7;--tint:#F6F2F8;--purple:#663366;--orange:#E07B00;--amber:#FFF4E6;--deep:#2B142D}
-*{box-sizing:border-box}
-html{scroll-padding-top:70px}
-body{margin:0;color:var(--ink);background:#fff;font-family:Charter,"Bitstream Charter","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;font-size:18px;line-height:1.65}
-a{color:var(--purple)}
-.skip{position:absolute;left:-999px}.skip:focus{left:10px;top:10px;background:#fff;padding:6px 10px;z-index:20}
-.top{position:sticky;top:0;z-index:10;background:var(--deep);color:#fff;font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif}
-.topin{max-width:1240px;margin:0 auto;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-.brand{color:#fff;text-decoration:none;font-weight:700;font-size:1.05rem}.brand span{font-weight:400;opacity:.75;font-size:.9rem;margin-left:6px}
-.toplinks a{color:#fff;text-decoration:none;margin-left:16px;font-size:.92rem;opacity:.9}.toplinks a:hover{opacity:1;text-decoration:underline}
-.layout{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:270px minmax(0,1fr);gap:40px;padding:0 20px}
-.side{position:sticky;top:58px;align-self:start;max-height:calc(100vh - 70px);overflow:auto;padding:24px 0;font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;font-size:.86rem}
-.side summary{font-weight:700;color:var(--purple);cursor:pointer;margin:6px 0}
-.side ol{list-style:none;padding:0;margin:0 0 14px}.side li{margin:2px 0}
-.side a{display:block;padding:4px 8px;border-radius:5px;text-decoration:none;color:var(--ink);line-height:1.35}
-.side a:hover,.side a[aria-current]{background:var(--tint);color:var(--purple)}
-main{max-width:46rem;padding:28px 0 60px}
-h1,h2,h3,h4,h5,.chnum,.boxtitle,figcaption,.pager,footer,.tablewrap,.chcard{font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif}
-.chnum{color:var(--orange);font-weight:700;letter-spacing:.04em;text-transform:uppercase;font-size:.85rem;margin:8px 0 0}
-h1{font-size:2.3rem;line-height:1.15;color:var(--purple);margin:.2rem 0 1.2rem}
-h2{font-size:1.5rem;color:var(--purple);margin:2.4rem 0 .6rem;line-height:1.25}
-h3{font-size:1.15rem;margin:1.8rem 0 .4rem}h4,h5{font-size:1rem;margin:1.4rem 0 .3rem}
-p{margin:.5rem 0 1rem}
-.lede{font-size:1.1rem}
-.box{border-radius:8px;padding:14px 20px;margin:1.5rem 0;font-size:.97rem}
-.box p:last-child{margin-bottom:.2rem}
-.boxtitle{font-weight:700;margin:0 0 .4rem!important;font-size:.95rem}
-.box.objectives{background:var(--tint);border-left:5px solid var(--purple)}.box.objectives .boxtitle{color:var(--purple)}
-.box.think{background:var(--amber);border-left:5px solid var(--orange)}.box.think .boxtitle{color:#9A5200}
-.box.why{background:var(--deep);color:#fff}.box.why .boxtitle{color:#FFC27A}.box.why a{color:#FFC27A}
-.box.note{background:var(--tint);border:1px solid var(--line)}
-figure{margin:1.8rem 0;text-align:center}
-figure img{max-width:100%;height:auto;border-radius:4px}
-figcaption{font-size:.86rem;color:var(--muted);text-align:left;margin-top:.5rem;line-height:1.45}
-.tablewrap{overflow-x:auto;margin:1.4rem 0;font-size:.88rem}
-.tablewrap table{border-collapse:collapse;width:100%}
-.tablewrap td,.tablewrap th{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
-.tablewrap thead th,.tablewrap tr:first-child th{background:var(--purple);color:#fff}
-.tablecaption{font-size:.86rem;color:var(--muted);font-family:"Segoe UI",system-ui,Arial,sans-serif}
-a.xref{text-decoration:none;border-bottom:1px dotted var(--purple)}
-.pager{display:flex;justify-content:space-between;gap:12px;margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line)}
-.pager a{font-weight:600;text-decoration:none;border:2px solid var(--purple);border-radius:6px;padding:6px 12px}
-footer{margin-top:2rem;font-size:.8rem;color:var(--muted)}
-.chcards{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-.chcard{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
-.chcard a{display:flex;gap:10px;align-items:baseline;text-decoration:none;font-weight:700;color:var(--purple)}
-.chcard .n{color:var(--orange);font-size:1.4rem}
-.chcard p{font-size:.8rem;color:var(--muted);margin:.4rem 0 0;line-height:1.4}
-@media (max-width:900px){.layout{grid-template-columns:1fr;gap:0}.side{position:static;max-height:none;padding:12px 0 0;border-bottom:1px solid var(--line)}.side details{margin-bottom:6px}body{font-size:17px}h1{font-size:1.9rem}.brand span{display:none}}
-@media print{.top,.side,.pager{display:none}.layout{display:block}main{max-width:none}body{font-size:11pt}}
+<title>BIOL3005 Cognition: tutorial tools</title>
+<style>
+  body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;color:#2B142D;line-height:1.55}
+  .wrap{max-width:820px;margin:0 auto;padding:32px 20px 60px}
+  h1{font-family:Rockwell,"Rockwell Nova","Roboto Slab",Georgia,serif;font-size:2.1rem;margin:.2rem 0 .4rem}
+  h2{font-family:Rockwell,"Rockwell Nova","Roboto Slab",Georgia,serif;font-size:1.2rem;margin:28px 0 6px}
+  p{max-width:70ch}
+  .muted{color:#6B5A70;font-size:.92rem}
+  .week{display:flex;justify-content:space-between;align-items:center;gap:14px;border:1px solid #E3DAE7;border-radius:10px;padding:12px 16px;margin:10px 0;flex-wrap:wrap}
+  .week strong{font-family:Rockwell,"Rockwell Nova","Roboto Slab",Georgia,serif;font-size:1.08rem;display:block;color:#663366}
+  .week span{font-size:.93rem}
+  .links{display:flex;gap:8px;flex-wrap:wrap}
+  a.link{display:inline-block;font-weight:600;font-size:.92rem;text-decoration:none;border:2px solid #663366;background:#663366;color:#fff;border-radius:6px;padding:6px 12px;white-space:nowrap}
+  a.link.ghost{background:#fff;color:#663366}
+  a.link:hover,a.link:focus-visible{outline:3px solid #E07B00;outline-offset:2px}
+  footer{margin-top:40px;font-size:.82rem;color:#6B5A70}
 </style>
 </head>
 <body>
-<a class="skip" href="#main">Skip to content</a>
-<header class="top"><div class="topin">
-  <a class="brand" href="index.html">Cognition <span>An open textbook for BIOL3005</span></a>
-  <nav class="toplinks"><a href="index.html">Contents</a><a href="BIOL3005_Cognition_textbook.pdf">PDF</a><a href="../index.html">Tutorials</a></nav>
-</div></header>
-<div class="layout">
-<aside class="side"><details open><summary>Chapters</summary><ol class="sectoc"><li><a href="ch01.html">1. Introduction &amp; Cognitive Neuroscience</a></li><li><a href="ch02.html">2. Attention</a></li><li><a href="ch03.html">3. Short-Term and Working Memory</a></li><li><a href="ch04.html">4. Long-Term Memory: Structure</a></li><li><a href="ch05.html">5. Long-Term Memory: Encoding, Retrieval and Consolidation</a></li><li><a href="ch06.html">6. Everyday Memory and Memory Errors</a></li><li><a href="ch07.html">7. Conceptual Knowledge</a></li><li><a href="ch08.html">8. Visual Imagery</a></li><li><a href="ch09.html">9. Language</a></li><li><a href="ch10.html">10. Problem Solving and Creativity</a></li><li><a href="ch11.html">11. Judgement, Decisions and Reasoning</a></li><li><a href="ch12.html">12. Drugs, Disorders and the Cognitive Brain</a></li></ol></details>
-<details><summary>All chapters</summary><ol class="chlist"><li><a href="ch01.html">Introduction &amp; Cognitive Neuroscience</a></li><li><a href="ch02.html">Attention</a></li><li><a href="ch03.html">Short-Term and Working Memory</a></li><li><a href="ch04.html">Long-Term Memory: Structure</a></li><li><a href="ch05.html">Long-Term Memory: Encoding, Retrieval and Consolidation</a></li><li><a href="ch06.html">Everyday Memory and Memory Errors</a></li><li><a href="ch07.html">Conceptual Knowledge</a></li><li><a href="ch08.html">Visual Imagery</a></li><li><a href="ch09.html">Language</a></li><li><a href="ch10.html">Problem Solving and Creativity</a></li><li><a href="ch11.html">Judgement, Decisions and Reasoning</a></li><li><a href="ch12.html">Drugs, Disorders and the Cognitive Brain</a></li></ol></details></aside>
-<main id="main">
-<p class="chnum">BIOL3005 Cognition, Curtin University</p>
-<h1>Cognition: An open textbook</h1>
-<p class="lede">Welber Marinovic, 2026. Twelve chapters, from the history and neuroscience of cognition to drugs, disorders and the cognitive brain. Read online here, or download the <a href="BIOL3005_Cognition_textbook.pdf">PDF edition</a>.</p>
-<h2>Chapters</h2>
-<ol class="chcards"><li class="chcard"><a href="ch01.html"><span class="n">1</span><span class="t">Introduction &amp; Cognitive Neuroscience</span></a><p>Studying the mind · The rise, fall, and re-emergence of the mind · The information-processing approach · The physiology of cognition · Localisation of function · From localised areas to networks …</p></li><li class="chcard"><a href="ch02.html"><span class="n">2</span><span class="t">Attention</span></a><p>What attention is · Selective attention: where is the filter? · Load theory: reframing the whole debate · Orienting attention: overt and covert · Binding features into objects · Failures of awareness …</p></li><li class="chcard"><a href="ch03.html"><span class="n">3</span><span class="t">Short-Term and Working Memory</span></a><p>The modal model of memory · Sensory memory · The limits of short-term memory · Working memory: Baddeley&#x27;s model · How the brain holds a representation</p></li><li class="chcard"><a href="ch04.html"><span class="n">4</span><span class="t">Long-Term Memory: Structure</span></a><p>The reach of long-term memory, and a first dissociation · Two stores, two codes · The method: H.M., Clive Wearing and K.F. · Episodic and semantic memory · Implicit memory · The physiology</p></li><li class="chcard"><a href="ch05.html"><span class="n">5</span><span class="t">Long-Term Memory: Encoding, Retrieval and Consolidation</span></a><p>Three stages: encoding, storage and retrieval · Getting information in: rehearsal and the quality of encoding · Levels of processing · Encoding strategies that actually work · Retrieval and the match between encoding and test · Forgetting: interference and the limits of cues …</p></li><li class="chcard"><a href="ch06.html"><span class="n">6</span><span class="t">Everyday Memory and Memory Errors</span></a><p>Autobiographical memory · The reminiscence bump · Flashbulb memories · The constructive nature of memory · The misinformation effect · False memories and eyewitness testimony …</p></li><li class="chcard"><a href="ch07.html"><span class="n">7</span><span class="t">Conceptual Knowledge</span></a><p>What concepts are for · The definitional approach and why it fails · Prototypes · Exemplars, and prototype versus exemplar · Hierarchical organisation and the basic level · The computational approach: networks and connections …</p></li><li class="chcard"><a href="ch08.html"><span class="n">8</span><span class="t">Visual Imagery</span></a><p>What visual imagery is · The imagery debate: pictures or propositions? · Comparing imagery and perception · Imagery in the brain · Aphantasia and the neural basis of imagery experience · Measuring the mind&#x27;s eye …</p></li><li class="chcard"><a href="ch09.html"><span class="n">9</span><span class="t">Language</span></a><p>What makes human language special · The processing of language · Understanding words · Understanding sentences · Understanding text and stories · Producing language: conversation …</p></li><li class="chcard"><a href="ch10.html"><span class="n">10</span><span class="t">Problem Solving and Creativity</span></a><p>What is a problem? · Problem-solving strategies · The information-processing approach · Gestalt theory and insight · Problem representation · Barriers: mental set and functional fixedness …</p></li><li class="chcard"><a href="ch11.html"><span class="n">11</span><span class="t">Judgement, Decisions and Reasoning</span></a><p>Reasoning and deciding · Inductive reasoning · Deductive reasoning and syllogisms · Heuristics and biases · Models of decision-making · Emotion in decision-making …</p></li><li class="chcard"><a href="ch12.html"><span class="n">12</span><span class="t">Drugs, Disorders and the Cognitive Brain</span></a><p>How drugs change cognition · Everyday drugs: caffeine and nicotine · Alcohol · “Smart drugs”: stimulants in healthy brains · Cannabis · Psychedelics …</p></li></ol>
-<h2>Acknowledgement of Country</h2>
-<p>This book was written at Curtin University’s Bentley campus, on the
-boodja (Country) of the Whadjuk Noongar people. I acknowledge the
-Whadjuk Noongar people as the Traditional Custodians of this land and
-pay my respects to their Elders past and present.</p>
-<p>Noongar people have cared for this Country and handed down their
-knowledge of it, from one generation to the next, for tens of thousands
-of years. A book about how people perceive, remember, reason and speak
-is written here in the company of one of the oldest continuous
-traditions of human knowledge, and I am grateful to study and teach on
-this land.</p>
-<p>Readers studying elsewhere may be on the lands of other First
-Nations, and I acknowledge their Traditional Custodians too.</p>
-<h2>About this book</h2>
-<p>This book was written for students taking BIOL3005 Cognition at
-Curtin University. Its twelve chapters move from the history and
-neuroscience of cognitive psychology, through attention, short-term and
-working memory, long-term memory, everyday memory, conceptual knowledge,
-visual imagery, language, problem solving, and judgement and
-decision-making, to the ways drugs and neurological conditions alter the
-cognitive brain. Each chapter opens with a short orientation and a set
-of learning objectives, and closes with a summary, self-check questions,
-its own attribution statement and its own reference list, so the
-chapters can be read in order or on their own.</p>
-<h2>Licence</h2>
-<p>© 2026 Welber Marinovic. Except where otherwise noted, this book is
-licensed under a Creative Commons Attribution-NonCommercial-ShareAlike
-4.0 International licence (CC BY-NC-SA 4.0). A copy of the licence is
-available at https://creativecommons.org/licenses/by-nc-sa/4.0/.</p>
-<p>Under this licence you may copy and redistribute the material in any
-medium or format, and you may remix, transform and build upon it,
-provided you meet three conditions. You must give appropriate credit,
-provide a link to the licence and indicate whether changes were made
-(Attribution). You may not use the material for commercial purposes
-(NonCommercial). If you remix, transform or build upon the material, you
-must distribute your contributions under the same licence as the
-original (ShareAlike). You may not apply legal terms or technological
-measures that restrict others from doing anything the licence
-permits.</p>
-<h2>Adapted and third-party material</h2>
-<p>This book adapts and remixes openly licensed material, principally
-Andrade and Walker (2019), Graham and Griffin (2025), Klein (2023),
-Murphy (2019), Stangor and Walinga (2014), Hedges (2022), Henley (2021)
-and Lim (2021), together with a number of open-access journal articles.
-A small number of figures are reproduced from open-access articles under
-the Creative Commons Attribution (CC BY) licence, and two figures in
-Chapter 10 combine AI-generated illustrations with the author’s editing
-and labelling. The cover image was generated with Google Gemini; as with
-the Chapter 10 figures, the raw generated output may not attract
-copyright.</p>
-<p>Each chapter ends with an Attribution and licence section that names
-the sources adapted in that chapter, their licences and the changes
-made. Those statements form part of the attribution for this book and
-should be kept with any chapter that is reused or adapted. Third-party
-material remains subject to the licence under which it was originally
-published. The Curtin University name and logo are not covered by this
-licence.</p>
-<p><strong>How to cite this book</strong></p>
-<p>Marinovic, W. (2026). <em>Cognition: An open textbook for
-BIOL3005</em>. Curtin University.</p>
-<p>When reusing or adapting material, a suitable attribution is:
-“Cognition: An open textbook for BIOL3005 by Welber Marinovic, Curtin
-University, licensed under CC BY-NC-SA 4.0.” Adapted versions should
-also state what was changed.</p>
-<p><strong>Disclaimer</strong></p>
-<p>This book is provided for educational purposes. Every effort has been
-made to ensure that its content is accurate and current at the time of
-writing, but cognitive science is an active field, and some of the
-findings described here will be refined or revised as new evidence
-accumulates. The author and Curtin University accept no liability for
-errors or omissions, or for any loss or harm arising from the use of
-this material. The views expressed are those of the author and do not
-necessarily reflect those of Curtin University.</p>
-<p>Chapter 12 discusses medicines, recreational drugs and neurological
-conditions in order to explain how changes in brain chemistry and brain
-tissue affect cognition. It is not medical, pharmacological or legal
-advice, and it should not be used to guide decisions about anyone’s
-health, treatment or drug use. Anyone with concerns about these matters
-should speak with a qualified health professional.</p>
-<p>Links to external websites are provided for convenience. The author
-has no control over their content or continued availability, and their
-inclusion does not imply endorsement.</p>
-<nav class="pager"><span></span><a href="ch01.html">Chapter 1 →</a></nav>
-<footer>Marinovic, W. (2026). <em>Cognition: An open textbook for BIOL3005</em>. Curtin University. Licensed under CC BY-NC-SA 4.0.</footer>
-</main>
+<div class="wrap">
+  <p class="muted">BIOL3005 Cognition, Curtin University</p>
+  <h1>Tutorial tools</h1>
+  <p><strong>Tutorial tools</strong> contain the experiment you run in the tutorial, your results, the class results and a quiz. Everything runs in your browser; your data stay on your computer unless you choose to share them.</p>
+  <p><strong>Practice problems</strong> (Weeks 7 to 11) are exam-style scenarios to work through on your own after the tutorial, with hints and model answers. Try each question before you look.</p>
+  <h2>Textbook</h2>
+  <div class="week"><div class="info"><strong>Cognition: An open textbook</strong><span>All twelve chapters, to read online or download.</span></div>
+    <div class="links"><a class="link" href="textbook/index.html">Read online</a><a class="link ghost" href="textbook/BIOL3005_Cognition_textbook.pdf">PDF</a></div></div>
+  <h2>Weeks</h2>
+  <div class="week"><div class="info"><strong>Week 1: Brain asymmetry</strong><span>Two hemispheres, one decision. Textbook Chapter 1.</span></div>
+    <div class="links"><a class="link" href="week01.html">Tutorial tools</a></div></div>
+  <div class="week"><div class="info"><strong>Week 2: Load theory</strong><span>What gets past the filter? Textbook Chapter 2.</span></div>
+    <div class="links"><a class="link" href="week02.html">Tutorial tools</a></div></div>
+  <div class="week"><div class="info"><strong>Week 3: The phonological loop</strong><span>Can you hear what you read? Textbook Chapter 3.</span></div>
+    <div class="links"><a class="link" href="week03.html">Tutorial tools</a></div></div>
+  <div class="week"><div class="info"><strong>Week 4: Implicit memory</strong><span>Remembering without knowing it. Textbook Chapter 4.</span></div>
+    <div class="links"><a class="link" href="week04.html">Tutorial tools</a></div></div>
+  <div class="week"><div class="info"><strong>Week 5: Levels of processing</strong><span>Depth, not effort. Textbook Chapter 5.</span></div>
+    <div class="links"><a class="link" href="week05.html">Tutorial tools</a></div></div>
+  <div class="week"><div class="info"><strong>Week 6: False memory</strong><span>Remembering what never happened. Textbook Chapter 6.</span></div>
+    <div class="links"><a class="link" href="week06.html">Tutorial tools</a></div></div>
+  <div class="week"><div class="info"><strong>Week 7: Conceptual knowledge</strong><span>Is a penguin a bird? Textbook Chapter 7.</span></div>
+    <div class="links"><a class="link" href="week07.html">Tutorial tools</a><a class="link ghost" href="practice07.html">Practice problems</a></div></div>
+  <div class="week"><div class="info"><strong>Week 8: Visual imagery</strong><span>Turning things over in your mind. Textbook Chapter 8.</span></div>
+    <div class="links"><a class="link" href="week08.html">Tutorial tools</a><a class="link ghost" href="practice08.html">Practice problems</a></div></div>
+  <div class="week"><div class="info"><strong>Week 9: Language</strong><span>Led up the garden path. Textbook Chapter 9.</span></div>
+    <div class="links"><a class="link" href="week09.html">Tutorial tools</a><a class="link ghost" href="practice09.html">Practice problems</a></div></div>
+  <div class="week"><div class="info"><strong>Week 10: Problem solving</strong><span>Stuck in a rut. Textbook Chapter 10.</span></div>
+    <div class="links"><a class="link" href="week10.html">Tutorial tools</a><a class="link ghost" href="practice10.html">Practice problems</a></div></div>
+  <div class="week"><div class="info"><strong>Week 11: Decisions and reasoning</strong><span>Same choice, different words. Textbook Chapter 11.</span></div>
+    <div class="links"><a class="link" href="week11.html">Tutorial tools</a><a class="link ghost" href="practice11.html">Practice problems</a></div></div>
+  <p class="muted">Week 12 is a visit to the TMS laboratory, so it has no online materials.</p>
+  <footer>Licensed under CC BY-NC-SA 4.0. Companion to <em>Cognition: An open textbook for BIOL3005</em> (Marinovic, 2026).</footer>
 </div>
-<script>if(window.matchMedia('(max-width: 900px)').matches)document.querySelectorAll('.side details').forEach(d=>d.removeAttribute('open'));</script>
 </body>
 </html>
