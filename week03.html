@@ -462,7 +462,7 @@ function trial(o){
       if(state==='fix'||state==='drawn'||resp!==null)return;let ts=e.timeStamp;const now=performance.now();if(!(ts>t0-5000&&ts<=now+5))ts=now;stamp=ts;resp=e.code;};
     const vis=()=>{if(document.hidden)focusLost=true;};
     window.addEventListener('keydown',key);document.addEventListener('visibilitychange',vis);
-    function finish(now){window.removeEventListener('keydown',key);document.removeEventListener('visibilitychange',vis);RITEMS.innerHTML='';RFIX.style.display='';if(offset===null)offset=now;
+    function finish(now){window.removeEventListener('keydown',key);document.removeEventListener('visibilitychange',vis);RITEMS.innerHTML='';RFIX.style.display=o.fix===false?'none':'';if(offset===null)offset=now;
       resolve({resp,rt:resp?stamp-onset:NaN,stimMs:offset-onset,focusLost,fullscreen:!!document.fullscreenElement});}
     const endAt=()=>o.codes?(o.windowMs!=null?onset+o.windowMs:Infinity):onset+(o.stimMs||0)+(o.gapMs||0);
     function frame(now){
