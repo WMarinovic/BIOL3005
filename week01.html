@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIOL3005 Week 1: Brain asymmetry tutorial tools</title>
+<style>
+  :root{
+    --ink:#2B142D; --muted:#6B5A70; --line:#E3DAE7; --tint:#F6F2F8; --paper:#FFFFFF;
+    --same:#663366; --across:#E07B00; --across-text:#A35600; --stage:#1E1222;
+    --ok:#2E7D4F; --bad:#B3261E;
+    --head: Rockwell, "Rockwell Nova", "Roboto Slab", "Sitka Small", Georgia, serif;
+    --body: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{font-size:16px}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.55}
+  a{color:var(--same)}
+  :focus-visible{outline:3px solid var(--across);outline-offset:2px}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+  header.mast{border-bottom:1px solid var(--line);padding:28px 0 0}
+  .unit{font-size:.9rem;color:var(--muted);margin:0}
+  h1{font-family:var(--head);font-weight:700;font-size:2.3rem;line-height:1.1;margin:.2rem 0 .4rem;letter-spacing:-.01em}
+  .lede{max-width:68ch;margin:0 0 18px;color:var(--muted)}
+  nav[role=tablist]{display:flex;gap:4px;flex-wrap:wrap}
+  nav button{font:inherit;font-weight:600;background:none;border:0;border-bottom:3px solid transparent;
+    padding:10px 14px;color:var(--muted);cursor:pointer}
+  nav button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--same)}
+  nav button:hover{color:var(--ink)}
+  main section{display:none;padding:28px 0 60px}
+  main section.on{display:block}
+  h2{font-family:var(--head);font-size:1.55rem;margin:0 0 .5rem}
+  h3{font-family:var(--head);font-size:1.15rem;margin:1.6rem 0 .4rem}
+  p.note{font-size:.92rem;color:var(--muted);max-width:72ch}
+  .twocol{display:grid;grid-template-columns:1.25fr 1fr;gap:28px;align-items:start}
+  @media (max-width:820px){.twocol{grid-template-columns:1fr}h1{font-size:1.8rem}}
+  .btn{font:inherit;font-weight:600;border:2px solid var(--same);background:var(--same);color:#fff;border-radius:6px;padding:8px 16px;cursor:pointer}
+  .btn.ghost{background:#fff;color:var(--same)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0}
+  label.inline{display:flex;gap:6px;align-items:center;font-size:.95rem}
+  select,input[type=number],textarea{font:inherit;border:1px solid #CBBBD2;border-radius:5px;padding:6px 8px;background:#fff;color:var(--ink)}
+  textarea{width:100%;min-height:130px;font-family:Consolas,"Courier New",monospace;font-size:.85rem}
+
+  /* Trial stage: the split visual field is the motif */
+  .stage{position:relative;background:var(--stage);border-radius:10px;aspect-ratio:16/10;overflow:hidden;user-select:none}
+  .stage::before{content:"";position:absolute;left:50%;top:6%;bottom:6%;border-left:1px dashed rgba(255,255,255,.14)}
+  .fieldlab{position:absolute;bottom:10px;font-size:.75rem;color:rgba(255,255,255,.45)}
+  .fieldlab.l{left:14px}.fieldlab.r{right:14px}
+  .fix{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#fff;font-size:2rem;font-weight:300}
+  .item{position:absolute;width:15%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;color:#fff;
+    font-family:Arial,sans-serif;font-weight:700;font-size:clamp(1.6rem,5vw,3.2rem);border-radius:8px;border:3px solid transparent}
+  .item svg{width:78%;height:78%}
+  .pos-tl{left:17%;top:12%}.pos-tr{right:17%;top:12%}.pos-bl{left:17%;bottom:12%}.pos-br{right:17%;bottom:12%}
+  .item.hl-same,.item.fb-same{border-color:#C9A3C9}.item.hl-across,.item.fb-across{border-color:var(--across)}
+  .stagebar{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;align-items:center}
+  .verdict{min-height:3.2em;margin-top:10px;font-size:.98rem}
+  .tag{display:inline-block;font-size:.8rem;font-weight:700;padding:1px 8px;border-radius:999px;color:#fff}
+  .tag.same{background:var(--same)}.tag.across{background:var(--across)}
+  .keyfacts{background:var(--tint);border-radius:10px;padding:16px 20px}
+  .keyfacts p{margin:.2rem 0 .7rem}
+
+  /* Results table */
+  table.entry{border-collapse:collapse;width:100%;font-size:.95rem}
+  table.entry th,table.entry td{padding:6px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+  table.entry th{font-weight:600;font-size:.85rem;color:var(--muted)}
+  table.entry th.same{color:var(--same)} table.entry th.across{color:var(--across-text)}
+  table.entry input{width:5.4rem}
+  input.bad{border-color:var(--bad);background:#FDECEA}
+  .linebox{font-family:Consolas,"Courier New",monospace;font-size:.85rem;background:var(--tint);padding:8px 10px;border-radius:5px;word-break:break-all}
+  .interp p{margin:.3rem 0;max-width:75ch}
+  .chart svg{width:100%;height:auto;display:block}
+  .chartgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start}
+  @media (max-width:820px){.chartgrid{grid-template-columns:1fr}}
+  .entrywrap{max-width:780px}
+  .legend{display:flex;gap:16px;font-size:.85rem;color:var(--muted);flex-wrap:wrap;margin:4px 0}
+  .sw{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-right:5px}
+  .banner{background:#FFF4E5;border:1px solid #F3C98B;color:#6B3D00;border-radius:6px;padding:8px 12px;font-size:.92rem;margin:10px 0}
+  table.summary{border-collapse:collapse;font-size:.92rem;margin-top:8px}
+  table.summary th,table.summary td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:right}
+  table.summary th:first-child,table.summary td:first-child{text-align:left}
+  .status{font-size:.92rem;color:var(--muted)}
+
+  /* Quiz */
+  .quizpick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:720px}
+  @media (max-width:600px){.quizpick{grid-template-columns:1fr}}
+  .pick{border:1px solid var(--line);border-radius:10px;padding:16px;background:#fff;text-align:left;font:inherit;cursor:pointer}
+  .pick:hover{border-color:var(--same)}
+  .pick strong{font-family:var(--head);font-size:1.15rem;display:block;margin-bottom:4px}
+  .qcard{max-width:760px}
+  .qmeta{display:flex;justify-content:space-between;color:var(--muted);font-size:.9rem}
+  .progress{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:6px 0 18px}
+  .progress div{height:100%;background:var(--same);transition:width .25s}
+  .qtext{font-size:1.15rem;font-weight:600;margin:0 0 14px}
+  .opt{display:block;width:100%;text-align:left;font:inherit;background:#fff;border:2px solid var(--line);border-radius:8px;padding:10px 14px;margin:8px 0;cursor:pointer;color:var(--ink)}
+  .opt:hover:not(:disabled){border-color:#B9A2C2}
+  .opt.sel{border-color:var(--same);background:var(--tint)}
+  .opt.right{border-color:var(--ok);background:#EAF5EE}
+  .opt.wrong{border-color:var(--bad);background:#FDECEA}
+  .opt:disabled{cursor:default}
+  .why{font-size:.92rem;margin-top:4px;color:var(--ink)}
+  .ref{font-size:.85rem;color:var(--muted);margin-top:10px}
+  .review{border-top:1px solid var(--line);padding:12px 0}
+  .review .ok{color:var(--ok);font-weight:700}.review .no{color:var(--bad);font-weight:700}
+  /* Full task overlay */
+  #run{position:fixed;inset:0;background:var(--stage);z-index:1000;display:none;color:#fff;cursor:none}
+  #run.on{display:block}
+  #run.screenmode{cursor:auto}
+  #runFix{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:6vh;font-weight:300;line-height:1}
+  .ritem{position:absolute;transform:translate(-50%,-50%);height:12vh;width:12vh;display:flex;align-items:center;justify-content:center;
+    font-family:Arial,sans-serif;font-weight:700;font-size:10vh;line-height:1;border-radius:1.2vh;border:.4vh solid transparent}
+  .ritem svg{width:10vh;height:10vh}
+  .rp-tl{left:25%;top:30%}.rp-tr{left:75%;top:30%}.rp-bl{left:25%;top:70%}.rp-br{left:75%;top:70%}
+  .ritem.fb-same{border-color:#C9A3C9}.ritem.fb-across{border-color:var(--across)}
+  #runMsg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(680px,90vw);background:#fff;color:var(--ink);
+    border-radius:12px;padding:26px 30px;display:none;max-height:90vh;overflow:auto}
+  #runMsg h2{margin-top:0}
+  #runMsg p{margin:.4rem 0 .8rem}
+  #runFb{position:absolute;left:50%;top:88%;transform:translate(-50%,-50%);font-size:2.4vh;font-weight:600;text-align:center;width:90vw}
+  .taskcard{background:var(--tint);border-radius:10px;padding:18px 22px;max-width:760px}
+  .taskcard ol{padding-left:1.2rem;margin:.4rem 0}
+  details.tutor{margin-top:14px;font-size:.92rem}
+  details.tutor summary{cursor:pointer;color:var(--muted);font-weight:600}
+  footer{border-top:1px solid var(--line);padding:16px 0 30px;font-size:.82rem;color:var(--muted)}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="mast">
+  <div class="wrap">
+    <p class="unit">BIOL3005 Cognition, Week 1 tutorial</p>
+    <h1>Two hemispheres, one decision</h1>
+    <p class="lede">Tools for the brain asymmetry lab, based on Patel and Hellige (2007). Textbook Chapter 1, §1.5 Localisation of function and §1.7 Methods for studying cognition.</p>
+    <nav role="tablist" aria-label="Tutorial tools">
+      <button role="tab" id="t-demo" aria-controls="s-demo" aria-selected="true">Try a trial</button>
+      <button role="tab" id="t-task" aria-controls="s-task" aria-selected="false">Run the task</button>
+      <button role="tab" id="t-mine" aria-controls="s-mine" aria-selected="false">My results</button>
+      <button role="tab" id="t-class" aria-controls="s-class" aria-selected="false">Class results</button>
+      <button role="tab" id="t-quiz" aria-controls="s-quiz" aria-selected="false">Quiz</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+<!-- ============ TRY A TRIAL ============ -->
+<section id="s-demo" class="on" role="tabpanel" aria-labelledby="t-demo">
+  <div class="twocol">
+    <div>
+      <div class="stage" id="stage" aria-live="polite">
+        <div class="fix" id="fix">+</div>
+        <div class="fieldlab l">Left visual field, to right hemisphere</div>
+        <div class="fieldlab r">Right visual field, to left hemisphere</div>
+      </div>
+      <div class="stagebar">
+        <label class="inline">Format
+          <select id="dFormat"><option value="random">Random</option><option value="digits">Digits</option><option value="dots">Dots</option><option value="mixed">Mixed</option></select>
+        </label>
+        <label class="inline">Display
+          <select id="dDur"><option value="195">195 ms (as in the lab)</option><option value="2000">2 seconds (to show the layout)</option></select>
+        </label>
+        <button class="btn" id="dGo">Flash a trial</button>
+        <button class="btn ghost" id="dMatch" disabled>Match (spacebar)</button>
+      </div>
+      <div class="verdict" id="dVerdict">Keep your eyes on the cross, then flash a trial. Press the spacebar, or the Match button, only if the bottom number matches one of the top two.</div>
+      <p class="status" id="dScore"></p>
+    </div>
+    <div class="keyfacts">
+      <h2>What the task is doing</h2>
+      <p>While you fixate the cross, anything to its left reaches your right hemisphere first, and anything to its right reaches your left hemisphere first.</p>
+      <p>On a <span class="tag same">same side</span> match, both copies of the number land in one hemisphere. On an <span class="tag across">across</span> match, they land in different hemispheres, so the comparison needs the corpus callosum.</p>
+      <p>The display lasts 195 ms, which is about the time it takes to launch an eye movement. Switch the display to 2 seconds and notice how your eyes jump to the numbers: once that happens, both hemispheres see everything and the logic of the task is lost.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RUN THE TASK ============ -->
+<section id="s-task" role="tabpanel" aria-labelledby="t-task">
+  <h2>Run the task</h2>
+  <div class="taskcard">
+    <p>The task runs full screen and takes about 12 minutes. You need a keyboard; sound is optional (a short beep warns you that the numbers are about to appear).</p>
+    <ol>
+      <li>Sit centred in front of the screen, at a comfortable arm's length.</li>
+      <li>Keep your eyes on the cross in the middle of the screen for the whole task.</li>
+      <li>Press the spacebar only when the bottom number matches one of the top two. Otherwise, do nothing.</li>
+    </ol>
+    <p>There are three blocks (digits, dots and mixed), each with a short practice. When you finish, your results appear on the My results tab, ready to share.</p>
+    <div class="row">
+      <label class="inline">Writing hand (optional)
+        <select id="taskHand"><option value="NA">Prefer not to say</option><option value="R">Right</option><option value="L">Left</option><option value="B">Both</option></select>
+      </label>
+    </div>
+    <div class="row"><button class="btn" id="taskStart">Start the task</button><span class="status" id="taskStatus"></span></div>
+    <details class="tutor"><summary>Settings for tutors</summary>
+      <div class="row">
+        <label class="inline">Trials per block
+          <select id="taskN"><option value="48" selected>48 (standard, about 12 minutes)</option><option value="96">96 (long, about 20 minutes)</option><option value="8">8 (quick check, about 3 minutes)</option></select>
+        </label>
+        <label class="inline"><input type="checkbox" id="taskBeep" checked> Warning beep</label>
+      </div>
+      <p class="note">Each block has 8 practice trials with feedback, then the test trials: a quarter same-side matches, a quarter across matches and half without a match, with the bottom number equally often on the left and the right. The display lasts 195 ms, the response window 2100 ms, and a fixation cross precedes each display by 2100 ms (beep at 1050 ms), as in the Inquisit script. Block order is assigned at random from three Latin-square orders, and the mixed version (digits or dots on top) at random.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ============ MY RESULTS ============ -->
+<section id="s-mine" role="tabpanel" aria-labelledby="t-mine">
+  <h2>Enter your results</h2>
+  <p class="note" id="mineIntro">If you ran the task on this page, your numbers are already filled in. If you used Inquisit, copy the numbers from its results screen. Accuracy is the percentage correct; response time is in milliseconds. Leave a cell empty if you did not record it.</p>
+  <div class="entrywrap">
+    <table class="entry" aria-label="Your results">
+      <thead><tr><th>Format</th><th class="same">Same side<br>% correct</th><th class="same">Same side<br>RT (ms)</th><th class="across">Across<br>% correct</th><th class="across">Across<br>RT (ms)</th><th>No match<br>% correct</th></tr></thead>
+      <tbody id="entryBody"></tbody>
+    </table>
+    <div class="row">
+      <label class="inline">Writing hand (optional)
+        <select id="hand"><option value="NA">Prefer not to say</option><option value="R">Right</option><option value="L">Left</option><option value="B">Both</option></select>
+      </label>
+    </div>
+    <h3>Share with your class</h3>
+    <p class="note">Copy this line and paste it where your tutor asks (for example, the tutorial's Teams chat). It contains no name.</p>
+    <div class="linebox" id="myLine">Fill in your results to create your line.</div>
+    <div class="row"><button class="btn" id="copyLine" disabled>Copy my results line</button><span class="status" id="copyMsg"></span></div>
+    <div id="trialDl" hidden>
+      <h3>Your trial-by-trial data</h3>
+      <p class="note">Download your data (one row per trial) before you close this page; nothing is saved once the tab is closed. Your tutor may ask you to submit the file on Canvas.</p>
+      <div class="row"><button class="btn ghost" id="dlMine">Download my trial data (CSV)</button><span class="status" id="pCode"></span></div>
+    </div>
+  </div>
+  <h3>Where your numbers sit</h3>
+  <div class="legend"><span><span class="sw" style="background:var(--ink)"></span>You</span><span><span class="sw" style="background:#fff;border:2px solid var(--same)"></span>2024 class average (N = 219)</span></div>
+  <div class="chartgrid">
+    <div class="chart" id="myChartAcc"></div>
+    <div class="chart" id="myChartRT"></div>
+  </div>
+  <div class="interp" id="myInterp"></div>
+  <p class="note">One person's numbers are noisy. With relatively few trials in each condition, a difference of a few points or a few tens of milliseconds can arise by chance. Your own pattern is interesting; the class pattern is the better evidence.</p>
+</section>
+
+<!-- ============ CLASS RESULTS ============ -->
+<section id="s-class" role="tabpanel" aria-labelledby="t-class">
+  <h2>Pool the class</h2>
+  <p class="note">Paste everything students posted. Lines that do not contain a results code (names, timestamps, chat messages) are ignored automatically. You can also load the trial-data files students downloaded (select several at once, for example after a bulk download from a Canvas assignment).</p>
+  <textarea id="paste" aria-label="Pasted results lines" placeholder="Paste results lines here, one per student. Each starts with BA1,"></textarea>
+  <div class="row">
+    <button class="btn" id="readPaste">Read pasted lines</button>
+    <label class="btn ghost" for="fileIn" style="display:inline-block">Load CSV files</label><input type="file" id="fileIn" accept=".csv,.txt" multiple hidden>
+    <button class="btn ghost" id="simulate">Rehearse with a simulated class</button>
+    <button class="btn ghost" id="clearClass">Clear</button>
+    <button class="btn ghost" id="download" disabled>Download class summary (CSV)</button>
+    <button class="btn ghost" id="downloadTrials" disabled>Download all trials (CSV)</button>
+  </div>
+  <p class="status" id="classStatus">No class data yet. The 2024 class averages are shown for reference.</p>
+  <div id="simBanner"></div>
+
+  <h3>Average performance with 95% confidence intervals</h3>
+  <div class="legend"><span><span class="sw" style="background:var(--same)"></span>Same side</span><span><span class="sw" style="background:var(--across)"></span>Across</span><span><span class="sw" style="background:#fff;border:2px dashed #9A8AA0"></span>2024 class average</span></div>
+  <div class="chartgrid"><div class="chart" id="cMeansAcc"></div><div class="chart" id="cMeansRT"></div></div>
+
+  <h3>The across advantage, student by student</h3>
+  <p class="note">Each dot is one student. Right of zero means that student did better when the match was across hemispheres; left of zero means better on the same side. The black bar is the class average with its 95% confidence interval.</p>
+  <div class="chartgrid"><div class="chart" id="cDiffAcc"></div><div class="chart" id="cDiffRT"></div></div>
+  <div id="cTable"></div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section id="s-quiz" role="tabpanel" aria-labelledby="t-quiz">
+  <div id="quizStart">
+    <h2>Week 1 quiz</h2>
+    <p class="note">Ten questions on today's lab and Chapter 1. You get feedback after each answer, including why the other options are wrong. Options appear in a different order each time.</p>
+    <div class="row"><label class="inline"><input type="checkbox" id="useTimer" checked> Use a 10-minute timer</label></div>
+    <div class="quizpick">
+      <button class="pick" data-set="core"><strong>Core</strong>The essentials: visual fields, the task design, split-brain logic and the methods of Chapter 1.</button>
+      <button class="pick" data-set="stretch"><strong>Stretch</strong>Interpreting our data, ruling out alternatives and judging brain-based claims.</button>
+    </div>
+  </div>
+  <div id="quizRun" hidden></div>
+</section>
+</main>
+
+<div id="run" aria-live="polite"><div id="runFix">+</div><div id="runItems"></div><div id="runFb"></div><div id="runMsg" role="dialog" aria-modal="true"></div></div>
+
+<footer><div class="wrap">BIOL3005 Cognition, Curtin University. Licensed under CC BY-NC-SA 4.0. Reference values are the 2024 class averages (N = 219).</div></footer>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- Tabs ---------- */
+const tabs=[...document.querySelectorAll('[role=tab]')];
+function showTab(t){
+  tabs.forEach(b=>{const on=b===t;b.setAttribute('aria-selected',on);document.getElementById(b.getAttribute('aria-controls')).classList.toggle('on',on);});
+}
+tabs.forEach(t=>t.addEventListener('click',()=>showTab(t)));
+
+/* ---------- Shared constants ---------- */
+const FORMATS=[{k:'digits',n:'Digits'},{k:'dots',n:'Dots'},{k:'mixed',n:'Mixed'}];
+// 2024 class averages (N = 219)
+const REF={digits:{sa:91.2,sr:721.6,aa:94.9,ar:661.04,nm:93.6},
+           dots:{sa:66.1,sr:1212.18,aa:73.1,ar:1088.36,nm:74.0},
+           mixed:{sa:83.9,sr:955.18,aa:81.5,ar:1010.77,nm:77.8}};
+const COLS=['sa','sr','aa','ar'];
+const css=getComputedStyle(document.documentElement);
+const C={same:'#663366',across:'#E07B00',ink:'#2B142D',muted:'#6B5A70',line:'#E3DAE7',grid:'#EFE8F2'};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=(x,d=1)=>(x>0?'+':x<0?'\u2212':'')+Math.abs(x).toFixed(d);
+
+/* ---------- Dice faces ---------- */
+const PIPS={1:[[50,50]],2:[[28,28],[72,72]],3:[[26,26],[50,50],[74,74]],4:[[28,28],[72,28],[28,72],[72,72]],
+            5:[[26,26],[74,26],[50,50],[26,74],[74,74]],6:[[28,24],[72,24],[28,50],[72,50],[28,76],[72,76]]};
+function dice(n){return '<svg viewBox="0 0 100 100" aria-label="dice showing '+n+'"><rect x="4" y="4" width="92" height="92" rx="14" fill="none" stroke="#fff" stroke-width="5"/>'+
+  PIPS[n].map(p=>'<circle cx="'+p[0]+'" cy="'+p[1]+'" r="9" fill="#fff"/>').join('')+'</svg>';}
+
+/* ---------- Try a trial ---------- */
+const stage=document.getElementById('stage'),dGo=document.getElementById('dGo'),dMatch=document.getElementById('dMatch'),dVerdict=document.getElementById('dVerdict'),dScore=document.getElementById('dScore');
+let trial=null,tried=0,right=0,timers=[];
+function rnd(a){return a[Math.floor(Math.random()*a.length)];}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function clearItems(){stage.querySelectorAll('.item').forEach(e=>e.remove());}
+function makeTrial(){
+  let f=document.getElementById('dFormat').value; if(f==='random') f=rnd(['digits','dots','mixed']);
+  const nums=shuffle([1,2,3,4,5,6]); const tl=nums[0],tr=nums[1];
+  const probeSide=rnd(['l','r']); const isMatch=Math.random()<.5;
+  let probe,matchSide=null;
+  if(isMatch){matchSide=rnd(['same','across']);
+    const matchTop=(matchSide==='same')?probeSide:(probeSide==='l'?'r':'l'); probe=matchTop==='l'?tl:tr;}
+  else probe=nums[2];
+  const mixedTopDigits=Math.random()<.5;
+  return {f,tl,tr,probe,probeSide,isMatch,matchSide,mixedTopDigits};
+}
+function render(t,highlight){
+  clearItems();
+  const asTop=n=> (t.f==='dots'||(t.f==='mixed'&&!t.mixedTopDigits))?dice(n):String(n);
+  const asBot=n=> (t.f==='dots'||(t.f==='mixed'&&t.mixedTopDigits))?dice(n):String(n);
+  const add=(cls,html,hl)=>{const d=document.createElement('div');d.className='item '+cls+(hl?' '+hl:'');d.innerHTML=html;stage.appendChild(d);};
+  let hlTop=null;
+  if(highlight&&t.isMatch){hlTop=(t.matchSide==='same')?t.probeSide:(t.probeSide==='l'?'r':'l');}
+  const hc=t.matchSide==='same'?'hl-same':'hl-across';
+  add('pos-tl',asTop(t.tl),hlTop==='l'?hc:'');
+  add('pos-tr',asTop(t.tr),hlTop==='r'?hc:'');
+  add(t.probeSide==='l'?'pos-bl':'pos-br',asBot(t.probe),highlight&&t.isMatch?hc:'');
+}
+function finish(responded){
+  timers.forEach(clearTimeout);timers=[];
+  if(!trial) return;
+  const t=trial; trial=null; dMatch.disabled=true; dGo.disabled=false;
+  const correct=(responded===t.isMatch); tried++; if(correct) right++;
+  render(t,true);
+  const fname={digits:'digits',dots:'dots',mixed:'mixed formats'}[t.f];
+  let msg=(correct?'<strong>Correct.</strong> ':'<strong>Not quite.</strong> ');
+  if(t.isMatch){
+    msg+= t.matchSide==='same'
+      ? 'This was a <span class="tag same">same side</span> match ('+fname+'): both copies started in the '+(t.probeSide==='l'?'right':'left')+' hemisphere.'
+      : 'This was an <span class="tag across">across</span> match ('+fname+'): the copies started in different hemispheres, so the comparison had to cross the corpus callosum.';
+  } else msg+='There was no match ('+fname+'), so the right response was to do nothing.';
+  dVerdict.innerHTML=msg; dScore.textContent=right+' of '+tried+' correct so far.';
+}
+dGo.addEventListener('click',()=>{
+  if(trial) return;
+  trial=makeTrial(); clearItems(); dGo.disabled=true; dVerdict.textContent='Eyes on the cross\u2026';
+  const dur=+document.getElementById('dDur').value;
+  timers.push(setTimeout(()=>{render(trial,false);dMatch.disabled=false;
+    timers.push(setTimeout(clearItems,dur));
+    timers.push(setTimeout(()=>finish(false),Math.max(2100,dur+300)));
+  },1050));
+});
+dMatch.addEventListener('click',()=>finish(true));
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('s-demo').classList.contains('on')) return;
+  if(e.code==='Space'&&trial&&!dMatch.disabled){e.preventDefault();finish(true);}
+});
+
+/* ---------- SVG helpers ---------- */
+function svgWrap(w,h,inner,label){return '<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="'+esc(label)+'">'+inner+'</svg>';}
+function txt(x,y,s,o={}){return '<text x="'+x+'" y="'+y+'" font-size="'+(o.size||12)+'" fill="'+(o.fill||C.muted)+'" text-anchor="'+(o.anchor||'start')+'" font-weight="'+(o.weight||400)+'" font-family="Segoe UI,system-ui,Arial,sans-serif">'+esc(s)+'</text>';}
+function niceTicks(lo,hi,n=5){const span=hi-lo;const step0=span/n;const mag=Math.pow(10,Math.floor(Math.log10(step0)));
+  const step=[1,2,2.5,5,10].map(m=>m*mag).find(s=>s>=step0)||10*mag;const out=[];for(let v=Math.ceil(lo/step)*step;v<=hi+1e-9;v+=step)out.push(+v.toFixed(6));return out;}
+
+/* Dot chart of across advantage: rows = formats, x = advantage */
+function advChart(el,title,unit,rows,opts={}){
+  // rows: [{name, you, ref, dots:[...], mean, lo, hi}]
+  const W=500,H=40+rows.length*58+36,L=70,R=16,T=34;
+  let vals=[0];rows.forEach(r=>{['you','ref','mean','lo','hi'].forEach(k=>{if(r[k]!=null&&isFinite(r[k]))vals.push(r[k]);});(r.dots||[]).forEach(v=>vals.push(v));});
+  let lo=Math.min(...vals),hi=Math.max(...vals);const pad=(hi-lo)*.12||opts.minPad||5;lo-=pad;hi+=pad;
+  const ticks=niceTicks(lo,hi,6);lo=Math.min(lo,ticks[0]);hi=Math.max(hi,ticks[ticks.length-1]);
+  const x=v=>L+(v-lo)/(hi-lo)*(W-L-R);
+  let s=txt(4,18,title,{size:15,fill:C.ink,weight:600});
+  ticks.forEach(t=>{s+='<line x1="'+x(t)+'" x2="'+x(t)+'" y1="'+T+'" y2="'+(H-30)+'" stroke="'+C.grid+'"/>'+txt(x(t),H-17,(t>0?'+':'')+t,{anchor:'middle',size:12.5});});
+  s+='<line x1="'+x(0)+'" x2="'+x(0)+'" y1="'+T+'" y2="'+(H-30)+'" stroke="'+C.ink+'" stroke-width="1.4"/>';
+  s+=txt(x(lo)+2,H-2,'\u2190 same side better',{size:12.5,fill:C.same})+txt(x(hi)-2,H-2,'across better \u2192',{size:12.5,fill:'#A35600',anchor:'end'});
+  rows.forEach((r,i)=>{const cy=T+22+i*58;
+    s+=txt(L-10,cy+5,r.name,{anchor:'end',size:14,fill:C.ink,weight:600});
+    s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+cy+'" y2="'+cy+'" stroke="'+C.line+'"/>';
+    (r.dots||[]).forEach((v,j)=>{const jit=((j*37)%17-8)*1.6;s+='<circle cx="'+x(v)+'" cy="'+(cy+jit)+'" r="4" fill="'+(v>=0?C.across:C.same)+'" fill-opacity=".55"/>';});
+    if(r.mean!=null&&isFinite(r.mean)&&isFinite(r.lo)){s+='<line x1="'+x(r.lo)+'" x2="'+x(r.hi)+'" y1="'+(cy+20)+'" y2="'+(cy+20)+'" stroke="'+C.ink+'" stroke-width="3"/><rect x="'+(x(r.mean)-2)+'" y="'+(cy+13)+'" width="4" height="14" fill="'+C.ink+'"/>';}
+    else if(r.mean!=null&&isFinite(r.mean)){s+='<rect x="'+(x(r.mean)-2)+'" y="'+(cy+13)+'" width="4" height="14" fill="'+C.ink+'"/>';}
+    if(r.ref!=null) s+='<circle cx="'+x(r.ref)+'" cy="'+cy+'" r="7" fill="#fff" stroke="'+C.same+'" stroke-width="2.5"'+(opts.refDashed?' stroke-dasharray="3 2"':'')+'/>';
+    if(r.you!=null&&isFinite(r.you)) s+='<circle cx="'+x(r.you)+'" cy="'+cy+'" r="7" fill="'+C.ink+'"/>';
+  });
+  el.innerHTML=svgWrap(W,H,s,title+' ('+unit+')');
+}
+
+/* Means chart: panels per format, same vs across with CI */
+function meansChart(el,title,key,stats,yLabel){
+  // stats[f] = {same:{m,lo,hi}, across:{m,lo,hi}} or null; ref from REF
+  const W=500,H=260,T=34,B=48,L=52,R=10,pw=(W-L-R)/3;
+  let vals=[];FORMATS.forEach(f=>{const rf=REF[f.k];vals.push(key==='acc'?rf.sa:rf.sr,key==='acc'?rf.aa:rf.ar);
+    const st=stats&&stats[f.k];if(st){['same','across'].forEach(sd=>{['m','lo','hi'].forEach(q=>{if(isFinite(st[sd][q]))vals.push(st[sd][q]);});});}});
+  let lo=Math.min(...vals),hi=Math.max(...vals);const pad=(hi-lo)*.15||5;lo-=pad;hi+=pad;if(key==='acc'){hi=Math.min(hi,100);}
+  const ticks=niceTicks(lo,hi,5);lo=Math.min(lo,ticks[0]);hi=Math.max(hi,ticks[ticks.length-1]);
+  const y=v=>T+(hi-v)/(hi-lo)*(H-T-B);
+  let s=txt(4,18,title,{size:15,fill:C.ink,weight:600});
+  ticks.forEach(t=>{s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(t)+'" y2="'+y(t)+'" stroke="'+C.grid+'"/>'+txt(L-6,y(t)+4,t,{anchor:'end',size:12.5});});
+  s+='<text transform="translate(14,'+((T+H-B)/2)+') rotate(-90)" font-size="11" fill="'+C.muted+'" text-anchor="middle" font-family="Segoe UI,system-ui,Arial,sans-serif">'+esc(yLabel)+'</text>';
+  FORMATS.forEach((f,i)=>{const x0=L+i*pw,xs=x0+pw*.33,xa=x0+pw*.67;const rf=REF[f.k];
+    s+=txt(x0+pw/2,H-26,f.n,{anchor:'middle',size:14,fill:C.ink,weight:600})+txt(xs,H-8,'same',{anchor:'middle',size:12,fill:C.same})+txt(xa,H-8,'across',{anchor:'middle',size:12,fill:'#A35600'});
+    const rs=key==='acc'?rf.sa:rf.sr,ra=key==='acc'?rf.aa:rf.ar;
+    s+='<line x1="'+xs+'" x2="'+xa+'" y1="'+y(rs)+'" y2="'+y(ra)+'" stroke="#9A8AA0" stroke-dasharray="4 3"/>';
+    s+='<circle cx="'+xs+'" cy="'+y(rs)+'" r="5" fill="#fff" stroke="#9A8AA0" stroke-width="2" stroke-dasharray="3 2"/><circle cx="'+xa+'" cy="'+y(ra)+'" r="5" fill="#fff" stroke="#9A8AA0" stroke-width="2" stroke-dasharray="3 2"/>';
+    const st=stats&&stats[f.k];
+    if(st&&isFinite(st.same.m)&&isFinite(st.across.m)){
+      s+='<line x1="'+xs+'" x2="'+xa+'" y1="'+y(st.same.m)+'" y2="'+y(st.across.m)+'" stroke="'+C.ink+'" stroke-width="2"/>';
+      [['same',xs,C.same],['across',xa,C.across]].forEach(([sd,xx,col])=>{const q=st[sd];
+        if(isFinite(q.lo)) s+='<line x1="'+xx+'" x2="'+xx+'" y1="'+y(q.lo)+'" y2="'+y(q.hi)+'" stroke="'+col+'" stroke-width="3"/>';
+        s+='<circle cx="'+xx+'" cy="'+y(q.m)+'" r="7" fill="'+col+'"/>';});
+    }
+    if(i>0) s+='<line x1="'+x0+'" x2="'+x0+'" y1="'+T+'" y2="'+(H-B)+'" stroke="'+C.line+'"/>';
+  });
+  el.innerHTML=svgWrap(W,H,s,title);
+}
+
+/* ---------- Statistics ---------- */
+function tq(df){ // 0.975 quantile of t
+  const tab=[12.706,4.303,3.182,2.776,2.571,2.447,2.365,2.306,2.262,2.228];
+  if(df<=10) return tab[df-1];
+  const z=1.959964;return z+(z**3+z)/(4*df)+(5*z**5+16*z**3+3*z)/(96*df*df);
+}
+function summ(a){a=a.filter(v=>isFinite(v));const n=a.length;if(!n) return {n:0,m:NaN,lo:NaN,hi:NaN};
+  const m=a.reduce((s,v)=>s+v,0)/n;if(n<2) return {n,m,lo:NaN,hi:NaN};
+  const sd=Math.sqrt(a.reduce((s,v)=>s+(v-m)**2,0)/(n-1));const h=tq(n-1)*sd/Math.sqrt(n);return {n,m,lo:m-h,hi:m+h,sd};}
+
+/* ---------- My results ---------- */
+const body=document.getElementById('entryBody');
+FORMATS.forEach(f=>{const tr=document.createElement('tr');
+  tr.innerHTML='<th scope="row" style="color:var(--ink);font-size:.95rem">'+f.n+'</th>'+
+   ['sa','sr','aa','ar','nm'].map(c=>'<td><input type="number" inputmode="decimal" data-f="'+f.k+'" data-c="'+c+'" '+(c.endsWith('r')?'min="150" max="3000" step="1" placeholder="ms"':'min="0" max="100" step="0.1" placeholder="%"')+' aria-label="'+f.n+' '+({sa:'same side % correct',sr:'same side response time',aa:'across % correct',ar:'across response time',nm:'no match % correct'}[c])+'"></td>').join('');
+  body.appendChild(tr);});
+const inputs=[...body.querySelectorAll('input')];
+function readMine(){const d={};let bad=0;FORMATS.forEach(f=>d[f.k]={});
+  inputs.forEach(i=>{const v=i.value.trim();let num=v===''?NaN:+v;const isRT=i.dataset.c.endsWith('r');
+    const ok=v===''||(isFinite(num)&&(isRT?(num>=150&&num<=3000):(num>=0&&num<=100)));
+    i.classList.toggle('bad',!ok);if(!ok){bad++;num=NaN;}d[i.dataset.f][i.dataset.c]=num;});
+  return {d,bad};}
+function updateMine(){
+  const {d,bad}=readMine();
+  const accRows=FORMATS.map(f=>({name:f.n,you:d[f.k].aa-d[f.k].sa,ref:REF[f.k].aa-REF[f.k].sa}));
+  const rtRows=FORMATS.map(f=>({name:f.n,you:d[f.k].sr-d[f.k].ar,ref:REF[f.k].sr-REF[f.k].ar}));
+  advChart(document.getElementById('myChartAcc'),'Accuracy advantage (percentage points)','percentage points',accRows);
+  advChart(document.getElementById('myChartRT'),'Speed advantage (ms faster)','ms',rtRows);
+  // interpretation
+  let h='';FORMATS.forEach(f=>{const a=d[f.k].aa-d[f.k].sa,r=d[f.k].sr-d[f.k].ar;
+    if(!isFinite(a)&&!isFinite(r)) return;
+    let parts=[];if(isFinite(a)) parts.push(Math.abs(a).toFixed(1)+' points '+(a>=0?'more':'less')+' accurate');
+    if(isFinite(r)) parts.push(Math.abs(r).toFixed(0)+' ms '+(r>=0?'faster':'slower'));
+    let tail='';if(isFinite(a)&&isFinite(r)&&a!==0&&r!==0){if(a>0&&r>0)tail=' That is an across-hemisphere advantage on both measures.';else if(a<0&&r<0)tail=' That is a same-side advantage on both measures.';else tail=' The two measures disagree, so look for a speed\u2013accuracy trade-off.';}
+    h+='<p><strong>'+f.n+':</strong> on across trials you were '+parts.join(' and ')+'.'+tail+'</p>';});
+  document.getElementById('myInterp').innerHTML=h;
+  // line
+  const vals=[];FORMATS.forEach(f=>COLS.forEach(c=>vals.push(d[f.k][c])));FORMATS.forEach(f=>vals.push(d[f.k].nm));
+  const nFilled=vals.filter(isFinite).length;
+  const line='BA1,'+document.getElementById('hand').value+','+vals.map(v=>isFinite(v)?String(+v.toFixed(2)):'').join(',')+','+(fromTask?'web':'manual');
+  const lb=document.getElementById('myLine'),cb=document.getElementById('copyLine');
+  if(nFilled>=4&&!bad){lb.textContent=line;cb.disabled=false;}else{lb.textContent=bad?'Check the highlighted cells: accuracy must be 0 to 100 and response times 150 to 3000 ms.':'Fill in your results to create your line.';cb.disabled=true;}
+}
+let fromTask=false;
+inputs.forEach(i=>i.addEventListener('input',e=>{if(e.isTrusted)fromTask=false;updateMine();}));document.getElementById('hand').addEventListener('change',updateMine);
+document.getElementById('copyLine').addEventListener('click',async()=>{
+  const t=document.getElementById('myLine').textContent,m=document.getElementById('copyMsg');
+  try{await navigator.clipboard.writeText(t);m.textContent='Copied. Paste it where your tutor asks.';}
+  catch(e){const r=document.createRange();r.selectNodeContents(document.getElementById('myLine'));const s=getSelection();s.removeAllRanges();s.addRange(r);m.textContent='Selected. Press Ctrl+C (or Cmd+C) to copy.';}
+});
+updateMine();
+
+/* ---------- Class results ---------- */
+let classRows=[],simulated=false;
+const KEYS=[];FORMATS.forEach(f=>COLS.forEach(c=>KEYS.push(f.k+'_'+c)));FORMATS.forEach(f=>KEYS.push(f.k+'_nm'));
+function parseText(text){
+  const rows=[];let skipped=0;
+  text.split(/\r?\n/).forEach(line=>{const i=line.indexOf('BA1,');if(i<0) return;
+    const parts=line.slice(i+4).split(',').map(s=>s.trim());
+    const hand=parts[0];const nums=parts.slice(1,1+KEYS.length).map(s=>s===''?NaN:+s);
+    if(nums.length<12||nums.slice(0,12).filter(isFinite).length<4){skipped++;return;}
+    const src=(parts[1+KEYS.length]||'').trim();
+    const r={hand:['R','L','B','NA'].includes(hand)?hand:'NA',src:['web','manual'].includes(src)?src:''};KEYS.forEach((k,j)=>{let v=nums[j];
+      if(isFinite(v)){const isRT=/_(sr|ar)$/.test(k);if(isRT?(v<150||v>3000):(v<0||v>100))v=NaN;}r[k]=v;});rows.push(r);});
+  return {rows,skipped};}
+let classTrials=[];
+function setClass(rows,isSim,msg,trials){classRows=rows;simulated=isSim;classTrials=trials||[];
+  document.getElementById('downloadTrials').disabled=!classTrials.length;
+  document.getElementById('simBanner').innerHTML=isSim?'<div class="banner">Simulated class for rehearsal. These are not real data: they were generated around the 2024 averages.</div>':'';
+  document.getElementById('classStatus').textContent=msg;document.getElementById('download').disabled=!rows.length;drawClass();}
+document.getElementById('readPaste').addEventListener('click',()=>{const {rows,skipped}=parseText(document.getElementById('paste').value);
+  setClass(rows,false,rows.length?('Read '+rows.length+' student'+(rows.length===1?'':'s')+'.'+(skipped?' Skipped '+skipped+' incomplete line'+(skipped===1?'':'s')+'.':'')):'No results lines found. Each line should contain BA1, followed by the numbers.');});
+function parseTrialCSV(text){
+  const lines=text.split(/\r?\n/).filter(l=>l.trim());if(!lines.length) return [];
+  const head=lines[0].split(',').map(h=>h.trim());
+  return lines.slice(1).map(l=>{const v=l.split(',');const o={};head.forEach((h,i)=>o[h]=(v[i]||'').trim());return o;});}
+document.getElementById('fileIn').addEventListener('change',async e=>{
+  const files=[...e.target.files];if(!files.length) return;e.target.value='';
+  let rows=[],trials=[],skipped=0,nTrialFiles=0;
+  for(const f of files){const text=await f.text();const first=text.split(/\r?\n/,1)[0]||'';
+    if(/side_match/.test(first)){const t=parseTrialCSV(text);if(t.length){nTrialFiles++;trials=trials.concat(t);}}
+    else{const r=parseText(text);rows=rows.concat(r.rows);skipped+=r.skipped;}}
+  const byP={};trials.forEach(t=>{(byP[t.participant]=byP[t.participant]||[]).push(t);});
+  Object.values(byP).forEach(ts=>{const r=summariseTrials(ts.map(t=>({phase:t.phase,format:t.format,match:t.match==='1',sideMatch:t.side_match,correct:t.correct==='1',rt:t.rt_ms===''?NaN:+t.rt_ms})));
+    r.hand=ts[0].handedness||'NA';r.src='web';rows.push(r);});
+  setClass(rows,false,'Loaded '+rows.length+' student'+(rows.length===1?'':'s')+' from '+files.length+' file'+(files.length===1?'':'s')+(nTrialFiles?' ('+nTrialFiles+' with trial-by-trial data)':'')+'.'+(skipped?' Skipped '+skipped+' incomplete line'+(skipped===1?'':'s')+'.':''),trials);});
+document.getElementById('downloadTrials').addEventListener('click',()=>{if(!classTrials.length) return;
+  const head=Object.keys(classTrials[0]);downloadText('week01_all_trials.csv',[head.join(',')].concat(classTrials.map(t=>head.map(h=>t[h]).join(','))).join('\n'));});
+document.getElementById('clearClass').addEventListener('click',()=>{document.getElementById('paste').value='';setClass([],false,'No class data yet. The 2024 class averages are shown for reference.');});
+function gauss(){let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+document.getElementById('simulate').addEventListener('click',()=>{
+  const sd={digits:[6,110],dots:[11,190],mixed:[9,160]},rows=[];
+  for(let i=0;i<25;i++){const r={hand:Math.random()<.88?'R':'L'};const skill=gauss();
+    FORMATS.forEach(f=>{const rf=REF[f.k],[sa,sr]=sd[f.k];const base=skill*sa*.7,rb=-skill*sr*.6;
+      const da=(rf.aa-rf.sa)+gauss()*sa*.6,dr=(rf.ar-rf.sr)+gauss()*sr*.45;
+      const s_a=clamp(rf.sa+base+gauss()*sa*.4,30,100);r[f.k+'_sa']=+s_a.toFixed(1);r[f.k+'_aa']=+clamp(s_a+da,30,100).toFixed(1);
+      const s_r=clamp(rf.sr+rb+gauss()*sr*.4,350,2000);r[f.k+'_sr']=Math.round(s_r);r[f.k+'_ar']=Math.round(clamp(s_r+dr,350,2000));
+      r[f.k+'_nm']=+clamp(rf.nm+gauss()*sa,30,100).toFixed(1);});rows.push(r);}
+  setClass(rows,true,'Simulated class of 25 students.');});
+function drawClass(){
+  const n=classRows.length;const stats={};
+  FORMATS.forEach(f=>{const g=k=>classRows.map(r=>r[f.k+'_'+k]);
+    stats[f.k]={acc:{same:summ(g('sa')),across:summ(g('aa'))},rt:{same:summ(g('sr')),across:summ(g('ar'))}};});
+  const pick=k=>{const o={};FORMATS.forEach(f=>{const s=stats[f.k][k];o[f.k]={same:s.same,across:s.across};});return n?o:null;};
+  meansChart(document.getElementById('cMeansAcc'),'Accuracy on match trials (% correct)','acc',pick('acc'),'% correct');
+  meansChart(document.getElementById('cMeansRT'),'Response time on correct match trials (ms)','rt',pick('rt'),'ms');
+  const accRows=[],rtRows=[];let tbl='';
+  FORMATS.forEach(f=>{
+    const da=classRows.map(r=>r[f.k+'_aa']-r[f.k+'_sa']).filter(isFinite);
+    const dr=classRows.map(r=>r[f.k+'_sr']-r[f.k+'_ar']).filter(isFinite);
+    const sa=summ(da),sr=summ(dr);
+    accRows.push({name:f.n,dots:da,mean:n?sa.m:null,lo:sa.lo,hi:sa.hi,ref:REF[f.k].aa-REF[f.k].sa});
+    rtRows.push({name:f.n,dots:dr,mean:n?sr.m:null,lo:sr.lo,hi:sr.hi,ref:REF[f.k].sr-REF[f.k].ar});
+    if(n){const ci=s=>isFinite(s.lo)?' ['+fmt(s.lo)+', '+fmt(s.hi)+']':'';
+      tbl+='<tr><td>'+f.n+'</td><td>'+fmt(sa.m)+ci(sa)+'</td><td>'+da.filter(v=>v>0).length+' of '+da.length+'</td><td>'+fmt(sr.m,0)+(isFinite(sr.lo)?' ['+fmt(sr.lo,0)+', '+fmt(sr.hi,0)+']':'')+'</td><td>'+dr.filter(v=>v>0).length+' of '+dr.length+'</td></tr>';}
+  });
+  advChart(document.getElementById('cDiffAcc'),'Accuracy advantage (percentage points)','percentage points',accRows,{refDashed:true});
+  advChart(document.getElementById('cDiffRT'),'Speed advantage (ms faster)','ms',rtRows,{refDashed:true});
+  document.getElementById('cTable').innerHTML=n?('<h3>Summary</h3><table class="summary"><thead><tr><th>Format</th><th>Accuracy advantage, points (95% CI)</th><th>More accurate across</th><th>Speed advantage, ms (95% CI)</th><th>Faster across</th></tr></thead><tbody>'+tbl+'</tbody></table><p class="note">Positive values favour across matches. An interval that sits entirely on one side of zero gives the class average a clear direction; an interval that spans zero means our data cannot tell which direction it goes.</p>'):'';
+}
+document.getElementById('download').addEventListener('click',()=>{
+  const head=['code','handedness'].concat(KEYS.map(k=>k.replace('_sa','_same_acc').replace('_sr','_same_rt').replace('_aa','_across_acc').replace('_ar','_across_rt').replace('_nm','_nomatch_acc'))).concat(['source']);
+  const lines=[head.join(',')].concat(classRows.map(r=>['BA1',r.hand].concat(KEYS.map(k=>isFinite(r[k])?+(+r[k]).toFixed(2):'')).concat([r.src||'']).join(',')));
+  downloadText(simulated?'week01_simulated_class.csv':'week01_class_summary.csv',lines.join('\n'));});
+drawClass();
+
+/* ---------- Downloads ---------- */
+function downloadText(name,text){const blob=new Blob([text],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);}
+
+/* ---------- Summaries from trials ---------- */
+function summariseTrials(trials){
+  const t=trials.filter(x=>x.phase==='test');const r={};
+  const mean=a=>a.length?a.reduce((s,v)=>s+v,0)/a.length:NaN;
+  FORMATS.forEach(f=>{const ft=t.filter(x=>x.format===f.k);
+    ['same','across'].forEach(sd=>{const m=ft.filter(x=>x.sideMatch===sd);const c=sd==='same'?'s':'a';
+      r[f.k+'_'+c+'a']=m.length?+(100*mean(m.map(x=>x.correct?1:0))).toFixed(1):NaN;
+      const rts=m.filter(x=>x.correct&&isFinite(x.rt)).map(x=>x.rt);r[f.k+'_'+c+'r']=rts.length?Math.round(mean(rts)):NaN;});
+    const nm=ft.filter(x=>x.sideMatch==='none');r[f.k+'_nm']=nm.length?+(100*mean(nm.map(x=>x.correct?1:0))).toFixed(1):NaN;});
+  return r;}
+
+/* ---------- Full task ---------- */
+const RUN=document.getElementById('run'),RFIX=document.getElementById('runFix'),RITEMS=document.getElementById('runItems'),RMSG=document.getElementById('runMsg'),RFB=document.getElementById('runFb');
+const ORDERS=[['digits','dots','mixed'],['mixed','digits','dots'],['dots','mixed','digits']];
+const FNAME={digits:'Digits',dots:'Dots',mixed:'Mixed'};
+let frameMs=1000/60,actx=null,taskData=null;
+const QA=/[?&]qa=1/.test(location.search); // testing only: shortens the timing so the task can be checked quickly
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function measureFrames(n=45){return new Promise(res=>{const ts=[];function f(t){ts.push(t);if(ts.length<n)requestAnimationFrame(f);else{const d=[];for(let i=1;i<ts.length;i++)d.push(ts[i]-ts[i-1]);d.sort((a,b)=>a-b);res(d[Math.floor(d.length/2)]);}}requestAnimationFrame(f);});}
+function tone(freq,dur,vol){if(!actx)return;try{const o=actx.createOscillator(),g=actx.createGain(),t=actx.currentTime;o.frequency.value=freq;
+  g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.connect(g);g.connect(actx.destination);o.start(t);o.stop(t+dur+0.02);}catch(e){}}
+function makeBlock(fmt,n){
+  const list=[];const add=(type,k)=>{for(let i=0;i<k;i++)list.push({type,side:i%2?'r':'l'});};
+  add('same',n/4);add('across',n/4);add('none',n/2);
+  return shuffle(list).map(t=>{const nums=shuffle([1,2,3,4,5,6]);const tl=nums[0],tr=nums[1];let probe;
+    if(t.type==='none')probe=nums[2];else{const top=t.type==='same'?t.side:(t.side==='l'?'r':'l');probe=top==='l'?tl:tr;}
+    return {format:fmt,tl,tr,probe,probeSide:t.side,match:t.type!=='none',sideMatch:t.type};});}
+function kinds(fmt,mv){if(fmt==='digits')return['d','d'];if(fmt==='dots')return['o','o'];return mv==='A'?['d','o']:['o','d'];}
+function arrayHTML(tr,mv,fb){const [tk,bk]=kinds(tr.format,mv);const it=(k,n)=>k==='o'?dice(n):String(n);
+  let hlTop=null;if(fb&&tr.match)hlTop=tr.sideMatch==='same'?tr.probeSide:(tr.probeSide==='l'?'r':'l');
+  const cls=fb&&tr.match?(tr.sideMatch==='same'?' fb-same':' fb-across'):'';
+  return '<div class="ritem rp-tl'+(hlTop==='l'?cls:'')+'">'+it(tk,tr.tl)+'</div><div class="ritem rp-tr'+(hlTop==='r'?cls:'')+'">'+it(tk,tr.tr)+'</div>'+
+         '<div class="ritem rp-b'+tr.probeSide+(fb&&tr.match?cls:'')+'">'+it(bk,tr.probe)+'</div>';}
+function showScreen(html,buttons=[['Continue','go']]){
+  RUN.classList.add('screenmode');RFIX.style.display='none';RITEMS.innerHTML='';RFB.textContent='';
+  RMSG.innerHTML=html+'<div class="row" style="margin-top:16px">'+buttons.map(([t,v],i)=>'<button class="btn'+(i?' ghost':'')+'" data-v="'+v+'">'+esc(t)+'</button>').join('')+'</div>';
+  RMSG.style.display='block';if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
+  return new Promise(res=>{let closed=false;const done=v=>{if(closed)return;closed=true;RMSG.style.display='none';RUN.classList.remove('screenmode');RFIX.style.display='';window.removeEventListener('keydown',k,true);window.removeEventListener('keyup',ku,true);res(v);};
+    const ku=e=>{if(e.code==='Space'||e.key===' '){e.preventDefault();e.stopPropagation();}};
+    window.addEventListener('keyup',ku,true);
+    const k=e=>{if(e.code==='Space'||e.key===' '){e.preventDefault();e.stopPropagation();return;}if(e.key==='Enter'){e.preventDefault();done(buttons[0][1]);}};
+    setTimeout(()=>{if(!closed)window.addEventListener('keydown',k,true);},300);
+    RMSG.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>done(b.dataset.v)));});}
+function runTrial(tr,meta){
+  return new Promise(resolve=>{
+    RITEMS.innerHTML='';RFIX.style.display='';
+    const onsetTarget=performance.now()+meta.fixMs;let beeped=!meta.beep;
+    let state='fix',onset=null,offset=null,resp=null,stamp=null,focusLost=false;
+    const t0=performance.now();
+    const key=e=>{if(e.code!=='Space'&&e.key!==' ')return;e.preventDefault();if(e.repeat)return;respond(e.timeStamp);};
+    const ptr=e=>{if(e.pointerType==='mouse'&&e.button!==0)return;respond(e.timeStamp);};
+    function respond(ts){if(state==='fix'||state==='drawn'||resp!==null)return;const now=performance.now();if(!(ts>t0-5000&&ts<=now+5))ts=now;stamp=ts;resp=1;}
+    const vis=()=>{if(document.hidden)focusLost=true;};
+    window.addEventListener('keydown',key);RUN.addEventListener('pointerdown',ptr);document.addEventListener('visibilitychange',vis);
+    function finish(now){window.removeEventListener('keydown',key);RUN.removeEventListener('pointerdown',ptr);document.removeEventListener('visibilitychange',vis);
+      RITEMS.innerHTML='';if(offset===null)offset=now;
+      const responded=resp===1;resolve({...tr,response:responded,correct:responded===tr.match,rt:responded?stamp-onset:NaN,stimMs:offset-onset,
+        focusLost,fullscreen:!!document.fullscreenElement});}
+    function frame(now){
+      if(state==='fix'){if(!beeped&&now>=onsetTarget-1050){tone(1000,0.05,0.15);beeped=true;}
+        if(now>=onsetTarget-frameMs/2){RITEMS.innerHTML=arrayHTML(tr,meta.mixedVersion,false);state='drawn';}
+        requestAnimationFrame(frame);return;}
+      if(state==='drawn'){onset=now;state='on';requestAnimationFrame(frame);return;}
+      if(resp!==null||now>=onset+meta.window){if(state==='on'){RITEMS.innerHTML='';offset=now;}finish(now);return;}
+      if(state==='on'&&now>=onset+meta.stimMs-frameMs*1.5){RITEMS.innerHTML='';state='hidden';requestAnimationFrame(frame);return;}
+      if(state==='hidden'){offset=now;state='resp';}
+      requestAnimationFrame(frame);}
+    requestAnimationFrame(frame);});}
+async function feedback(r,meta){
+  RFIX.style.display='';RITEMS.innerHTML=arrayHTML(r,meta.mixedVersion,true);
+  RFB.textContent=r.match?(r.sideMatch==='same'?'There was a match on the same side: you should have pressed the spacebar.':'There was a match across the screen: you should have pressed the spacebar.')
+                         :'There was no match: you should not have pressed.';
+  tone(300,0.15,0.15);await sleep(QA?300:2200);RITEMS.innerHTML='';RFB.textContent='';await sleep(500);}
+function exampleBox(fmt,mv){const ex=makeBlock(fmt,4).find(t=>t.match);
+  return '<div class="stage" style="max-width:420px;margin:10px auto;aspect-ratio:16/10"><div class="fix" style="font-size:1.6rem">+</div>'+
+    arrayHTML(ex,mv,true).replace(/ritem rp-(\w+)/g,(m,p)=>'item pos-'+p)+'</div>';}
+async function runTask(){
+  const n=+document.getElementById('taskN').value;
+  const meta={participant:'P'+Math.random().toString(36).slice(2,8).toUpperCase(),date:new Date().toISOString().slice(0,10),
+    order:ORDERS[Math.floor(Math.random()*3)],mixedVersion:Math.random()<.5?'A':'B',n,fixMs:QA?400:2100,stimMs:195,window:QA?900:2100,
+    beep:document.getElementById('taskBeep').checked,hand:document.getElementById('taskHand').value};
+  if(meta.beep){try{actx=new (window.AudioContext||window.webkitAudioContext)();await actx.resume();}catch(e){actx=null;}}
+  RUN.classList.add('on');document.body.style.overflow='hidden';
+  try{if(RUN.requestFullscreen)await RUN.requestFullscreen();}catch(e){}
+  RFIX.style.display='none';
+  frameMs=await measureFrames();meta.frameMs=frameMs;
+  const rows=[];let quit=false;
+  let go=await showScreen('<h2>Before you start</h2><p>Keep your eyes on the cross in the middle of the screen throughout. Three numbers will flash briefly: two at the top and one at the bottom.</p><p>Press the <strong>spacebar</strong> as quickly as you can if the bottom number matches one of the top two. If there is no match, do nothing and wait for the next display.</p><p>There are three blocks. Each starts with 8 practice trials, and you will be told when you make an error in practice.</p>',[['I\u2019m ready','go'],['Cancel','quit']]);
+  if(go==='quit')quit=true;
+  for(let b=0;b<3&&!quit;b++){const fmt=meta.order[b];
+    const desc={digits:'All three numbers are digits.',dots:'All three numbers are dice patterns.',
+      mixed:meta.mixedVersion==='A'?'The top numbers are digits and the bottom number is a dice pattern. A match means the same quantity.':'The top numbers are dice patterns and the bottom number is a digit. A match means the same quantity.'}[fmt];
+    go=await showScreen('<h2>Block '+(b+1)+' of 3: '+FNAME[fmt]+'</h2><p>'+desc+'</p>'+exampleBox(fmt,meta.mixedVersion)+'<p>In this example the bottom number matches, so you would press the spacebar.</p>',[['Start the practice','go'],['Quit the task','quit']]);
+    if(go==='quit'){quit=true;break;}
+    let k=0;
+    for(const tr of makeBlock(fmt,8)){const r=await runTrial(tr,meta);rows.push(rowOf(r,meta,'practice',b+1,++k));if(!r.correct)await feedback(r,meta);}
+    go=await showScreen('<h2>Practice finished</h2><p>Now the real trials for this block ('+n+' displays). There is no feedback from here on. Keep your eyes on the cross.</p>',[['Start','go'],['Quit the task','quit']]);
+    if(go==='quit'){quit=true;break;}
+    k=0;
+    for(const tr of makeBlock(fmt,n)){const r=await runTrial(tr,meta);rows.push(rowOf(r,meta,'test',b+1,++k));}
+    if(b<2){go=await showScreen('<h2>Block '+(b+1)+' of 3 done</h2><p>Take a short break and rest your eyes. Continue when you are ready.</p>',[['Continue','go'],['Quit the task','quit']]);if(go==='quit')quit=true;}
+  }
+  try{if(document.fullscreenElement)await document.exitFullscreen();}catch(e){}
+  RUN.classList.remove('on');document.body.style.overflow='';RMSG.style.display='none';
+  finishTask(rows,meta,quit);}
+function rowOf(r,meta,phase,block,trial){return {participant:meta.participant,date:meta.date,block_order:meta.order.join('-'),mixed_version:meta.mixedVersion,
+  phase,block,format:r.format,trial,top_left:r.tl,top_right:r.tr,bottom:r.probe,bottom_side:r.probeSide==='l'?'left':'right',match:r.match?1:0,
+  side_match:r.sideMatch,response:r.response?1:0,correct:r.correct?1:0,rt_ms:isFinite(r.rt)?r.rt.toFixed(1):'',stim_ms:r.stimMs.toFixed(1),
+  frame_ms:meta.frameMs.toFixed(2),fullscreen:r.fullscreen?1:0,focus_lost:r.focusLost?1:0,screen_w:screen.width,screen_h:screen.height,handedness:meta.hand};}
+function finishTask(rows,meta,quit){
+  const st=document.getElementById('taskStatus');
+  const nTest=rows.filter(r=>r.phase==='test').length;
+  if(!nTest){st.textContent=quit?'Task cancelled. Start again when you are ready.':'';return;}
+  taskData={rows,meta};
+  const summ=summariseTrials(rows.map(r=>({phase:r.phase,format:r.format,match:r.match===1,sideMatch:r.side_match,correct:r.correct===1,rt:r.rt_ms===''?NaN:+r.rt_ms})));
+  inputs.forEach(i=>{const v=summ[i.dataset.f+'_'+i.dataset.c];i.value=isFinite(v)?v:'';});
+  document.getElementById('hand').value=meta.hand;fromTask=true;updateMine();
+  document.getElementById('trialDl').hidden=false;
+  document.getElementById('pCode').textContent='Your anonymous code: '+meta.participant;
+  document.getElementById('mineIntro').textContent=quit?'You stopped the task early, so some cells may be empty. Your numbers from the trials you completed are filled in below.':'Your results from the task are filled in below. Check them, then copy your results line and download your trial data.';
+  st.textContent=quit?'Task stopped early. Partial results are on the My results tab.':'Finished. Your results are on the My results tab.';
+  showTab(document.getElementById('t-mine'));window.scrollTo(0,0);}
+document.getElementById('taskStart').addEventListener('click',()=>{if(RUN.classList.contains('on'))return;runTask();});
+document.getElementById('dlMine').addEventListener('click',()=>{if(!taskData)return;const head=Object.keys(taskData.rows[0]);
+  taskData.saved=true;downloadText('week01_'+taskData.meta.participant+'_trials.csv',[head.join(',')].concat(taskData.rows.map(r=>head.map(h=>r[h]).join(','))).join('\n'));});
+window.addEventListener('beforeunload',e=>{if(taskData&&!taskData.saved){e.preventDefault();e.returnValue='';}});
+
+/* ---------- Quiz ---------- */
+const Q={
+core:[
+ {q:'A number is flashed briefly in the left visual field while you look at the central cross. Which hemisphere receives it first?',ref:'Textbook §1.5',
+  o:[['The right hemisphere',1,'Correct. Each visual field projects to the opposite hemisphere, so the left visual field goes to the right hemisphere.'],
+     ['The left hemisphere',0,'That would be the right visual field. Visual fields project to the opposite (contralateral) hemisphere.'],
+     ['Both hemispheres, at the same moment',0,'Both hemispheres do end up with the information, but only after it crosses the corpus callosum. The task exploits that delay.'],
+     ['Whichever hemisphere is dominant for numbers',0,'Dominance affects how well a hemisphere handles the input, not where the input first arrives. The wiring is fixed.']]},
+ {q:'Why were the numbers displayed for only about 200 ms?',ref:'Textbook §1.5; lab design',
+  o:[['So they disappear before your eyes can move to look at them',1,'Correct. Launching an eye movement takes about 200 ms. A longer display lets you look at each number, so both hemispheres see everything and the visual-field logic is lost.'],
+     ['To make the task hard enough that everyone makes errors',0,'Difficulty is manipulated through stimulus format. The brief display protects the visual-field logic.'],
+     ['To measure the capacity of iconic memory',0,'Iconic memory is studied with brief displays too (Chapter 3), but that is not the purpose here.'],
+     ['To stop participants from guessing',0,'People can guess at any display duration.']]},
+ {q:'What were the independent variables in this experiment?',ref:'Textbook §1.7, research designs',
+  o:[['Stimulus format (digits, dots, mixed) and whether the match was on the same side or across',1,'Correct. Both were manipulated within each participant, giving a 3 \u00d7 2 within-participants design.'],
+     ['Accuracy and response time',0,'These are the dependent variables: what we measured, not what we manipulated.'],
+     ['Handedness and sex of the participant',0,'These were not manipulated. At most they are participant variables, and they were not part of the design.'],
+     ['The order of the three blocks',0,'Block order was varied to control order effects (counterbalancing). It is not a variable of interest.']]},
+ {q:'Which statement describes a same-side match trial?',ref:'Today\u2019s lab: the task design',
+  o:[['Both copies of the matching number start in the same hemisphere, so no crossing of the corpus callosum is needed',1,'Correct. Same side refers to the visual field, and therefore the hemisphere, that receives both copies.'],
+     ['The matching numbers are always in the same format',0,'Format is a separate factor. In the mixed block, matches are always in different formats.'],
+     ['The bottom number appears on the same side on every trial',0,'The bottom number appears randomly on the left or the right.'],
+     ['Both hemispheres receive both numbers at once',0,'Each visual field projects to one hemisphere first.']]},
+ {q:'In the 2024 class data, dots trials were both more accurate and faster when the match was across. Why does that combination matter?',ref:'Today\u2019s lab: the class results',
+  o:[['It rules out a speed\u2013accuracy trade-off, because across trials were better on both measures',1,'Correct. If across trials had been faster but less accurate, people might simply have been responding more hastily on them.'],
+     ['It shows that dots are processed in the right hemisphere',0,'The comparison is same versus across, not left versus right, so it does not localise dot processing.'],
+     ['It proves that transfer across the corpus callosum is faster than processing within a hemisphere',0,'Transfer has a cost. The across advantage arises despite that cost, because two hemispheres provide more processing resources in parallel.'],
+     ['It means the result must be statistically significant',0,'Agreement between measures is not an inferential test. For that, look at the confidence interval around the difference.']]},
+ {q:'A split-brain patient is shown a picture of a key in the left visual field. What is the most likely outcome?',ref:'Textbook §1.5',
+  o:[['They cannot name it, but can pick out a key with their left hand',1,'Correct. The right hemisphere receives the image and controls the left hand, but language is usually left-hemisphere, and the callosum is cut.'],
+     ['They can name it, but cannot pick it out',0,'This is the reverse. Naming needs the left hemisphere, which never received the image.'],
+     ['They can neither name it nor pick it out',0,'The right hemisphere can recognise the key and guide the left hand to it.'],
+     ['They name it after a short delay, once it crosses over',0,'With the corpus callosum cut, the image cannot cross to the left hemisphere.']]},
+ {q:'Why is a double dissociation stronger evidence for localisation than a single dissociation?',ref:'Textbook §1.5',
+  o:[['Each function can be lost while the other is spared, so neither task difficulty nor a single shared mechanism can explain the pattern',1,'Correct. A single dissociation could mean one task is simply harder. The crossed pattern rules that out.'],
+     ['It requires two patients rather than one',0,'The number of patients is incidental. What matters is the crossed pattern of loss and sparing.'],
+     ['It shows that the two functions depend on the same brain area',0,'It shows the opposite: the functions are separable.'],
+     ['It removes the need for imaging studies',0,'Lesion evidence and imaging answer different questions and complement each other.']]},
+ {q:'Donders compared simple and choice reaction times. What did the difference between them estimate?',ref:'Textbook §1.2',
+  o:[['The duration of the decision stage that the choice task adds',1,'Correct. This is the subtractive method, which assumes the extra stage is simply inserted without changing the others.'],
+     ['The speed of nerve conduction',0,'Nerve conduction speed was measured by Helmholtz. Donders was after the duration of a mental stage.'],
+     ['The time for a stimulus to reach awareness',0,'The subtraction isolates a decision stage, not the moment of awareness.'],
+     ['The participant\u2019s level of attention',0,'Attention may affect both reaction times, but the difference was taken to estimate decision time.']]},
+ {q:'Why did introspection fail as the main method of early psychology?',ref:'Textbook §1.2',
+  o:[['Much of cognition is unconscious, and reports could not be checked independently between observers',1,'Correct. The method had no way to settle disagreements, and it could not reach processes outside awareness.'],
+     ['It needed expensive laboratory equipment',0,'Introspection needed little equipment; the problem was the data, not the cost.'],
+     ['Behaviourists proved that introspective reports were false',0,'Behaviourists rejected introspection as unscientific rather than proving reports false.'],
+     ['It measured reaction times inaccurately',0,'Introspection relies on verbal reports, not reaction times.']]},
+ {q:'An fMRI study finds that a region is active whenever people perform a task. What can the authors conclude?',ref:'Textbook §1.7',
+  o:[['The region\u2019s activity is associated with the task, but this does not show the region is necessary for it',1,'Correct. Imaging is correlational. Testing necessity needs an intervention such as TMS, or lesion evidence.'],
+     ['The region is necessary for the task',0,'Necessity requires showing that disrupting the region impairs the task.'],
+     ['The region is the only one involved in the task',0,'Other regions may contribute, including ones below the statistical threshold.'],
+     ['The region became active before the others',0,'The BOLD response unfolds over seconds, so fMRI is poor at ordering events that take milliseconds.']]}
+],
+stretch:[
+ {q:'In the mixed block, our class did better when the match was on the same side. Which account best fits Patel and Hellige\u2019s explanation?',ref:'Today\u2019s lab; Patel & Hellige (2007)',
+  o:[['Digits and dot patterns are identified through different cortical routes, so one hemisphere can process both in parallel with little interference',1,'Correct. When the two items do not compete for the same machinery, keeping them in one hemisphere avoids the cost of transfer.'],
+     ['Mixed trials are so easy that one hemisphere is enough',0,'Mixed trials were harder than digits, yet digits still showed an across advantage. Ease cannot explain the reversal.'],
+     ['The corpus callosum cannot carry numerical information',0,'It clearly can: digits and dots both showed an across advantage.'],
+     ['Participants ignored the dots in the mixed block',0,'Accuracy would then fall towards chance on mixed trials. It was around 82 to 84%.']]},
+ {q:'Accuracy in 2024 was highest for digits, then mixed, then dots. Why is that a problem for the idea that the across advantage simply grows with difficulty?',ref:'Today\u2019s lab: the class results',
+  o:[['Mixed was harder than digits, so it should have shown at least as large an across advantage as digits, but it showed the reverse',1,'Correct. Difficulty predicts the ordering digits < mixed < dots for the across advantage. The mixed result breaks that ordering, so format must matter.'],
+     ['Dots were the hardest and showed the largest advantage',0,'That part supports the difficulty idea. The problem lies with the mixed block.'],
+     ['Digits are too easy to show any effect',0,'Digits showed an across advantage of about 3.7 points.'],
+     ['Accuracy cannot be used as an index of difficulty',0,'Accuracy is a reasonable index of difficulty here, and response times tell the same story.']]},
+ {q:'Why does the task rotate the order of the three format blocks across students?',ref:'Textbook §1.7; lab design',
+  o:[['So that practice and fatigue are not confounded with format',1,'Correct. This matters especially here, because practice can shrink the across advantage (Weissman & Compton, 2003).'],
+     ['So that every student meets the hardest block first',0,'Rotation means different students meet the blocks in different orders.'],
+     ['To increase the number of trials',0,'The number of trials is the same whatever the order.'],
+     ['To turn format into a between-participants factor',0,'Every student completes every format. Only the order differs.']]},
+ {q:'On no-match trials the correct response is to press nothing. What does accuracy on these trials tell you?',ref:'Today\u2019s lab: the task design',
+  o:[['How well you withheld a response when there was no match, which reflects your false alarms',1,'Correct. This is a go/no-go design: the only response is \u201cmatch\u201d.'],
+     ['Your response time to displays without a match',0,'There is no response on a correct no-match trial, so there is no response time.'],
+     ['Whether the across advantage holds without a match',0,'Same and across are defined by where the match is, so they do not apply when there is none.'],
+     ['How often you missed a real match',0,'Missed matches show up as errors on match trials.']]},
+ {q:'Suppose the numbers stayed on the screen for 2 seconds instead of 195 ms. What would you predict for the difference between same-side and across trials?',ref:'Textbook §1.5; lab design',
+  o:[['It would shrink towards zero, because people would move their eyes and both hemispheres would see all the numbers',1,'Correct. The manipulation only works while input is restricted to one hemisphere at a time.'],
+     ['It would grow, because there is more time to transfer information',0,'Transfer would no longer be needed once both hemispheres see every number.'],
+     ['It would reverse for every format',0,'There is no reason for a reversal. Removing the lateralised input removes the effect.'],
+     ['It would be unchanged, because visual fields are fixed by anatomy',0,'Visual fields are fixed relative to where you look, but your gaze can move.']]},
+ {q:'Raine et al. (2003) compared 15 community volunteers with high psychopathic and antisocial traits against 25 controls and found a larger corpus callosum in the first group. Which conclusion is best supported?',ref:'Textbook §1.7; Raine et al. (2003)',
+  o:[['Callosal structure is associated with these traits in this sample, but the design cannot show what causes what',1,'Correct. This is a small correlational comparison: cause, consequence, or a third factor are all possible.'],
+     ['A damaged corpus callosum causes psychopathy',0,'The callosum was larger, not damaged, and a group comparison cannot establish cause.'],
+     ['Shrinking the corpus callosum would reduce psychopathic traits',0,'Nothing in the design tells us what an intervention would do.'],
+     ['The finding applies to everyone diagnosed with psychopathy',0,'A small community sample cannot be generalised to clinical or forensic populations.']]},
+ {q:'Myznikov et al. (2024) split 129 healthy adults into two groups using a 12-item questionnaire and found lower grey matter volume in some regions in the higher-trait group. Which statement goes beyond the evidence?',ref:'Textbook §1.7; Myznikov et al. (2024)',
+  o:[['\u201cReduced grey matter in these regions is what makes people manipulative.\u201d',1,'Correct. This is a causal and trait-specific claim. The study compared two groups on structure at one time point.'],
+     ['\u201cOn average, the higher-trait group had lower grey matter volume in some regions.\u201d',0,'This is what the study reported, so it stays within the evidence.'],
+     ['\u201cA 12-item questionnaire is a coarse measure of personality traits.\u201d',0,'This is a fair criticism of the method, not an overreach.'],
+     ['\u201cHealthy volunteers with higher scores are not the same as people with clinical psychopathy.\u201d',0,'This is a fair caution about generalising, not an overreach.']]},
+ {q:'Someone proposes using TMS to test whether the ventral striatum is necessary for reward-driven behaviour. What is the main problem?',ref:'Textbook §1.7',
+  o:[['TMS reaches only surface cortex, and the ventral striatum lies deep in the brain',1,'Correct. Deep structures such as the hippocampus and basal ganglia are out of TMS\u2019s range.'],
+     ['TMS cannot be used on healthy people',0,'TMS is used in healthy volunteers, under published safety and screening guidelines.'],
+     ['TMS measures brain activity rather than changing it',0,'TMS intervenes in the brain; that is exactly why it can test necessity.'],
+     ['TMS effects are permanent',0,'TMS effects are brief and reversible, which is why it is called a virtual lesion.']]},
+ {q:'Two regions show strongly correlated activity at rest, yet no direct axonal tract links them. How is that possible?',ref:'Textbook §1.6',
+  o:[['They can be functionally connected through an intermediate hub, because functional connectivity is a statistical relationship, not a cable',1,'Correct. Structural and functional connectivity need not coincide.'],
+     ['It must be an imaging artefact',0,'Artefacts are always possible, but this pattern is common and well understood.'],
+     ['They must be linked by the corpus callosum',0,'The corpus callosum is itself a structural tract, and the question says there is no direct one.'],
+     ['Correlated activity proves that a hidden direct tract exists',0,'Correlation is evidence of coordination, not of a direct physical connection.']]},
+ {q:'A student\u2019s own data show a same-side advantage for digits, the opposite of the class. What is the most reasonable interpretation?',ref:'Today\u2019s lab: the class results',
+  o:[['With relatively few trials per condition one person\u2019s difference is noisy, so the class estimate is more informative, although real individual differences are possible',1,'Correct. Check the student-by-student plot: some students fall on each side of zero even when the average is clear.'],
+     ['The student\u2019s hemispheres must be organised unusually',0,'That overinterprets a single, noisy difference.'],
+     ['The class result must be wrong',0,'One person cannot overturn the average of a whole class.'],
+     ['The student must be left-handed',0,'Handedness may relate to lateralisation, but it cannot be inferred from one result.']]}
+]};
+const qRun=document.getElementById('quizRun'),qStart=document.getElementById('quizStart');
+let qs=null,qi=0,score=0,log=[],qTimer=null,qLeft=0;
+document.querySelectorAll('.pick').forEach(b=>b.addEventListener('click',()=>startQuiz(b.dataset.set)));
+function startQuiz(set){
+  qs=Q[set].map(q=>({q:q.q,ref:q.ref,o:shuffle(q.o)}));qi=0;score=0;log=[];
+  qStart.hidden=true;qRun.hidden=false;
+  if(document.getElementById('useTimer').checked){qLeft=600;clearInterval(qTimer);qTimer=setInterval(()=>{qLeft--;const t=document.getElementById('qClock');if(t)t.textContent=clock();if(qLeft<=0){clearInterval(qTimer);endQuiz(true);}},1000);}else{qLeft=0;}
+  showQ();}
+function clock(){return Math.floor(qLeft/60)+':'+String(qLeft%60).padStart(2,'0')+' left';}
+function showQ(){const q=qs[qi];
+  qRun.innerHTML='<div class="qcard"><div class="qmeta"><span>Question '+(qi+1)+' of '+qs.length+'</span><span id="qClock">'+(qLeft?clock():'')+'</span></div>'+
+   '<div class="progress"><div style="width:'+(qi/qs.length*100)+'%"></div></div><p class="qtext">'+esc(q.q)+'</p>'+
+   q.o.map((o,i)=>'<button class="opt" data-i="'+i+'">'+esc(o[0])+'</button>').join('')+
+   '<div class="row"><button class="btn" id="qCheck" disabled>Check answer</button></div><div id="qFb"></div></div>';
+  let sel=null;const opts=[...qRun.querySelectorAll('.opt')];
+  opts.forEach(b=>b.addEventListener('click',()=>{opts.forEach(x=>x.classList.remove('sel'));b.classList.add('sel');sel=+b.dataset.i;document.getElementById('qCheck').disabled=false;}));
+  document.getElementById('qCheck').addEventListener('click',()=>{if(sel==null)return;
+    const chosen=q.o[sel],correctIdx=q.o.findIndex(o=>o[1]===1),ok=chosen[1]===1;if(ok)score++;
+    log.push({q:q.q,chosen:chosen[0],correct:q.o[correctIdx][0],ok,ref:q.ref,why:q.o[correctIdx][2]});
+    opts.forEach((b,i)=>{b.disabled=true;if(i===correctIdx)b.classList.add('right');else if(i===sel)b.classList.add('wrong');
+      if(i===sel||i===correctIdx){const w=document.createElement('div');w.className='why';w.textContent=q.o[i][2];b.appendChild(w);}});
+    document.getElementById('qCheck').remove();
+    const fb=document.getElementById('qFb');fb.innerHTML='<p class="ref">Where to read more: '+esc(q.ref)+'</p><div class="row"><button class="btn" id="qNext">'+(qi<qs.length-1?'Next question':'See my results')+'</button></div>';
+    document.getElementById('qNext').addEventListener('click',()=>{qi++;if(qi<qs.length)showQ();else endQuiz(false);});
+    document.getElementById('qNext').focus();});
+}
+function endQuiz(timedOut){clearInterval(qTimer);
+  let h='<div class="qcard"><h2>'+score+' of '+qs.length+' correct</h2>'+(timedOut?'<p class="note">Time ran out. Questions you did not reach are listed as not answered.</p>':'');
+  qs.forEach((q,i)=>{const L=log[i];
+    if(L) h+='<div class="review"><p><span class="'+(L.ok?'ok':'no')+'">'+(L.ok?'Correct':'Incorrect')+'</span> '+esc(q.q)+'</p>'+(L.ok?'':'<p>Your answer: '+esc(L.chosen)+'</p>')+'<p>Answer: '+esc(L.correct)+'. '+esc(L.why.replace(/^Correct\.\s*/,''))+'</p><p class="ref">Where to read more: '+esc(L.ref)+'</p></div>';
+    else{const c=q.o.find(o=>o[1]===1);h+='<div class="review"><p><span class="no">Not answered</span> '+esc(q.q)+'</p><p>Answer: '+esc(c[0])+'. '+esc(c[2].replace(/^Correct\.\s*/,''))+'</p></div>';}});
+  h+='<div class="row"><button class="btn" id="qAgain">Back to the quiz menu</button></div></div>';
+  qRun.innerHTML=h;document.getElementById('qAgain').addEventListener('click',()=>{qRun.hidden=true;qStart.hidden=false;});}
+})();
+</script>
+</body>
+</html>

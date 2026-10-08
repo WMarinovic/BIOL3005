@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIOL3005 Week 2: Load theory tutorial tools</title>
+<style>
+  :root{
+    --ink:#2B142D; --muted:#6B5A70; --line:#E3DAE7; --tint:#F6F2F8; --paper:#FFFFFF;
+    --same:#663366; --across:#E07B00; --across-text:#A35600; --stage:#1E1222;
+    --ok:#2E7D4F; --bad:#B3261E;
+    --head: Rockwell, "Rockwell Nova", "Roboto Slab", "Sitka Small", Georgia, serif;
+    --body: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{font-size:16px}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.55}
+  a{color:var(--same)}
+  :focus-visible{outline:3px solid var(--across);outline-offset:2px}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+  header.mast{border-bottom:1px solid var(--line);padding:28px 0 0}
+  .unit{font-size:.9rem;color:var(--muted);margin:0}
+  h1{font-family:var(--head);font-weight:700;font-size:2.3rem;line-height:1.1;margin:.2rem 0 .4rem;letter-spacing:-.01em}
+  .lede{max-width:68ch;margin:0 0 18px;color:var(--muted)}
+  nav[role=tablist]{display:flex;gap:4px;flex-wrap:wrap}
+  nav button{font:inherit;font-weight:600;background:none;border:0;border-bottom:3px solid transparent;
+    padding:10px 14px;color:var(--muted);cursor:pointer}
+  nav button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--same)}
+  nav button:hover{color:var(--ink)}
+  main section{display:none;padding:28px 0 60px}
+  main section.on{display:block}
+  h2{font-family:var(--head);font-size:1.55rem;margin:0 0 .5rem}
+  h3{font-family:var(--head);font-size:1.15rem;margin:1.6rem 0 .4rem}
+  p.note{font-size:.92rem;color:var(--muted);max-width:72ch}
+  .twocol{display:grid;grid-template-columns:1.25fr 1fr;gap:28px;align-items:start}
+  @media (max-width:820px){.twocol{grid-template-columns:1fr}h1{font-size:1.8rem}}
+  .btn{font:inherit;font-weight:600;border:2px solid var(--same);background:var(--same);color:#fff;border-radius:6px;padding:8px 16px;cursor:pointer}
+  .btn.ghost{background:#fff;color:var(--same)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0}
+  label.inline{display:flex;gap:6px;align-items:center;font-size:.95rem}
+  select,input[type=number],textarea{font:inherit;border:1px solid #CBBBD2;border-radius:5px;padding:6px 8px;background:#fff;color:var(--ink)}
+  textarea{width:100%;min-height:130px;font-family:Consolas,"Courier New",monospace;font-size:.85rem}
+
+  /* Trial stage: the split visual field is the motif */
+  .stage{position:relative;background:var(--stage);border-radius:10px;aspect-ratio:16/10;overflow:hidden;user-select:none}
+  .stage::before{content:"";position:absolute;left:50%;top:6%;bottom:6%;border-left:1px dashed rgba(255,255,255,.14)}
+  .fieldlab{position:absolute;bottom:10px;font-size:.75rem;color:rgba(255,255,255,.45)}
+  .fieldlab.l{left:14px}.fieldlab.r{right:14px}
+  .fix{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#fff;font-size:2rem;font-weight:300}
+  .item{position:absolute;width:15%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;color:#fff;
+    font-family:Arial,sans-serif;font-weight:700;font-size:clamp(1.6rem,5vw,3.2rem);border-radius:8px;border:3px solid transparent}
+  .item svg{width:78%;height:78%}
+  .pos-tl{left:17%;top:12%}.pos-tr{right:17%;top:12%}.pos-bl{left:17%;bottom:12%}.pos-br{right:17%;bottom:12%}
+  .item.hl-same,.item.fb-same{border-color:#C9A3C9}.item.hl-across,.item.fb-across{border-color:var(--across)}
+  .stagebar{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;align-items:center}
+  .verdict{min-height:3.2em;margin-top:10px;font-size:.98rem}
+  .tag{display:inline-block;font-size:.8rem;font-weight:700;padding:1px 8px;border-radius:999px;color:#fff}
+  .tag.same{background:var(--same)}.tag.across{background:var(--across)}
+  .keyfacts{background:var(--tint);border-radius:10px;padding:16px 20px}
+  .keyfacts p{margin:.2rem 0 .7rem}
+
+  /* Results table */
+  table.entry{border-collapse:collapse;width:100%;font-size:.95rem}
+  table.entry th,table.entry td{padding:6px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+  table.entry th{font-weight:600;font-size:.85rem;color:var(--muted)}
+  table.entry th.same{color:var(--same)} table.entry th.across{color:var(--across-text)}
+  table.entry input{width:5.4rem}
+  input.bad{border-color:var(--bad);background:#FDECEA}
+  .linebox{font-family:Consolas,"Courier New",monospace;font-size:.85rem;background:var(--tint);padding:8px 10px;border-radius:5px;word-break:break-all}
+  .interp p{margin:.3rem 0;max-width:75ch}
+  .chart svg{width:100%;height:auto;display:block}
+  .chartgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start}
+  @media (max-width:820px){.chartgrid{grid-template-columns:1fr}}
+  .entrywrap{max-width:780px}
+  .legend{display:flex;gap:16px;font-size:.85rem;color:var(--muted);flex-wrap:wrap;margin:4px 0}
+  .sw{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-right:5px}
+  .banner{background:#FFF4E5;border:1px solid #F3C98B;color:#6B3D00;border-radius:6px;padding:8px 12px;font-size:.92rem;margin:10px 0}
+  table.summary{border-collapse:collapse;font-size:.92rem;margin-top:8px}
+  table.summary th,table.summary td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:right}
+  table.summary th:first-child,table.summary td:first-child{text-align:left}
+  .status{font-size:.92rem;color:var(--muted)}
+
+  /* Quiz */
+  .quizpick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:720px}
+  @media (max-width:600px){.quizpick{grid-template-columns:1fr}}
+  .pick{border:1px solid var(--line);border-radius:10px;padding:16px;background:#fff;text-align:left;font:inherit;cursor:pointer}
+  .pick:hover{border-color:var(--same)}
+  .pick strong{font-family:var(--head);font-size:1.15rem;display:block;margin-bottom:4px}
+  .qcard{max-width:760px}
+  .qmeta{display:flex;justify-content:space-between;color:var(--muted);font-size:.9rem}
+  .progress{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:6px 0 18px}
+  .progress div{height:100%;background:var(--same);transition:width .25s}
+  .qtext{font-size:1.15rem;font-weight:600;margin:0 0 14px}
+  .opt{display:block;width:100%;text-align:left;font:inherit;background:#fff;border:2px solid var(--line);border-radius:8px;padding:10px 14px;margin:8px 0;cursor:pointer;color:var(--ink)}
+  .opt:hover:not(:disabled){border-color:#B9A2C2}
+  .opt.sel{border-color:var(--same);background:var(--tint)}
+  .opt.right{border-color:var(--ok);background:#EAF5EE}
+  .opt.wrong{border-color:var(--bad);background:#FDECEA}
+  .opt:disabled{cursor:default}
+  .why{font-size:.92rem;margin-top:4px;color:var(--ink)}
+  .ref{font-size:.85rem;color:var(--muted);margin-top:10px}
+  .review{border-top:1px solid var(--line);padding:12px 0}
+  .review .ok{color:var(--ok);font-weight:700}.review .no{color:var(--bad);font-weight:700}
+  /* Full task overlay */
+  #run{position:fixed;inset:0;background:var(--stage);z-index:1000;display:none;color:#fff;cursor:none}
+  #run.on{display:block}
+  #run.screenmode{cursor:auto}
+  #runFix{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:6vh;font-weight:300;line-height:1}
+  .ritem{position:absolute;transform:translate(-50%,-50%);height:12vh;width:12vh;display:flex;align-items:center;justify-content:center;
+    font-family:Arial,sans-serif;font-weight:700;font-size:10vh;line-height:1;border-radius:1.2vh;border:.4vh solid transparent}
+  .ritem svg{width:10vh;height:10vh}
+  .rp-tl{left:25%;top:30%}.rp-tr{left:75%;top:30%}.rp-bl{left:25%;top:70%}.rp-br{left:75%;top:70%}
+  .ritem.fb-same{border-color:#C9A3C9}.ritem.fb-across{border-color:var(--across)}
+  #runMsg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(680px,90vw);background:#fff;color:var(--ink);
+    border-radius:12px;padding:26px 30px;display:none;max-height:90vh;overflow:auto}
+  #runMsg h2{margin-top:0}
+  #runMsg p{margin:.4rem 0 .8rem}
+  #runFb{position:absolute;left:50%;top:88%;transform:translate(-50%,-50%);font-size:2.4vh;font-weight:600;text-align:center;width:90vw}
+  .taskcard{background:var(--tint);border-radius:10px;padding:18px 22px;max-width:760px}
+  .taskcard ol{padding-left:1.2rem;margin:.4rem 0}
+  details.tutor{margin-top:14px;font-size:.92rem}
+  details.tutor summary{cursor:pointer;color:var(--muted);font-weight:600}
+  footer{border-top:1px solid var(--line);padding:16px 0 30px;font-size:.82rem;color:var(--muted)}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  /* Week 2 letter displays */
+  .lstage{container-type:size}
+  .lstage::before{display:none}
+  .litem{position:absolute;transform:translate(-50%,-50%);font-family:Arial,sans-serif;font-weight:700;line-height:1;color:#fff;
+    padding:.35em .3em;border-radius:.2em;border:.12em solid transparent}
+  .litem.hl-t{border-color:#fff}
+  .litem.hl-c{border-color:#C9A3C9}
+  .litem.hl-i{border-color:var(--across)}
+</style>
+</head>
+<body>
+<header class="mast">
+  <div class="wrap">
+    <p class="unit">BIOL3005 Cognition, Week 2 tutorial</p>
+    <h1>What gets past the filter?</h1>
+    <p class="lede">Tools for the load-theory lab, based on Lavie (1995) and Lavie and Cox (1997), with a dilution condition in the spirit of Tsal and Benoni (2010). Textbook Chapter 2, §2.2 Selective attention and §2.3 Load theory.</p>
+    <nav role="tablist" aria-label="Tutorial tools">
+      <button role="tab" id="t-demo" aria-controls="s-demo" aria-selected="true">Try a trial</button>
+      <button role="tab" id="t-task" aria-controls="s-task" aria-selected="false">Run the task</button>
+      <button role="tab" id="t-mine" aria-controls="s-mine" aria-selected="false">My results</button>
+      <button role="tab" id="t-class" aria-controls="s-class" aria-selected="false">Class results</button>
+      <button role="tab" id="t-quiz" aria-controls="s-quiz" aria-selected="false">Quiz</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+<!-- ============ TRY A TRIAL ============ -->
+<section id="s-demo" class="on" role="tabpanel" aria-labelledby="t-demo">
+  <div class="twocol">
+    <div>
+      <div class="stage lstage" id="stage" aria-live="polite"><div class="fix">+</div></div>
+      <div class="stagebar">
+        <label class="inline">Display
+          <select id="dCond"><option value="random">Random</option><option value="low">Low load</option><option value="high">High load</option><option value="dil">Dilution</option></select>
+        </label>
+        <label class="inline">Duration
+          <select id="dDur"><option value="100">100 ms (as in the task)</option><option value="2000">2 seconds (to show the layout)</option></select>
+        </label>
+        <button class="btn" id="dGo">Flash a trial</button>
+      </div>
+      <div class="stagebar">
+        <button class="btn ghost" id="dX" disabled>X (key X)</button>
+        <button class="btn ghost" id="dN" disabled>N (key N)</button>
+      </div>
+      <div class="verdict" id="dVerdict">Keep your eyes on the cross, then flash a trial. Find the X or N in the ring and press the matching key. Ignore the letter outside the ring.</div>
+      <p class="status" id="dScore"></p>
+    </div>
+    <div class="keyfacts">
+      <h2>What the task is doing</h2>
+      <p>Your job is to find the target, an X or an N, somewhere in the ring of six letters. A seventh letter appears outside the ring, on the left or the right. It is irrelevant: you should ignore it.</p>
+      <p>Sometimes the outside letter is the <span class="tag same">same</span> as the target (compatible); sometimes it is the <span class="tag across">other</span> target letter (incompatible). If you are slower when it clashes, it was processed despite your intention.</p>
+      <p>The question is when that happens. In the low-load ring the target is the only letter among small circles. In the high-load ring it hides among other letters. In the dilution ring it is among other letters but printed in red, so it pops out.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RUN THE TASK ============ -->
+<section id="s-task" role="tabpanel" aria-labelledby="t-task">
+  <h2>Run the task</h2>
+  <div class="taskcard">
+    <p>The task runs full screen and takes about 12 minutes. You need a keyboard with X and N keys.</p>
+    <ol>
+      <li>Sit centred in front of the screen, at a comfortable arm's length.</li>
+      <li>Keep your eyes on the cross. The letters flash for a tenth of a second.</li>
+      <li>Press <strong>X</strong> if the ring contains an X, and <strong>N</strong> if it contains an N. Ignore the letter outside the ring.</li>
+      <li>Be as fast as you can while making few errors.</li>
+    </ol>
+    <p>There are three blocks, one for each kind of ring, each with a short practice. When you finish, your results appear on the My results tab, ready to share.</p>
+    <div class="row">
+      <label class="inline">Writing hand (optional)
+        <select id="taskHand"><option value="NA">Prefer not to say</option><option value="R">Right</option><option value="L">Left</option><option value="B">Both</option></select>
+      </label>
+    </div>
+    <div class="row"><button class="btn" id="taskStart">Start the task</button><span class="status" id="taskStatus"></span></div>
+    <details class="tutor"><summary>Settings for tutors</summary>
+      <div class="row">
+        <label class="inline">Test trials per block
+          <select id="taskN"><option value="80" selected>80 (standard, about 12 minutes)</option><option value="120">120 (long, about 17 minutes)</option><option value="8">8 (quick check, about 3 minutes)</option></select>
+        </label>
+      </div>
+      <p class="note">Each block has 16 practice trials with feedback, then the test trials, balanced for target letter (X or N), distractor compatibility and distractor side, with the target position in the ring random. Each trial: fixation 500 ms, display 100 ms, response window 2000 ms from display onset, then 700 ms before the next trial. Block order is assigned at random from three Latin-square orders.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ============ MY RESULTS ============ -->
+<section id="s-mine" role="tabpanel" aria-labelledby="t-mine">
+  <h2>Your results</h2>
+  <p class="note" id="mineIntro">Run the task first: your numbers are filled in automatically. You can also type them in.</p>
+  <div class="entrywrap">
+    <table class="entry" aria-label="Your results">
+      <thead><tr><th>Display</th><th class="same">Compatible<br>RT (ms)</th><th class="across">Incompatible<br>RT (ms)</th><th class="same">Compatible<br>% correct</th><th class="across">Incompatible<br>% correct</th></tr></thead>
+      <tbody id="entryBody"></tbody>
+    </table>
+    <div class="row">
+      <label class="inline">Writing hand (optional)
+        <select id="hand"><option value="NA">Prefer not to say</option><option value="R">Right</option><option value="L">Left</option><option value="B">Both</option></select>
+      </label>
+    </div>
+    <h3>Share with your class</h3>
+    <p class="note">Copy this line and paste it where your tutor asks (for example, the tutorial's Teams chat). It contains no name.</p>
+    <div class="linebox" id="myLine">Fill in your results to create your line.</div>
+    <div class="row"><button class="btn" id="copyLine" disabled>Copy my results line</button><span class="status" id="copyMsg"></span></div>
+    <div id="trialDl" hidden>
+      <h3>Your trial-by-trial data</h3>
+      <p class="note">Download your data (one row per trial) before you close this page; nothing is saved once the tab is closed. Your tutor may ask you to submit the file on Canvas.</p>
+      <div class="row"><button class="btn ghost" id="dlMine">Download my trial data (CSV)</button><span class="status" id="pCode"></span></div>
+    </div>
+  </div>
+  <h3>Your pattern</h3>
+  <div class="chartgrid">
+    <div class="chart" id="myChartSearch"></div>
+    <div class="chart" id="myChartInt"></div>
+  </div>
+  <div class="interp" id="myInterp"></div>
+  <p class="note">One person's numbers are noisy. With a few dozen trials per condition, an interference effect of 20 or 30 ms can appear or vanish by chance. Your own pattern is interesting; the class pattern is the better evidence.</p>
+</section>
+
+<!-- ============ CLASS RESULTS ============ -->
+<section id="s-class" role="tabpanel" aria-labelledby="t-class">
+  <h2>Pool the class</h2>
+  <p class="note">Paste everything students posted. Lines that do not contain a results code (names, timestamps, chat messages) are ignored automatically. You can also load the trial-data files students downloaded (select several at once, for example after a bulk download from a Canvas assignment).</p>
+  <textarea id="paste" aria-label="Pasted results lines" placeholder="Paste results lines here, one per student. Each starts with LT1,"></textarea>
+  <div class="row">
+    <button class="btn" id="readPaste">Read pasted lines</button>
+    <label class="btn ghost" for="fileIn" style="display:inline-block">Load CSV files</label><input type="file" id="fileIn" accept=".csv,.txt" multiple hidden>
+    <button class="btn ghost" id="simulate">Rehearse with a simulated class</button>
+    <button class="btn ghost" id="clearClass">Clear</button>
+    <button class="btn ghost" id="download" disabled>Download class summary (CSV)</button>
+    <button class="btn ghost" id="downloadTrials" disabled>Download all trials (CSV)</button>
+  </div>
+  <p class="status" id="classStatus">No class data yet.</p>
+  <div id="simBanner"></div>
+  <div id="classBody" hidden>
+    <h3>Did the load manipulation work?</h3>
+    <p class="note">Search time is the mean response time on correct trials, averaged over compatible and incompatible distractors. If high load is genuinely more demanding, search should be slowest there. Error bars are 95% confidence intervals.</p>
+    <div class="chartgrid"><div class="chart" id="cSearch"></div><div class="chart" id="cMeans"></div></div>
+    <h3>How much did the irrelevant letter intrude?</h3>
+    <p class="note">Each dot is one student's interference effect: incompatible minus compatible response time. Right of zero means a clashing distractor slowed that student down. The black bar is the class average with its 95% confidence interval.</p>
+    <div class="chartgrid"><div class="chart" id="cInt"></div><div class="chart" id="cAcc"></div></div>
+    <div id="cTable"></div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section id="s-quiz" role="tabpanel" aria-labelledby="t-quiz">
+  <div id="quizStart">
+    <h2>Week 2 quiz</h2>
+    <p class="note">Ten questions on today's lab and Chapter 2. You get feedback after each answer, including why the other options are wrong. Options appear in a different order each time.</p>
+    <div class="row"><label class="inline"><input type="checkbox" id="useTimer" checked> Use a 10-minute timer</label></div>
+    <div class="quizpick">
+      <button class="pick" data-set="core"><strong>Core</strong>The essentials: early and late selection, load theory, orienting, binding and failures of awareness.</button>
+      <button class="pick" data-set="stretch"><strong>Stretch</strong>Interpreting our data, the dilution debate, and what would count as evidence against load theory.</button>
+    </div>
+  </div>
+  <div id="quizRun" hidden></div>
+</section>
+</main>
+
+<div id="run" aria-live="polite"><div id="runFix">+</div><div id="runItems"></div><div id="runFb"></div><div id="runMsg" role="dialog" aria-modal="true"></div></div>
+
+<footer><div class="wrap">BIOL3005 Cognition, Curtin University. Licensed under CC BY-NC-SA 4.0. The task design follows Lavie and Cox (1997) and Tsal and Benoni (2010); the code is original.</div></footer>
+
+<script>
+(function(){
+"use strict";
+/* ---------- Tabs ---------- */
+const tabs=[...document.querySelectorAll('[role=tab]')];
+function showTab(t){tabs.forEach(b=>{const on=b===t;b.setAttribute('aria-selected',on);document.getElementById(b.getAttribute('aria-controls')).classList.toggle('on',on);});}
+tabs.forEach(t=>t.addEventListener('click',()=>showTab(t)));
+
+/* ---------- Constants ---------- */
+const CONDS=[{k:'low',n:'Low load'},{k:'high',n:'High load'},{k:'dil',n:'Dilution'}];
+const COLS=['cr','ir','ca','ia'];
+const KEYS=[];CONDS.forEach(c=>COLS.forEach(k=>KEYS.push(c.k+'_'+k)));
+/* Optional reference values (for example, last year's class averages or a tutor's pilot run).
+   Leave as null to hide reference markers. Format: {low:{cr:..,ir:..,ca:..,ia:..}, high:{...}, dil:{...}} */
+const REF=null;
+const REF_LABEL='Reference';
+const C={same:'#663366',across:'#E07B00',ink:'#2B142D',muted:'#6B5A70',line:'#E3DAE7',grid:'#EFE8F2'};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=(x,d=0)=>(x>0?'+':x<0?'\u2212':'')+Math.abs(x).toFixed(d);
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+
+/* ---------- Displays ---------- */
+const HET=['H','K','M','V','W','Z'];
+function makeDisplay(cond,target,compat,dside){
+  const pos=Math.floor(Math.random()*6);
+  const fill=cond==='low'?Array(5).fill('o'):shuffle(HET).slice(0,5);
+  const ring=[];let k=0;for(let i=0;i<6;i++)ring.push(i===pos?target:fill[k++]);
+  const distractor=compat==='compatible'?target:(target==='X'?'N':'X');
+  return {cond,target,targetPos:pos,ring,distractor,dside,compat};
+}
+// ring positions: start at top, clockwise; radius and offsets in units of the stage height
+function ringXY(i,r){const a=(-90+i*60)*Math.PI/180;return [Math.cos(a)*r,Math.sin(a)*r];}
+function displayHTML(d,unit,opts={}){
+  // unit: 'vh' for full screen, '%h' handled by caller via CSS variables
+  const sc=opts.scale||1,R=11*sc,DX=26*sc,FS='font-size:'+(5.5*sc)+unit+';';let h='';
+  d.ring.forEach((ch,i)=>{const [x,y]=ringXY(i,R);const isT=i===d.targetPos;
+    const red=(d.cond==='dil'&&isT);
+    h+='<div class="litem'+(ch==='o'?' small':'')+(opts.hl&&isT?' hl-t':'')+'" style="'+FS+'left:calc(50% + '+x+unit+');top:calc(50% + '+y+unit+');'+(red?'color:#FF5A5F;':'')+'">'+ch+'</div>';});
+  h+='<div class="litem'+(opts.hl?(d.compat==='compatible'?' hl-c':' hl-i'):'')+'" style="'+FS+'left:calc(50% '+(d.dside==='left'?'- ':'+ ')+DX+unit+');top:50%">'+d.distractor+'</div>';
+  return h;}
+
+/* ---------- Try a trial ---------- */
+const stage=document.getElementById('stage'),dGo=document.getElementById('dGo'),dX=document.getElementById('dX'),dN=document.getElementById('dN'),dVerdict=document.getElementById('dVerdict'),dScore=document.getElementById('dScore');
+let demo=null,dTried=0,dRight=0,dTimers=[];
+const CNAME={low:'low-load',high:'high-load',dil:'dilution'};
+function dClear(){stage.querySelectorAll('.litem').forEach(e=>e.remove());}
+function dRender(d,hl){dClear();stage.insertAdjacentHTML('beforeend',displayHTML(d,'cqh',{hl,scale:1.8}));}
+function dFinish(resp){dTimers.forEach(clearTimeout);dTimers=[];if(!demo)return;const d=demo;demo=null;dX.disabled=dN.disabled=true;dGo.disabled=false;
+  const ok=resp===d.target;dTried++;if(ok)dRight++;dRender(d,true);
+  let m=resp?(ok?'<strong>Correct.</strong> ':'<strong>Not quite.</strong> The target was '+d.target+'. '):'<strong>Too slow.</strong> The target was '+d.target+'. ';
+  m+='This was a '+CNAME[d.cond]+' display with a '+(d.compat==='compatible'?'<span class="tag same">compatible</span> distractor (the same letter as the target).':'<span class="tag across">incompatible</span> distractor (the other target letter).');
+  dVerdict.innerHTML=m;dScore.textContent=dRight+' of '+dTried+' correct so far.';}
+dGo.addEventListener('click',()=>{if(demo)return;let c=document.getElementById('dCond').value;if(c==='random')c=rnd(['low','high','dil']);
+  demo=makeDisplay(c,rnd(['X','N']),rnd(['compatible','incompatible']),rnd(['left','right']));dClear();dGo.disabled=true;dVerdict.textContent='Eyes on the cross\u2026';
+  const dur=+document.getElementById('dDur').value;
+  dTimers.push(setTimeout(()=>{dRender(demo,false);dX.disabled=dN.disabled=false;dTimers.push(setTimeout(dClear,dur));dTimers.push(setTimeout(()=>dFinish(null),Math.max(2000,dur+300)));},600));});
+dX.addEventListener('click',()=>dFinish('X'));dN.addEventListener('click',()=>dFinish('N'));
+document.addEventListener('keydown',e=>{if(!document.getElementById('s-demo').classList.contains('on')||!demo||dX.disabled)return;
+  if(e.code==='KeyX'){e.preventDefault();dFinish('X');}else if(e.code==='KeyN'){e.preventDefault();dFinish('N');}});
+
+/* ---------- SVG helpers ---------- */
+function svgWrap(w,h,inner,label){return '<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="'+esc(label)+'">'+inner+'</svg>';}
+function txt(x,y,s,o={}){return '<text x="'+x+'" y="'+y+'" font-size="'+(o.size||13)+'" fill="'+(o.fill||C.muted)+'" text-anchor="'+(o.anchor||'start')+'" font-weight="'+(o.weight||400)+'" font-family="Segoe UI,system-ui,Arial,sans-serif">'+esc(s)+'</text>';}
+function niceTicks(lo,hi,n=5){const span=hi-lo||1;const step0=span/n;const mag=Math.pow(10,Math.floor(Math.log10(step0)));
+  const step=[1,2,2.5,5,10].map(m=>m*mag).find(s=>s>=step0)||10*mag;const out=[];for(let v=Math.ceil(lo/step)*step;v<=hi+1e-9;v+=step)out.push(+v.toFixed(6));return out;}
+const fin=v=>v!=null&&isFinite(v);
+
+/* Horizontal dot chart: rows = conditions */
+function dotChart(el,title,rows,o={}){
+  const W=500,H=40+rows.length*58+36,L=84,R=16,T=34;
+  let vals=o.zero?[0]:[];rows.forEach(r=>{['you','ref','mean','lo','hi'].forEach(k=>{if(fin(r[k]))vals.push(r[k]);});(r.dots||[]).forEach(v=>vals.push(v));});
+  if(!vals.length)vals=[0,1];
+  let lo=Math.min(...vals),hi=Math.max(...vals);const pad=(hi-lo)*.12||o.minPad||20;lo-=pad;hi+=pad;if(o.floor!=null)lo=Math.max(lo,o.floor);
+  const ticks=niceTicks(lo,hi,5);lo=Math.min(lo,ticks[0]);hi=Math.max(hi,ticks[ticks.length-1]);
+  const x=v=>L+(v-lo)/(hi-lo)*(W-L-R);
+  let s=txt(4,18,title,{size:15,fill:C.ink,weight:600});
+  ticks.forEach(t=>{s+='<line x1="'+x(t)+'" x2="'+x(t)+'" y1="'+T+'" y2="'+(H-30)+'" stroke="'+C.grid+'"/>'+txt(x(t),H-17,(o.zero&&t>0?'+':'')+t,{anchor:'middle',size:12.5});});
+  if(o.zero){s+='<line x1="'+x(0)+'" x2="'+x(0)+'" y1="'+T+'" y2="'+(H-30)+'" stroke="'+C.ink+'" stroke-width="1.4"/>';
+    if(o.leftLab)s+=txt(x(lo)+2,H-2,o.leftLab,{size:12.5,fill:C.same});if(o.rightLab)s+=txt(x(hi)-2,H-2,o.rightLab,{size:12.5,fill:'#A35600',anchor:'end'});}
+  else if(o.unit)s+=txt(W-R,H-2,o.unit,{size:12.5,anchor:'end'});
+  rows.forEach((r,i)=>{const cy=T+22+i*58;
+    s+=txt(L-10,cy+5,r.name,{anchor:'end',size:14,fill:C.ink,weight:600})+'<line x1="'+L+'" x2="'+(W-R)+'" y1="'+cy+'" y2="'+cy+'" stroke="'+C.line+'"/>';
+    (r.dots||[]).forEach((v,j)=>{const jit=((j*37)%17-8)*1.6;s+='<circle cx="'+x(v)+'" cy="'+(cy+jit)+'" r="4" fill="'+(o.zero?(v>=0?C.across:C.same):C.same)+'" fill-opacity=".55"/>';});
+    if(fin(r.mean)){if(fin(r.lo))s+='<line x1="'+x(r.lo)+'" x2="'+x(r.hi)+'" y1="'+(cy+20)+'" y2="'+(cy+20)+'" stroke="'+C.ink+'" stroke-width="3"/>';
+      s+='<rect x="'+(x(r.mean)-2)+'" y="'+(cy+13)+'" width="4" height="14" fill="'+C.ink+'"/>';}
+    if(fin(r.ref))s+='<circle cx="'+x(r.ref)+'" cy="'+cy+'" r="7" fill="#fff" stroke="'+C.same+'" stroke-width="2.5" stroke-dasharray="3 2"/>';
+    if(fin(r.you))s+='<circle cx="'+x(r.you)+'" cy="'+cy+'" r="7" fill="'+C.ink+'"/>';});
+  el.innerHTML=svgWrap(W,H,s,title);}
+
+/* Means chart: panels per condition, compatible vs incompatible with CI */
+function pairChart(el,title,stats,yLabel,o={}){
+  const W=500,H=260,T=34,B=40,L=56,R=10,pw=(W-L-R)/3;
+  let vals=[];CONDS.forEach(c=>{const st=stats[c.k];['a','b'].forEach(sd=>['m','lo','hi'].forEach(q=>{if(fin(st[sd][q]))vals.push(st[sd][q]);}));});
+  if(!vals.length)vals=[0,1];
+  let lo=Math.min(...vals),hi=Math.max(...vals);const pad=(hi-lo)*.15||10;lo-=pad;hi+=pad;if(o.max!=null)hi=Math.min(hi,o.max);
+  const ticks=niceTicks(lo,hi,5);lo=Math.min(lo,ticks[0]);hi=Math.max(hi,ticks[ticks.length-1]);
+  const y=v=>T+(hi-v)/(hi-lo)*(H-T-B);
+  let s=txt(4,18,title,{size:15,fill:C.ink,weight:600});
+  ticks.forEach(t=>{s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(t)+'" y2="'+y(t)+'" stroke="'+C.grid+'"/>'+txt(L-6,y(t)+4,t,{anchor:'end',size:12.5});});
+  s+='<text transform="translate(14,'+((T+H-B)/2)+') rotate(-90)" font-size="12" fill="'+C.muted+'" text-anchor="middle" font-family="Segoe UI,system-ui,Arial,sans-serif">'+esc(yLabel)+'</text>';
+  CONDS.forEach((c,i)=>{const x0=L+i*pw,xa=x0+pw*.33,xb=x0+pw*.67;const st=stats[c.k];
+    s+=txt(x0+pw/2,H-14,c.n,{anchor:'middle',size:14,fill:C.ink,weight:600});
+    if(i>0)s+='<line x1="'+x0+'" x2="'+x0+'" y1="'+T+'" y2="'+(H-B)+'" stroke="'+C.line+'"/>';
+    if(fin(st.a.m)&&fin(st.b.m))s+='<line x1="'+xa+'" x2="'+xb+'" y1="'+y(st.a.m)+'" y2="'+y(st.b.m)+'" stroke="'+C.ink+'" stroke-width="2"/>';
+    [['a',xa,C.same],['b',xb,C.across]].forEach(([k,xx,col])=>{const q=st[k];if(!fin(q.m))return;
+      if(fin(q.lo))s+='<line x1="'+xx+'" x2="'+xx+'" y1="'+y(q.lo)+'" y2="'+y(q.hi)+'" stroke="'+col+'" stroke-width="3"/>';
+      s+='<circle cx="'+xx+'" cy="'+y(q.m)+'" r="7" fill="'+col+'"/>';});});
+  el.innerHTML=svgWrap(W,H,s,title);}
+
+/* ---------- Statistics ---------- */
+function tq(df){const tab=[12.706,4.303,3.182,2.776,2.571,2.447,2.365,2.306,2.262,2.228];if(df<=10)return tab[df-1];
+  const z=1.959964;return z+(z**3+z)/(4*df)+(5*z**5+16*z**3+3*z)/(96*df*df);}
+function summ(a){a=a.filter(fin);const n=a.length;if(!n)return {n:0,m:NaN,lo:NaN,hi:NaN};const m=a.reduce((s,v)=>s+v,0)/n;if(n<2)return {n,m,lo:NaN,hi:NaN};
+  const sd=Math.sqrt(a.reduce((s,v)=>s+(v-m)**2,0)/(n-1));const h=tq(n-1)*sd/Math.sqrt(n);return {n,m,lo:m-h,hi:m+h,sd};}
+const mean=a=>a.length?a.reduce((s,v)=>s+v,0)/a.length:NaN;
+
+/* ---------- My results ---------- */
+const body=document.getElementById('entryBody');
+CONDS.forEach(c=>{const tr=document.createElement('tr');
+  tr.innerHTML='<th scope="row" style="color:var(--ink);font-size:.95rem">'+c.n+'</th>'+COLS.map(k=>'<td><input type="number" inputmode="decimal" data-f="'+c.k+'" data-c="'+k+'" '+
+   (k.endsWith('r')?'min="150" max="3000" step="1" placeholder="ms"':'min="0" max="100" step="0.1" placeholder="%"')+' aria-label="'+c.n+' '+({cr:'compatible response time',ir:'incompatible response time',ca:'compatible % correct',ia:'incompatible % correct'}[k])+'"></td>').join('');
+  body.appendChild(tr);});
+const inputs=[...body.querySelectorAll('input')];
+let fromTask=false;
+function readMine(){const d={};let bad=0;CONDS.forEach(c=>d[c.k]={});
+  inputs.forEach(i=>{const v=i.value.trim();let num=v===''?NaN:+v;const isRT=i.dataset.c.endsWith('r');
+    const ok=v===''||(isFinite(num)&&(isRT?(num>=150&&num<=3000):(num>=0&&num<=100)));i.classList.toggle('bad',!ok);if(!ok){bad++;num=NaN;}d[i.dataset.f][i.dataset.c]=num;});
+  return {d,bad};}
+function updateMine(){
+  const {d,bad}=readMine();
+  const search=CONDS.map(c=>({name:c.n,you:mean([d[c.k].cr,d[c.k].ir].filter(fin)),ref:REF?(REF[c.k].cr+REF[c.k].ir)/2:null}));
+  const inter=CONDS.map(c=>({name:c.n,you:d[c.k].ir-d[c.k].cr,ref:REF?REF[c.k].ir-REF[c.k].cr:null}));
+  dotChart(document.getElementById('myChartSearch'),'Search time (ms)',search,{unit:'ms, mean of correct trials'});
+  dotChart(document.getElementById('myChartInt'),'Interference (ms)',inter,{zero:true,leftLab:'\u2190 no slowing',rightLab:'slowed by a clash \u2192'});
+  let h='';CONDS.forEach(c=>{const it=d[c.k].ir-d[c.k].cr;if(!fin(it))return;
+    h+='<p><strong>'+c.n+':</strong> '+(Math.abs(it)<1?'the distractor made no difference to your speed.':'a clashing distractor made you '+Math.abs(it).toFixed(0)+' ms '+(it>0?'slower':'faster')+' than a matching one.')+'</p>';});
+  const s=search.map(r=>r.you);if(s.every(fin)){h+='<p><strong>Search:</strong> '+(s[1]>s[0]?'high-load search took you '+(s[1]-s[0]).toFixed(0)+' ms longer than low-load search, so the load manipulation worked for you.':'high-load search was not slower than low-load search for you, which is unusual; check your error rates.')+'</p>';}
+  document.getElementById('myInterp').innerHTML=h;
+  const vals=KEYS.map(k=>{const [c,col]=k.split('_');return d[c][col];});
+  const nFilled=vals.filter(fin).length;
+  const line='LT1,'+document.getElementById('hand').value+','+vals.map(v=>fin(v)?String(+v.toFixed(1)):'').join(',')+','+(fromTask?'web':'manual');
+  const lb=document.getElementById('myLine'),cb=document.getElementById('copyLine');
+  if(nFilled>=4&&!bad){lb.textContent=line;cb.disabled=false;}else{lb.textContent=bad?'Check the highlighted cells: accuracy must be 0 to 100 and response times 150 to 3000 ms.':'Fill in your results to create your line.';cb.disabled=true;}}
+inputs.forEach(i=>i.addEventListener('input',e=>{if(e.isTrusted)fromTask=false;updateMine();}));
+document.getElementById('hand').addEventListener('change',updateMine);
+document.getElementById('copyLine').addEventListener('click',async()=>{const t=document.getElementById('myLine').textContent,m=document.getElementById('copyMsg');
+  try{await navigator.clipboard.writeText(t);m.textContent='Copied. Paste it where your tutor asks.';}
+  catch(e){const r=document.createRange();r.selectNodeContents(document.getElementById('myLine'));const s=getSelection();s.removeAllRanges();s.addRange(r);m.textContent='Selected. Press Ctrl+C (or Cmd+C) to copy.';}});
+updateMine();
+
+/* ---------- Downloads and summaries ---------- */
+function downloadText(name,text){const blob=new Blob([text],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);}
+function summariseTrials(trials){const t=trials.filter(x=>x.phase==='test');const r={};
+  CONDS.forEach(c=>{const ct=t.filter(x=>x.cond===c.k);
+    [['compatible','c'],['incompatible','i']].forEach(([cp,p])=>{const m=ct.filter(x=>x.compat===cp);
+      r[c.k+'_'+p+'a']=m.length?+(100*mean(m.map(x=>x.correct?1:0))).toFixed(1):NaN;
+      const rts=m.filter(x=>x.correct&&fin(x.rt)).map(x=>x.rt);r[c.k+'_'+p+'r']=rts.length?Math.round(mean(rts)):NaN;});});
+  return r;}
+
+/* ---------- Class results ---------- */
+let classRows=[],classTrials=[],simulated=false;
+function parseText(text){const rows=[];let skipped=0;
+  text.split(/\r?\n/).forEach(line=>{const i=line.indexOf('LT1,');if(i<0)return;
+    const parts=line.slice(i+4).split(',').map(s=>s.trim());const hand=parts[0];const nums=parts.slice(1,1+KEYS.length).map(s=>s===''?NaN:+s);
+    if(nums.length<KEYS.length||nums.filter(isFinite).length<4){skipped++;return;}
+    const src=(parts[1+KEYS.length]||'').trim();
+    const r={hand:['R','L','B','NA'].includes(hand)?hand:'NA',src:['web','manual'].includes(src)?src:''};
+    KEYS.forEach((k,j)=>{let v=nums[j];if(isFinite(v)){const isRT=/r$/.test(k);if(isRT?(v<150||v>3000):(v<0||v>100))v=NaN;}r[k]=v;});rows.push(r);});
+  return {rows,skipped};}
+function parseTrialCSV(text){const lines=text.split(/\r?\n/).filter(l=>l.trim());if(!lines.length)return [];
+  const head=lines[0].split(',').map(h=>h.trim());return lines.slice(1).map(l=>{const v=l.split(',');const o={};head.forEach((h,i)=>o[h]=(v[i]||'').trim());return o;});}
+function setClass(rows,isSim,msg,trials){classRows=rows;simulated=isSim;classTrials=trials||[];
+  document.getElementById('downloadTrials').disabled=!classTrials.length;document.getElementById('download').disabled=!rows.length;
+  document.getElementById('simBanner').innerHTML=isSim?'<div class="banner">Simulated class for rehearsal. These are not real data: the values were invented to look plausible.</div>':'';
+  document.getElementById('classStatus').textContent=msg;drawClass();}
+document.getElementById('readPaste').addEventListener('click',()=>{const {rows,skipped}=parseText(document.getElementById('paste').value);
+  setClass(rows,false,rows.length?('Read '+rows.length+' student'+(rows.length===1?'':'s')+'.'+(skipped?' Skipped '+skipped+' incomplete line'+(skipped===1?'':'s')+'.':'')):'No results lines found. Each line should contain LT1, followed by the numbers.');});
+document.getElementById('fileIn').addEventListener('change',async e=>{const files=[...e.target.files];if(!files.length)return;e.target.value='';
+  let rows=[],trials=[],skipped=0,nTF=0;
+  for(const f of files){const text=await f.text();const first=text.split(/\r?\n/,1)[0]||'';
+    if(/compatibility/.test(first)){const t=parseTrialCSV(text);if(t.length){nTF++;trials=trials.concat(t);}}else{const r=parseText(text);rows=rows.concat(r.rows);skipped+=r.skipped;}}
+  const byP={};trials.forEach(t=>{(byP[t.participant]=byP[t.participant]||[]).push(t);});
+  Object.values(byP).forEach(ts=>{const r=summariseTrials(ts.map(t=>({phase:t.phase,cond:t.condition,compat:t.compatibility,correct:t.correct==='1',rt:t.rt_ms===''?NaN:+t.rt_ms})));
+    r.hand=ts[0].handedness||'NA';r.src='web';rows.push(r);});
+  setClass(rows,false,'Loaded '+rows.length+' student'+(rows.length===1?'':'s')+' from '+files.length+' file'+(files.length===1?'':'s')+(nTF?' ('+nTF+' with trial-by-trial data)':'')+'.'+(skipped?' Skipped '+skipped+' incomplete line'+(skipped===1?'':'s')+'.':''),trials);});
+document.getElementById('clearClass').addEventListener('click',()=>{document.getElementById('paste').value='';setClass([],false,'No class data yet.');});
+function gauss(){let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+document.getElementById('simulate').addEventListener('click',()=>{
+  // Invented values for rehearsal only: low load shows interference, high load and dilution show little.
+  const base={low:[620,40,97],high:[860,5,90],dil:[650,10,96]},rows=[];
+  for(let i=0;i<25;i++){const r={hand:Math.random()<.88?'R':'L',src:'sim'};const speed=gauss()*90;
+    CONDS.forEach(c=>{const [rt,int,acc]=base[c.k];const cr=clamp(rt+speed+gauss()*35,350,1800);r[c.k+'_cr']=Math.round(cr);
+      r[c.k+'_ir']=Math.round(clamp(cr+int+gauss()*30,350,1900));r[c.k+'_ca']=+clamp(acc+gauss()*3,60,100).toFixed(1);
+      r[c.k+'_ia']=+clamp(acc-(int>20?3:0.5)+gauss()*3,60,100).toFixed(1);});rows.push(r);}
+  setClass(rows,true,'Simulated class of 25 students.');});
+function drawClass(){
+  const n=classRows.length;document.getElementById('classBody').hidden=!n;if(!n)return;
+  const g=(c,k)=>classRows.map(r=>r[c+'_'+k]);
+  const searchRows=CONDS.map(c=>{const per=classRows.map(r=>mean([r[c.k+'_cr'],r[c.k+'_ir']].filter(fin)));const s=summ(per);return {name:c.n,dots:per.filter(fin),mean:s.m,lo:s.lo,hi:s.hi};});
+  dotChart(document.getElementById('cSearch'),'Search time (ms)',searchRows,{unit:'ms'});
+  const rt={},acc={};CONDS.forEach(c=>{rt[c.k]={a:summ(g(c.k,'cr')),b:summ(g(c.k,'ir'))};acc[c.k]={a:summ(g(c.k,'ca')),b:summ(g(c.k,'ia'))};});
+  pairChart(document.getElementById('cMeans'),'RT: compatible vs incompatible',rt,'ms');
+  const intRows=[],tbl=[];
+  CONDS.forEach((c,i)=>{const di=classRows.map(r=>r[c.k+'_ir']-r[c.k+'_cr']).filter(fin);const s=summ(di);
+    intRows.push({name:c.n,dots:di,mean:s.m,lo:s.lo,hi:s.hi});
+    const ss=searchRows[i];const ci=(q,d)=>fin(q.lo)?' ['+fmt(q.lo,d)+', '+fmt(q.hi,d)+']':'';
+    tbl.push('<tr><td>'+c.n+'</td><td>'+(fin(ss.mean)?ss.mean.toFixed(0):'')+(fin(ss.lo)?' ['+ss.lo.toFixed(0)+', '+ss.hi.toFixed(0)+']':'')+'</td><td>'+fmt(s.m)+ci(s,0)+'</td><td>'+di.filter(v=>v>0).length+' of '+di.length+'</td><td>'+(fin(acc[c.k].a.m)?acc[c.k].a.m.toFixed(1):'')+' / '+(fin(acc[c.k].b.m)?acc[c.k].b.m.toFixed(1):'')+'</td></tr>');});
+  dotChart(document.getElementById('cInt'),'Interference (ms)',intRows,{zero:true,leftLab:'\u2190 no slowing',rightLab:'slowed by a clash \u2192'});
+  pairChart(document.getElementById('cAcc'),'Accuracy: compatible vs incompatible',acc,'% correct',{max:100});
+  document.getElementById('cTable').innerHTML='<h3>Summary</h3><table class="summary"><thead><tr><th>Display</th><th>Search time, ms (95% CI)</th><th>Interference, ms (95% CI)</th><th>Slowed by a clash</th><th>% correct, compatible / incompatible</th></tr></thead><tbody>'+tbl.join('')+'</tbody></table>'+
+   '<p class="note">An interval that sits entirely on one side of zero gives the class average a clear direction; an interval that spans zero means our data cannot tell which direction it goes. Purple points are compatible trials, orange points incompatible.</p>';}
+document.getElementById('download').addEventListener('click',()=>{
+  const nm={cr:'compatible_rt',ir:'incompatible_rt',ca:'compatible_acc',ia:'incompatible_acc'};
+  const head=['code','handedness'].concat(KEYS.map(k=>{const [c,col]=k.split('_');return c+'_'+nm[col];})).concat(['source']);
+  const lines=[head.join(',')].concat(classRows.map(r=>['LT1',r.hand].concat(KEYS.map(k=>fin(r[k])?+(+r[k]).toFixed(1):'')).concat([r.src||'']).join(',')));
+  downloadText(simulated?'week02_simulated_class.csv':'week02_class_summary.csv',lines.join('\n'));});
+document.getElementById('downloadTrials').addEventListener('click',()=>{if(!classTrials.length)return;const head=Object.keys(classTrials[0]);
+  downloadText('week02_all_trials.csv',[head.join(',')].concat(classTrials.map(t=>head.map(h=>t[h]).join(','))).join('\n'));});
+drawClass();
+
+/* ---------- Full task ---------- */
+const RUN=document.getElementById('run'),RFIX=document.getElementById('runFix'),RITEMS=document.getElementById('runItems'),RMSG=document.getElementById('runMsg'),RFB=document.getElementById('runFb');
+const ORDERS=[['low','high','dil'],['dil','low','high'],['high','dil','low']];
+const BLOCKTXT={low:'In this block the target X or N sits among small circles, so it is easy to find.',
+  high:'In this block the target X or N hides among other letters, so you will need to search for it.',
+  dil:'In this block the target X or N is among other letters, but it is printed in red, so it stands out.'};
+let frameMs=1000/60,taskData=null,actx=null;
+const QA=/[?&]qa=1/.test(location.search); // testing only: shortens the timing so the task can be checked quickly
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function measureFrames(n=45){return new Promise(res=>{const ts=[];function f(t){ts.push(t);if(ts.length<n)requestAnimationFrame(f);else{const d=[];for(let i=1;i<ts.length;i++)d.push(ts[i]-ts[i-1]);d.sort((a,b)=>a-b);res(d[Math.floor(d.length/2)]);}}requestAnimationFrame(f);});}
+function tone(freq,dur,vol){if(!actx)return;try{const o=actx.createOscillator(),gn=actx.createGain(),t=actx.currentTime;o.frequency.value=freq;
+  gn.gain.setValueAtTime(vol,t);gn.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.connect(gn);gn.connect(actx.destination);o.start(t);o.stop(t+dur+0.02);}catch(e){}}
+function makeBlock(cond,n){const list=[];
+  for(let i=0;i<n;i++){const target=i%2?'X':'N';const compat=Math.floor(i/2)%2?'incompatible':'compatible';const dside=Math.floor(i/4)%2?'left':'right';list.push(makeDisplay(cond,target,compat,dside));}
+  return shuffle(list);}
+function showScreen(html,buttons=[['Continue','go']]){
+  RUN.classList.add('screenmode');RFIX.style.display='none';RITEMS.innerHTML='';RFB.textContent='';
+  RMSG.innerHTML=html+'<div class="row" style="margin-top:16px">'+buttons.map(([t,v],i)=>'<button class="btn'+(i?' ghost':'')+'" data-v="'+v+'">'+esc(t)+'</button>').join('')+'</div>';
+  RMSG.style.display='block';if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
+  return new Promise(res=>{let closed=false;const done=v=>{if(closed)return;closed=true;RMSG.style.display='none';RUN.classList.remove('screenmode');RFIX.style.display='';
+      window.removeEventListener('keydown',k,true);window.removeEventListener('keyup',ku,true);res(v);};
+    const swallow=e=>e.code==='Space'||e.key===' '||e.code==='KeyX'||e.code==='KeyN';
+    const ku=e=>{if(swallow(e)){e.preventDefault();e.stopPropagation();}};window.addEventListener('keyup',ku,true);
+    const k=e=>{if(swallow(e)){e.preventDefault();e.stopPropagation();return;}if(e.key==='Enter'){e.preventDefault();done(buttons[0][1]);}};
+    setTimeout(()=>{if(!closed)window.addEventListener('keydown',k,true);},300);
+    RMSG.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>done(b.dataset.v)));});}
+function runTrial(d,meta){
+  return new Promise(resolve=>{
+    RITEMS.innerHTML='';RFIX.style.display='';
+    const t0=performance.now(),onsetTarget=t0+meta.fixMs;
+    let state='fix',onset=null,offset=null,resp=null,stamp=null,focusLost=false;
+    const key=e=>{let r=null;if(e.code==='KeyX')r='X';else if(e.code==='KeyN')r='N';else return;e.preventDefault();if(e.repeat)return;
+      if(state==='fix'||state==='drawn'||resp!==null)return;let ts=e.timeStamp;const now=performance.now();if(!(ts>t0-5000&&ts<=now+5))ts=now;stamp=ts;resp=r;};
+    const vis=()=>{if(document.hidden)focusLost=true;};
+    window.addEventListener('keydown',key);document.addEventListener('visibilitychange',vis);
+    function finish(now){window.removeEventListener('keydown',key);document.removeEventListener('visibilitychange',vis);RITEMS.innerHTML='';if(offset===null)offset=now;
+      resolve({...d,response:resp,correct:resp===d.target,rt:resp?stamp-onset:NaN,stimMs:offset-onset,focusLost,fullscreen:!!document.fullscreenElement});}
+    function frame(now){
+      if(state==='fix'){if(now>=onsetTarget-frameMs/2){RITEMS.innerHTML=displayHTML(d,'vh');state='drawn';}requestAnimationFrame(frame);return;}
+      if(state==='drawn'){onset=now;state='on';requestAnimationFrame(frame);return;}
+      if(resp!==null||now>=onset+meta.window){if(state==='on'){RITEMS.innerHTML='';offset=now;}finish(now);return;}
+      if(state==='on'&&now>=onset+meta.stimMs-frameMs*1.5){RITEMS.innerHTML='';state='hidden';requestAnimationFrame(frame);return;}
+      if(state==='hidden'){offset=now;state='resp';}
+      requestAnimationFrame(frame);}
+    requestAnimationFrame(frame);});}
+async function feedback(r,meta){
+  RITEMS.innerHTML=displayHTML(r,'vh',{hl:true});
+  RFB.textContent=r.response?('The target was '+r.target+'. Press '+r.target+' when the ring contains '+(r.target==='X'?'an X':'an N')+'.'):'Too slow. The target was '+r.target+'.';
+  tone(300,0.15,0.12);await sleep(QA?300:1800);RITEMS.innerHTML='';RFB.textContent='';await sleep(400);}
+function exampleBox(cond){const ex=makeDisplay(cond,'X','incompatible','right');
+  return '<div class="stage lstage" style="max-width:440px;margin:10px auto"><div class="fix" style="font-size:1.4rem">+</div>'+displayHTML(ex,'cqh',{scale:1.8})+'</div>';}
+async function runTask(){
+  const n=+document.getElementById('taskN').value;
+  const meta={participant:'P'+Math.random().toString(36).slice(2,8).toUpperCase(),date:new Date().toISOString().slice(0,10),
+    order:ORDERS[Math.floor(Math.random()*3)],n,fixMs:QA?250:500,stimMs:100,window:QA?700:2000,iti:QA?100:700,hand:document.getElementById('taskHand').value};
+  try{actx=new (window.AudioContext||window.webkitAudioContext)();await actx.resume();}catch(e){actx=null;}
+  RUN.classList.add('on');document.body.style.overflow='hidden';
+  try{if(RUN.requestFullscreen)await RUN.requestFullscreen();}catch(e){}
+  RFIX.style.display='none';frameMs=await measureFrames();meta.frameMs=frameMs;
+  const rows=[];let quit=false;
+  let go=await showScreen('<h2>Before you start</h2><p>Keep your eyes on the cross in the middle of the screen. A ring of six letters will flash briefly around it, with one extra letter outside the ring.</p><p>Press <strong>X</strong> if the ring contains an X, or <strong>N</strong> if it contains an N. Every ring contains exactly one of them. Ignore the letter outside the ring.</p><p>There are three blocks. Each starts with 16 practice trials, and you will be told when you make an error in practice. Be fast, but try not to make mistakes.</p>',[['I\u2019m ready','go'],['Cancel','quit']]);
+  if(go==='quit')quit=true;
+  for(let b=0;b<3&&!quit;b++){const cond=meta.order[b];
+    go=await showScreen('<h2>Block '+(b+1)+' of 3</h2><p>'+BLOCKTXT[cond]+'</p>'+exampleBox(cond)+'<p>In this example the ring contains an X, so you would press X. The N outside the ring should be ignored.</p>',[['Start the practice','go'],['Quit the task','quit']]);
+    if(go==='quit'){quit=true;break;}
+    let k=0;for(const d of makeBlock(cond,16)){const r=await runTrial(d,meta);rows.push(rowOf(r,meta,'practice',b+1,++k));if(!r.correct)await feedback(r,meta);await sleep(meta.iti);}
+    go=await showScreen('<h2>Practice finished</h2><p>Now the real trials for this block ('+n+' displays). There is no feedback from here on, apart from a reminder if you are too slow.</p>',[['Start','go'],['Quit the task','quit']]);
+    if(go==='quit'){quit=true;break;}
+    k=0;for(const d of makeBlock(cond,n)){const r=await runTrial(d,meta);rows.push(rowOf(r,meta,'test',b+1,++k));
+      if(!r.response){RFB.textContent='Too slow';await sleep(QA?100:600);RFB.textContent='';}await sleep(meta.iti);}
+    if(b<2){go=await showScreen('<h2>Block '+(b+1)+' of 3 done</h2><p>Take a short break. Continue when you are ready.</p>',[['Continue','go'],['Quit the task','quit']]);if(go==='quit')quit=true;}}
+  try{if(document.fullscreenElement)await document.exitFullscreen();}catch(e){}
+  RUN.classList.remove('on');document.body.style.overflow='';RMSG.style.display='none';finishTask(rows,meta,quit);}
+function rowOf(r,meta,phase,block,trial){return {participant:meta.participant,date:meta.date,block_order:meta.order.join('-'),phase,block,condition:r.cond,trial,
+  target:r.target,target_pos:r.targetPos+1,ring:r.ring.join(''),distractor:r.distractor,distractor_side:r.dside,compatibility:r.compat,
+  response:r.response||'',correct:r.correct?1:0,rt_ms:fin(r.rt)?r.rt.toFixed(1):'',stim_ms:r.stimMs.toFixed(1),frame_ms:meta.frameMs.toFixed(2),
+  fullscreen:r.fullscreen?1:0,focus_lost:r.focusLost?1:0,screen_w:window.screen.width,screen_h:window.screen.height,handedness:meta.hand};}
+function finishTask(rows,meta,quit){const st=document.getElementById('taskStatus');const nTest=rows.filter(r=>r.phase==='test').length;
+  if(!nTest){st.textContent=quit?'Task cancelled. Start again when you are ready.':'';return;}
+  taskData={rows,meta};
+  const sm=summariseTrials(rows.map(r=>({phase:r.phase,cond:r.condition,compat:r.compatibility,correct:r.correct===1,rt:r.rt_ms===''?NaN:+r.rt_ms})));
+  inputs.forEach(i=>{const v=sm[i.dataset.f+'_'+i.dataset.c];i.value=fin(v)?v:'';});
+  document.getElementById('hand').value=meta.hand;fromTask=true;updateMine();
+  document.getElementById('trialDl').hidden=false;document.getElementById('pCode').textContent='Your anonymous code: '+meta.participant;
+  document.getElementById('mineIntro').textContent=quit?'You stopped the task early, so some cells may be empty. Your numbers from the trials you completed are filled in below.':'Your results from the task are filled in below. Check them, then copy your results line and download your trial data.';
+  st.textContent=quit?'Task stopped early. Partial results are on the My results tab.':'Finished. Your results are on the My results tab.';
+  showTab(document.getElementById('t-mine'));window.scrollTo(0,0);}
+document.getElementById('taskStart').addEventListener('click',()=>{if(RUN.classList.contains('on'))return;runTask();});
+document.getElementById('dlMine').addEventListener('click',()=>{if(!taskData)return;taskData.saved=true;const head=Object.keys(taskData.rows[0]);
+  downloadText('week02_'+taskData.meta.participant+'_trials.csv',[head.join(',')].concat(taskData.rows.map(r=>head.map(h=>r[h]).join(','))).join('\n'));});
+window.addEventListener('beforeunload',e=>{if(taskData&&!taskData.saved){e.preventDefault();e.returnValue='';}});
+
+/* ---------- Quiz ---------- */
+const Q={
+core:[
+ {q:'On what basis did Broadbent\u2019s filter select a message?',ref:'Textbook \u00a72.2',
+  o:[['Physical features such as which ear, which voice or which pitch',1,'Correct. The filter selected a channel early, before meaning was analysed.'],
+     ['The meaning of the words in each message',0,'Selection on meaning is what late-selection models propose.'],
+     ['How important each message was to the listener',0,'Importance comes in through Treisman\u2019s dictionary unit, not Broadbent\u2019s filter.'],
+     ['Whichever message arrived first',0,'Order of arrival plays no role in the filter model.']]},
+ {q:'Gray and Wedderburn (1960) played \u201cDear 7 Jane\u201d to one ear and \u201c9 Aunt 6\u201d to the other, and people reported \u201cDear Aunt Jane\u201d. Which model does this most directly challenge?',ref:'Textbook \u00a72.2',
+  o:[['Broadbent\u2019s early-selection filter',1,'Correct. People followed meaning across the very channels an early filter should keep apart.'],
+     ['Treisman\u2019s attenuation model',0,'Attenuation allows some meaning through the unattended channel, so this result fits it reasonably well.'],
+     ['Deutsch and Deutsch\u2019s late-selection model',0,'Late selection predicts that meaning is analysed in both channels, so the result fits it.'],
+     ['Lavie\u2019s load theory',0,'Load theory came decades later and is about how much spare capacity a task leaves.']]},
+ {q:'Why do you hear your own name across a noisy room, according to Treisman?',ref:'Textbook \u00a72.2',
+  o:[['Your name has a permanently low threshold in the dictionary unit, so even an attenuated signal can trigger it',1,'Correct. Attenuation turns the message down rather than off.'],
+     ['The filter always lets personally relevant words through at full strength',0,'In Treisman\u2019s model the unattended message is weakened, not passed at full strength.'],
+     ['All unattended words are fully processed for meaning',0,'That is the late-selection position, not Treisman\u2019s.'],
+     ['Your name is louder than other words',0,'The effect does not depend on loudness.']]},
+ {q:'According to load theory, what happens to an irrelevant distractor when the main task has high perceptual load?',ref:'Textbook \u00a72.3',
+  o:[['It is not processed, because the task uses up the available perceptual capacity',1,'Correct. Nothing is left over to spill onto the distractor.'],
+     ['It is processed but then actively inhibited',0,'Lavie and Fox (2000) found no negative priming under high load, which argues against stronger inhibition.'],
+     ['It is processed more, because harder tasks raise arousal',0,'Load theory predicts the opposite.'],
+     ['It is processed only if it appears in the same location as the target',0,'Location is not what load theory turns on; spare capacity is.']]},
+ {q:'In today\u2019s task, what does the interference effect (incompatible minus compatible response time) tell you?',ref:'Today\u2019s lab',
+  o:[['How much the irrelevant letter outside the ring was processed',1,'Correct. A clashing letter can only slow you if it was identified well enough to activate the wrong response.'],
+     ['How hard it was to find the target in the ring',0,'Search difficulty shows up in overall response time, not in the compatible\u2013incompatible difference.'],
+     ['How quickly you can move your eyes',0,'The display is too brief for eye movements to matter.'],
+     ['Whether you guessed',0,'Guessing would show up mainly as errors.']]},
+ {q:'Which were the independent variables in today\u2019s experiment?',ref:'Textbook \u00a71.7; today\u2019s lab',
+  o:[['The kind of display (low load, high load, dilution) and whether the distractor was compatible or incompatible',1,'Correct. Both were manipulated within each participant.'],
+     ['Response time and accuracy',0,'These are the dependent variables.'],
+     ['The side on which the distractor appeared',0,'Distractor side was balanced as a control, not studied as a variable of interest.'],
+     ['Which hand people write with',0,'This was recorded optionally but not manipulated.']]},
+ {q:'What is covert orienting of attention?',ref:'Textbook \u00a72.4',
+  o:[['Shifting attention to a location without moving the eyes',1,'Correct. The Posner cueing paradigm shows its benefits and costs.'],
+     ['Shifting attention by moving the eyes',0,'That is overt orienting.'],
+     ['Attention captured by a sudden peripheral event',0,'That is exogenous orienting, which can be overt or covert.'],
+     ['Attending to an object rather than a location',0,'That is object-based attention.']]},
+ {q:'In Feature Integration Theory, why is search for a single-feature target (a red item among green) fast whatever the number of items?',ref:'Textbook \u00a72.5',
+  o:[['A single feature map registers it pre-attentively, in parallel across the display',1,'Correct. The target pops out, so search time barely changes with set size.'],
+     ['Focused attention moves very quickly between items',0,'Serial, focused attention is what makes conjunction search slow.'],
+     ['Colour is processed only after shape',0,'Features are registered separately and in parallel.'],
+     ['The eyes jump straight to the target by chance',0,'Pop-out is systematic, not a matter of chance.']]},
+ {q:'What does load theory predict about inattentional blindness?',ref:'Textbook \u00a72.3 and \u00a72.6',
+  o:[['People miss more unexpected events when the task in hand has higher perceptual load',1,'Correct. Cartwright-Finch and Lavie (2007) found exactly this.'],
+     ['Inattentional blindness disappears under high load, because people are more alert',0,'The evidence runs the other way.'],
+     ['Load has no effect, because inattentional blindness depends on expectations only',0,'Expectations matter, but load changes the rate of missing.'],
+     ['Only experts are protected from inattentional blindness',0,'Radiologists missed a gorilla in a scan: expertise does not protect automatically.']]},
+ {q:'Participants hold six digits rather than one in memory while doing a distractor task. What happens to distractor interference?',ref:'Textbook \u00a72.3',
+  o:[['It increases, because cognitive load weakens the control that keeps priorities straight',1,'Correct. Cognitive load and perceptual load pull in opposite directions.'],
+     ['It decreases, because any extra load uses up capacity',0,'That is the mistaken \u201charder tasks protect you\u201d summary.'],
+     ['It is unchanged, because memory and attention are separate',0,'The sandwich-task studies show a clear increase.'],
+     ['It disappears, as under high perceptual load',0,'Cognitive load has the opposite effect to perceptual load.']]}
+],
+stretch:[
+ {q:'Why is \u201ca harder task protects you from distraction\u201d a misleading summary of load theory?',ref:'Textbook \u00a72.3',
+  o:[['It ignores which resource is taxed: cognitive load increases distraction, and making a display hard to see does not reduce it',1,'Correct. Only perceptual load that consumes capacity shuts distractors out (Lavie & de Fockert, 2003).'],
+     ['Load theory says that harder tasks always increase distraction',0,'For perceptual load the theory predicts less distraction.'],
+     ['Difficulty and load are defined identically in the theory',0,'The theory distinguishes them; that is the point.'],
+     ['It is accurate; the summary is the theory',0,'The textbook explains why the summary is wrong.']]},
+ {q:'Our high-load ring contains five different letters, while the low-load ring contains five small circles. Why can these two conditions alone not settle the dispute between load theory and the dilution account?',ref:'Textbook \u00a72.3',
+  o:[['The high-load ring raises load and also adds more letters that compete with the distractor, so both accounts predict less interference',1,'Correct. That confound is why the dilution condition is needed.'],
+     ['The two rings take different amounts of time to search',0,'They do, but that is the intended manipulation, not the confound.'],
+     ['The distractor appears in different places in the two conditions',0,'Distractor positions are identical across conditions.'],
+     ['Low load is too easy to show interference',0,'Low load is where load theory predicts the most interference.']]},
+ {q:'Suppose the class shows fast search in the dilution condition but little interference. Which account does that seem to favour, and how did Lavie and Torralbo (2010) reply?',ref:'Textbook \u00a72.3',
+  o:[['The dilution account; they replied that spare capacity spilled onto the nearby letters in the ring rather than onto the distractor',1,'Correct. They showed that the nearby letters, not the peripheral distractor, then produced the competition effects.'],
+     ['Load theory; they replied that red targets increase load',0,'A colour singleton makes search easy, so load is low.'],
+     ['Neither; they replied that the task was too easy to show any effect',0,'This was not their reply.'],
+     ['The dilution account; they accepted that load has no effect',0,'They defended load theory, and the field now favours a hybrid view.']]},
+ {q:'Critics say load theory risks circularity. What do they mean?',ref:'Textbook \u00a72.3',
+  o:[['There is no independent measure of load: high load is defined as load that stops distractor processing',1,'Correct. A failed prediction can always be blamed on a manipulation that was too weak.'],
+     ['The theory predicts both more and less distraction for the same task',0,'It predicts opposite effects for perceptual and cognitive load, which is a different matter.'],
+     ['Load theory was tested only by Lavie\u2019s group',0,'Many groups have tested it.'],
+     ['The theory relies on reaction times, which are circular measures',0,'Reaction times are not circular; awareness measures also support the theory.']]},
+ {q:'Why do we check that high-load search was slower than low-load search before interpreting the interference effects?',ref:'Today\u2019s lab',
+  o:[['If high load were not more demanding, less interference there could not be attributed to load',1,'Correct. A manipulation check shows that the manipulation did what it was meant to do.'],
+     ['Because slower responses always show more interference',0,'Slower responses do not by themselves produce interference effects.'],
+     ['To check that participants kept their eyes on the cross',0,'Search time cannot tell us that.'],
+     ['To make sure accuracy was at ceiling',0,'Accuracy is checked separately.']]},
+ {q:'Lavie and Fox (2000) found negative priming under low load but none under high load. What does that suggest?',ref:'Textbook \u00a72.3',
+  o:[['High load reduces perception of the distractor, rather than improving its inhibition',1,'Correct. Better inhibition would have produced more negative priming under high load, not none.'],
+     ['High load makes inhibition stronger',0,'Stronger inhibition predicts more negative priming.'],
+     ['Distractors are always perceived, whatever the load',0,'The absence of priming suggests they were not perceived under high load.'],
+     ['Negative priming measures how hard the task was',0,'It is a marker of a distractor being perceived and then inhibited.']]},
+ {q:'Macdonald and Lavie (2008) found that high load lowered detection sensitivity (d\u2032) with no change in response criterion. Why does the criterion result matter?',ref:'Textbook \u00a72.3',
+  o:[['It suggests perception itself was reduced, not people\u2019s willingness to report the shape',1,'Correct. A criterion shift would mean people were simply more reluctant to say yes.'],
+     ['It shows the task was too easy',0,'The criterion speaks to response bias, not ease.'],
+     ['It shows people forgot the shape',0,'Forgetting was ruled out by asking for the report first.'],
+     ['It shows that load affects only hearing',0,'The study was visual; inattentional deafness is a separate finding.']]},
+ {q:'A group still shows distractor interference at a load that eliminates it for most people. How does load theory interpret this?',ref:'Textbook \u00a72.3',
+  o:[['The group has a larger perceptual capacity, so the load has not used it up',1,'Correct. This is how the theory has been applied to autistic adults and action video-game players.'],
+     ['The group cannot inhibit distractors',0,'The load-theory reading is about capacity, not inhibition.'],
+     ['The theory has been falsified',0,'The theory can accommodate this through individual differences in capacity, which is one reason it is hard to falsify.'],
+     ['The group must have been under high cognitive load',0,'Nothing in the result requires that.']]},
+ {q:'Why does the distractor appear unpredictably on the left or the right?',ref:'Today\u2019s lab',
+  o:[['So that people cannot simply learn to ignore one location, and any interference reflects involuntary processing',1,'Correct. Load theory claims spillover is involuntary, so the design should not allow an easy location strategy.'],
+     ['To make the task harder',0,'Side is balanced across conditions, so it does not change difficulty between them.'],
+     ['To test the two hemispheres, as in Week 1',0,'That would need the distractor side as a variable of interest.'],
+     ['So that the distractor is always visible',0,'It would be visible on either side.']]},
+ {q:'Load theory\u2019s driving prediction: in dense city traffic (high perceptual load), what happens to your chance of noticing a child approaching an intersection?',ref:'Textbook \u00a72.3',
+  o:[['It falls, because the main task uses up the capacity needed to notice task-irrelevant events',1,'Correct. That is why the prediction is alarming rather than reassuring.'],
+     ['It rises, because you are more alert in busy traffic',0,'Load theory predicts the opposite.'],
+     ['It is unchanged, because driving is automatic',0,'Dense traffic is the opposite of an automatic task.'],
+     ['It depends only on whether you are using a phone',0,'Phone use adds cognitive demand, but the prediction is about perceptual load.']]}
+]};
+const qRun=document.getElementById('quizRun'),qStart=document.getElementById('quizStart');
+let qs=null,qi=0,score=0,log=[],qTimer=null,qLeft=0;
+document.querySelectorAll('.pick').forEach(b=>b.addEventListener('click',()=>startQuiz(b.dataset.set)));
+function startQuiz(set){qs=Q[set].map(q=>({q:q.q,ref:q.ref,o:shuffle(q.o)}));qi=0;score=0;log=[];qStart.hidden=true;qRun.hidden=false;clearInterval(qTimer);
+  if(document.getElementById('useTimer').checked){qLeft=600;qTimer=setInterval(()=>{qLeft--;const t=document.getElementById('qClock');if(t)t.textContent=clock();if(qLeft<=0){clearInterval(qTimer);endQuiz(true);}},1000);}else qLeft=0;showQ();}
+function clock(){return Math.floor(qLeft/60)+':'+String(qLeft%60).padStart(2,'0')+' left';}
+function showQ(){const q=qs[qi];
+  qRun.innerHTML='<div class="qcard"><div class="qmeta"><span>Question '+(qi+1)+' of '+qs.length+'</span><span id="qClock">'+(qLeft?clock():'')+'</span></div><div class="progress"><div style="width:'+(qi/qs.length*100)+'%"></div></div><p class="qtext">'+esc(q.q)+'</p>'+
+   q.o.map((o,i)=>'<button class="opt" data-i="'+i+'">'+esc(o[0])+'</button>').join('')+'<div class="row"><button class="btn" id="qCheck" disabled>Check answer</button></div><div id="qFb"></div></div>';
+  let sel=null;const opts=[...qRun.querySelectorAll('.opt')];
+  opts.forEach(b=>b.addEventListener('click',()=>{opts.forEach(x=>x.classList.remove('sel'));b.classList.add('sel');sel=+b.dataset.i;document.getElementById('qCheck').disabled=false;}));
+  document.getElementById('qCheck').addEventListener('click',()=>{if(sel==null)return;const chosen=q.o[sel],ci=q.o.findIndex(o=>o[1]===1),ok=chosen[1]===1;if(ok)score++;
+    log.push({chosen:chosen[0],correct:q.o[ci][0],ok,ref:q.ref,why:q.o[ci][2]});
+    opts.forEach((b,i)=>{b.disabled=true;if(i===ci)b.classList.add('right');else if(i===sel)b.classList.add('wrong');if(i===sel||i===ci){const w=document.createElement('div');w.className='why';w.textContent=q.o[i][2];b.appendChild(w);}});
+    document.getElementById('qCheck').remove();
+    document.getElementById('qFb').innerHTML='<p class="ref">Where to read more: '+esc(q.ref)+'</p><div class="row"><button class="btn" id="qNext">'+(qi<qs.length-1?'Next question':'See my results')+'</button></div>';
+    document.getElementById('qNext').addEventListener('click',()=>{qi++;if(qi<qs.length)showQ();else endQuiz(false);});document.getElementById('qNext').focus();});}
+function endQuiz(timedOut){clearInterval(qTimer);
+  let h='<div class="qcard"><h2>'+score+' of '+qs.length+' correct</h2>'+(timedOut?'<p class="note">Time ran out. Questions you did not reach are listed as not answered.</p>':'');
+  qs.forEach((q,i)=>{const L=log[i];
+    if(L)h+='<div class="review"><p><span class="'+(L.ok?'ok':'no')+'">'+(L.ok?'Correct':'Incorrect')+'</span> '+esc(q.q)+'</p>'+(L.ok?'':'<p>Your answer: '+esc(L.chosen)+'</p>')+'<p>Answer: '+esc(L.correct)+'. '+esc(L.why.replace(/^Correct\.\s*/,''))+'</p><p class="ref">Where to read more: '+esc(L.ref)+'</p></div>';
+    else{const c=q.o.find(o=>o[1]===1);h+='<div class="review"><p><span class="no">Not answered</span> '+esc(q.q)+'</p><p>Answer: '+esc(c[0])+'. '+esc(c[2].replace(/^Correct\.\s*/,''))+'</p></div>';}});
+  h+='<div class="row"><button class="btn" id="qAgain">Back to the quiz menu</button></div></div>';qRun.innerHTML=h;
+  document.getElementById('qAgain').addEventListener('click',()=>{qRun.hidden=true;qStart.hidden=false;});}
+})();
+</script>
+
+</body>
+</html>
