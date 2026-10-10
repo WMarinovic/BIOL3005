@@ -1,0 +1,15 @@
+// Cloudflare settings for the BIOL3005 Cognition site.
+// The site is plain HTML; worker/index.js checks the login before anything is served.
+{
+  "name": "biol3005-cognition",
+  "main": "worker/index.js",
+  "compatibility_date": "2025-09-01",
+  "assets": {
+    "directory": ".",
+    "binding": "ASSETS",
+    // Run the login check before every page and file, not only for missing ones.
+    "run_worker_first": true
+  },
+  // Keep variables set in the dashboard when the site is redeployed.
+  "keep_vars": true
+}
