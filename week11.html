@@ -142,11 +142,17 @@
   #runMsg input.letters{letter-spacing:.4em;text-transform:uppercase;font-size:1.8rem}
   #runMsg textarea{min-height:140px;font-size:1.05rem}
   .countdown{font-weight:700;color:var(--across-text)}
+  /* Navigation home and leaving the quiz */
+  .home{display:inline-block;font-size:.9rem;font-weight:600;color:var(--same);text-decoration:none;margin:0 0 6px}
+  .home:hover,.home:focus-visible{text-decoration:underline}
+  .qleave{font:inherit;font-size:.9rem;font-weight:600;background:none;border:0;padding:0;margin-left:16px;color:var(--same);text-decoration:underline;cursor:pointer}
+  .qleave:focus-visible{outline:3px solid var(--across);outline-offset:2px}
 </style>
 </head>
 <body>
 <header class="mast"><div class="wrap">
-  <p class="unit">BIOL3005 Cognition, Week 11 tutorial</p>
+  <a class="home" href="index.html">Back to all weeks and the textbook</a>
+    <p class="unit">BIOL3005 Cognition, Week 11 tutorial</p>
   <h1>Same choice, different words</h1>
   <p class="lede">Tools for the decisions and reasoning lab: framing problems (Tversky & Kahneman, 1981), the Linda problem, and the Wason selection task in abstract and thematic versions. Textbook Chapter 11, §11.3 to §11.5 and §11.8.</p>
   <nav role="tablist" aria-label="Tutorial tools"><button role="tab" id="t-demo" aria-controls="s-demo" aria-selected="true">Try a trial</button><button role="tab" id="t-task" aria-controls="s-task" aria-selected="false">Run the task</button><button role="tab" id="t-mine" aria-controls="s-mine" aria-selected="false">My results</button><button role="tab" id="t-class" aria-controls="s-class" aria-selected="false">Class results</button><button role="tab" id="t-quiz" aria-controls="s-quiz" aria-selected="false">Quiz</button></nav>
@@ -530,12 +536,20 @@ window.addEventListener('beforeunload',e=>{if(taskData&&!taskData.saved){e.preve
 /* ---------- Quiz ---------- */
 const qRun=document.getElementById('quizRun'),qStart=document.getElementById('quizStart');
 let qs=null,qi=0,score=0,log=[],qTimer=null,qLeft=0;
+/* Leaving the Quiz tab pauses the timer; coming back resumes it. Reset quiz returns to the quiz menu */
+let qPaused=false;
+function quizTick(){qLeft--;const t=document.getElementById('qClock');if(t)t.textContent=clock();if(qLeft<=0){clearInterval(qTimer);qTimer=null;endQuiz(true);}}
+function pauseQuiz(){if(qTimer){clearInterval(qTimer);qTimer=null;qPaused=true;}}
+function resumeQuiz(){if(qPaused&&qs&&qLeft>0){clearInterval(qTimer);qTimer=setInterval(quizTick,1000);}qPaused=false;}
+function resetQuiz(){clearInterval(qTimer);qTimer=null;qPaused=false;qLeft=0;qs=null;qi=0;score=0;log=[];qRun.innerHTML='';qRun.hidden=true;qStart.hidden=false;}
+tabs.forEach(t=>t.addEventListener('click',()=>{if(t.id==='t-quiz')resumeQuiz();else pauseQuiz();}));
+qRun.addEventListener('click',e=>{if(e.target.closest('#qLeave')){resetQuiz();const p=qStart.querySelector('.pick');if(p)p.focus();}});
 document.querySelectorAll('.pick').forEach(b=>b.addEventListener('click',()=>startQuiz(b.dataset.set)));
-function startQuiz(set){qs=WK.quiz[set].map(q=>({q:q.q,ref:q.ref,o:shuffle(q.o)}));qi=0;score=0;log=[];qStart.hidden=true;qRun.hidden=false;clearInterval(qTimer);
+function startQuiz(set){qPaused=false;qs=WK.quiz[set].map(q=>({q:q.q,ref:q.ref,o:shuffle(q.o)}));qi=0;score=0;log=[];qStart.hidden=true;qRun.hidden=false;clearInterval(qTimer);
   if(document.getElementById('useTimer').checked){qLeft=60*qs.length;qTimer=setInterval(()=>{qLeft--;const t=document.getElementById('qClock');if(t)t.textContent=clock();if(qLeft<=0){clearInterval(qTimer);endQuiz(true);}},1000);}else qLeft=0;showQ();}
 function clock(){return Math.floor(qLeft/60)+':'+String(qLeft%60).padStart(2,'0')+' left';}
 function showQ(){const q=qs[qi];
-  qRun.innerHTML='<div class="qcard"><div class="qmeta"><span>Question '+(qi+1)+' of '+qs.length+'</span><span id="qClock">'+(qLeft?clock():'')+'</span></div><div class="progress"><div style="width:'+(qi/qs.length*100)+'%"></div></div><p class="qtext">'+esc(q.q)+'</p>'+
+  qRun.innerHTML='<div class="qcard"><div class="qmeta"><span>Question '+(qi+1)+' of '+qs.length+'</span><span><span id="qClock">'+(qLeft?clock():'')+'</span><button class="qleave" id="qLeave">Reset quiz</button></span></div><div class="progress"><div style="width:'+(qi/qs.length*100)+'%"></div></div><p class="qtext">'+esc(q.q)+'</p>'+
    q.o.map((o,i)=>'<button class="opt" data-i="'+i+'">'+esc(o[0])+'</button>').join('')+'<div class="row"><button class="btn" id="qCheck" disabled>Check answer</button></div><div id="qFb"></div></div>';
   let sel=null;const opts=[...qRun.querySelectorAll('.opt')];
   opts.forEach(b=>b.addEventListener('click',()=>{opts.forEach(x=>x.classList.remove('sel'));b.classList.add('sel');sel=+b.dataset.i;document.getElementById('qCheck').disabled=false;}));
