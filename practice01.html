@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIOL3005 Cognition: Introduction and cognitive neuroscience practice problems</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #f6f4f0;
+    --surface: #ffffff;
+    --surface-alt: #f0ede8;
+    --border: #d6d0c6;
+    --text: #2c2a26;
+    --text-muted: #6b6660;
+    --accent: #b04a32;
+    --accent-light: #e8d5cf;
+    --accent-dark: #8c3926;
+    --easy: #3a7d5e;
+    --easy-bg: #e8f3ec;
+    --easy-border: #b0d6bf;
+    --medium: #c07b1a;
+    --medium-bg: #fdf3e0;
+    --medium-border: #e4c67a;
+    --hard: #9b2e4e;
+    --hard-bg: #f6e3ea;
+    --hard-border: #d4a0b3;
+    --hint-bg: #f0f4f8;
+    --hint-border: #a8bdd4;
+    --answer-bg: #f0ede8;
+    --answer-border: #c4bdb2;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; min-height: 100vh; }
+
+  .header { background: var(--text); color: var(--bg); padding: 28px 0 24px; text-align: center; }
+  .header-inner { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+  .header .unit-code { font-size: 0.8rem; letter-spacing: 2.5px; text-transform: uppercase; opacity: 0.6; margin-bottom: 6px; }
+  .header h1 { font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 1.75rem; line-height: 1.3; }
+  .header .subtitle { font-size: 0.9rem; opacity: 0.55; margin-top: 6px; }
+
+  .nav-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 0; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+  .nav-inner { max-width: 880px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-indicator { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+  .nav-indicator span { color: var(--text); font-weight: 700; }
+  .nav-buttons { display: flex; gap: 10px; }
+  .nav-btn { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; padding: 8px 20px; border-radius: var(--radius); border: 1.5px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .main { max-width: 880px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  .scenario { display: none; }
+  .scenario.active { display: block; }
+
+  .scenario-label { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 8px; }
+  .scenario-title { font-family: 'Source Serif 4', serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 16px; line-height: 1.35; }
+
+  .scenario-stem { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 28px; box-shadow: var(--shadow); font-size: 0.95rem; }
+  .scenario-stem p { margin-bottom: 12px; }
+  .scenario-stem p:last-child { margin-bottom: 0; }
+  .scenario-stem ul { margin: 8px 0 12px 20px; }
+  .scenario-stem li { margin-bottom: 6px; }
+  .scenario-stem strong { font-weight: 600; }
+
+  .chart-container { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 32px; box-shadow: var(--shadow); }
+  .chart-title { font-weight: 600; font-size: 0.9rem; text-align: center; margin-bottom: 12px; color: var(--text); }
+  .chart-wrapper { position: relative; max-width: 680px; margin: 0 auto; }
+
+  .questions-section { margin-top: 8px; }
+  .question-block { margin-bottom: 24px; }
+
+  .q-difficulty { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 4px; margin-bottom: 8px; }
+  .q-difficulty.easy { background: var(--easy-bg); color: var(--easy); border: 1px solid var(--easy-border); }
+  .q-difficulty.medium { background: var(--medium-bg); color: var(--medium); border: 1px solid var(--medium-border); }
+  .q-difficulty.hard { background: var(--hard-bg); color: var(--hard); border: 1px solid var(--hard-border); }
+  .q-difficulty.applied { background: #eef3f8; color: #4a7faa; border: 1px solid #b3c8de; }
+
+  .q-text { font-family: 'Source Serif 4', serif; font-size: 1.05rem; font-weight: 400; line-height: 1.55; margin-bottom: 12px; }
+
+  .reveal-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+  .reveal-btn { font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 600; padding: 6px 16px; border-radius: 6px; border: 1.5px solid; cursor: pointer; transition: all 0.15s ease; background: transparent; }
+  .reveal-btn.hint-btn { border-color: var(--hint-border); color: #4a6b8a; }
+  .reveal-btn.hint-btn:hover { background: var(--hint-bg); }
+  .reveal-btn.answer-btn { border-color: var(--answer-border); color: var(--text-muted); }
+  .reveal-btn.answer-btn:hover { background: var(--answer-bg); }
+  .reveal-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+  .reveal-content { overflow: hidden; max-height: 0; opacity: 0; transition: max-height 0.35s ease, opacity 0.25s ease, margin 0.25s ease; margin-top: 0; }
+  .reveal-content.open { max-height: 1000px; opacity: 1; margin-top: 10px; }
+  .reveal-inner { padding: 16px 20px; border-radius: var(--radius); font-size: 0.9rem; line-height: 1.6; }
+  .reveal-inner.hint { background: var(--hint-bg); border: 1px solid var(--hint-border); color: #3a5a78; }
+  .reveal-inner.answer { background: var(--answer-bg); border: 1px solid var(--answer-border); color: var(--text); }
+  .reveal-inner p { margin-bottom: 8px; }
+  .reveal-inner p:last-child { margin-bottom: 0; }
+
+  .q-divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  .instructions { background: var(--accent-light); border: 1px solid #d4b0a3; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 28px; font-size: 0.85rem; color: var(--accent-dark); line-height: 1.55; }
+  .instructions strong { font-weight: 700; }
+
+  .applied-box { background: #eef3f8; border: 1px solid #b3c8de; border-left: 4px solid #4a7faa; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 24px; font-size: 0.88rem; line-height: 1.6; color: #2a4560; }
+  .applied-box-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #4a7faa; margin-bottom: 6px; }
+  .applied-box p { margin-bottom: 8px; }
+  .applied-box p:last-child { margin-bottom: 0; }
+
+  .footer { text-align: center; padding: 24px; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 40px; }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 1.35rem; }
+    .scenario-title { font-size: 1.2rem; }
+    .nav-inner { flex-direction: column; gap: 10px; }
+  }
+  .chart-note { font-size: 0.8rem; color: #6b665e; margin-top: 8px; text-align: center; }
+
+/* Site theme, matching the textbook */
+:root{--bg:#FFFFFF;--surface:#FFFFFF;--surface-alt:#F6F2F8;--border:#E3DAE7;--text:#2B142D;--text-muted:#6B5A70;--accent:#663366;--accent-light:#F6F2F8;--accent-dark:#663366;--answer-bg:#F6F2F8;--answer-border:#D9CDE0}
+body,.nav-btn,.reveal-btn{font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif}
+.scenario-stem,.q-text,.reveal-inner,.applied-box p{font-family:Charter,"Bitstream Charter","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif}
+.header{background:#fff;color:var(--text);text-align:left;border-bottom:1px solid var(--border);padding:26px 0 20px}
+.header .unit-code{opacity:1;color:#E07B00;font-weight:700;letter-spacing:.04em;font-size:.85rem}
+.header h1{font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;color:#663366;font-size:2rem;line-height:1.2;margin-top:4px}
+.header .subtitle{opacity:1;color:var(--text-muted);font-size:.95rem}
+.scenario-title{font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;color:#663366}
+.instructions{border-color:var(--border);color:var(--text)}
+.reveal-btn.active{background:#663366;border-color:#663366;color:#fff}
+.nav-btn:hover:not(:disabled){background:#663366;border-color:#663366;color:#fff}
+
+/* Site bar shared with the textbook */
+.cbar{background:#2B142D;font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;line-height:1.4}
+.cbar .cbar-in{max-width:880px;margin:0 auto;padding:10px 24px;display:flex;justify-content:space-between;align-items:center;gap:8px 16px;flex-wrap:wrap}
+.cbar a{text-decoration:none;border:0;background:none;padding:0}
+.cbar .cbar-brand{color:#fff;font-weight:700;font-size:1.05rem}
+.cbar .cbar-links a{color:#fff;margin-left:16px;font-size:.92rem;opacity:.9}
+.cbar .cbar-links a:first-child{margin-left:0}
+.cbar .cbar-links a:hover{opacity:1;text-decoration:underline}
+.cbar a:focus-visible{outline:3px solid #E07B00;outline-offset:2px}
+.cbar-week{background:#F6F2F8;border-bottom:1px solid #E3DAE7}
+.cbar-week .cbar-in{justify-content:flex-start;padding:8px 24px}
+.weeknav{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:.88rem;line-height:1.3}
+.weeknav .wl{font-weight:700;color:#E07B00;margin-right:4px}
+.weeknav a{text-decoration:none;border:1px solid #D9CDE0;border-radius:999px;padding:4px 12px;color:#663366;background:#fff;font-weight:600}
+.weeknav a:hover{background:#F6F2F8}
+.weeknav a[aria-current]{background:#663366;color:#fff;border-color:#663366}
+.weeknav a:focus-visible{outline:3px solid #E07B00;outline-offset:2px}
+.weeknav .na{color:#6B5A70;padding:4px 2px}
+@media print{.cbar{display:none}}
+</style>
+</head>
+<body>
+<div class="cbar" role="navigation" aria-label="Site">
+  <div class="cbar-in"><a class="cbar-brand" href="index.html">BIOL3005 Cognition</a><span class="cbar-links"><a href="index.html">Home</a><a href="textbook/index.html">Textbook</a><a href="answers/index.html">Answers</a></span></div>
+  <div class="cbar-week"><div class="cbar-in weeknav" aria-label="This week"><span class="wl">Week 1</span><a href="textbook/ch01.html">Chapter 1</a><a href="week01.html">Tutorial tools</a><a href="practice01.html" aria-current="page">Practice problems</a><a href="answers/ch01.html">Answers</a></div></div>
+</div>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="unit-code">Week 1</div>
+    <h1>Practice problems: Introduction and cognitive neuroscience</h1>
+    <div class="subtitle">Exam-style scenarios on Textbook Chapter 1, with hints and model answers.</div>
+  </div>
+</div>
+
+<div class="nav-bar">
+  <div class="nav-inner">
+    <div class="nav-indicator">Scenario <span id="currentNum">1</span> of <span>2</span></div>
+    <div class="nav-buttons">
+      <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Back</button>
+      <button class="nav-btn" id="nextBtn" onclick="navigate(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="instructions">
+    <strong>How to use this page:</strong> Read each scenario and try to answer the questions on your own first, as you would in an exam. If you get stuck, click <em>Show Hint</em> for guidance. Use <em>Show Answer</em> only after you have given the question a genuine attempt.
+  </div>
+
+    <!-- ==================== SCENARIO 1 ==================== -->
+  <div class="scenario active" id="scenario1">
+    <div class="scenario-label">Scenario 1</div>
+    <div class="scenario-title">Measuring a Decision: Donders&rsquo; Subtractive Method</div>
+
+    <div class="applied-box">
+      <div class="applied-box-label">Why this matters for psychologists</div>
+      <p>Reaction time is still the most widely used measure in cognitive psychology and in clinical assessment. Neuropsychologists, sports scientists and road-safety researchers all use slowed responses to infer that something has gone wrong, but a slow response on its own does not say where in the chain from stimulus to action the delay arose. The subtractive logic Donders introduced is what lets a researcher or clinician ask whether a person is slow to perceive, slow to decide or slow to move, and those answers point to quite different problems and interventions.</p>
+    </div>
+
+    <div class="scenario-stem">
+      <p>A research team replicated Donders&rsquo; experiment with 40 undergraduate participants. Each participant completed three tasks with the same two lights (one on the left, one on the right) and the same response keys:</p>
+      <ul>
+        <li><strong>Simple task:</strong> press one key as soon as any light appears.</li>
+        <li><strong>Go/no-go task:</strong> press the key only when the <em>left</em> light appears, and do nothing when the right light appears.</li>
+        <li><strong>Choice task:</strong> press the left key for the left light and the right key for the right light.</li>
+      </ul>
+      <p>The graph shows mean reaction times (ms) for correct responses in each task. To save time, every participant completed the tasks in the same order: simple, then go/no-go, then choice.</p>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Mean Reaction Time (ms) by Task</div>
+      <div class="chart-wrapper">
+        <canvas id="chart1"></canvas>
+      </div>
+      <div class="chart-note">Illustrative data, consistent with the pattern described in &sect;1.2.</div>
+    </div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">a) Which mental operations does each of the three tasks involve? Explain why the tasks are built so that each one adds exactly one operation to the one before.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q1hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q1ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q1hint">
+          <div class="reveal-inner hint">
+            <p>Start with the simplest task and ask what has to happen between the light appearing and the key press. Then ask what the go/no-go task requires that the simple task does not, and what the choice task requires that the go/no-go task does not.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q1ans">
+          <div class="reveal-inner answer">
+            <p>The <strong>simple task</strong> involves only detecting (sensing) the stimulus and executing the motor response. The participant does not need to know which light appeared, only that a light appeared.</p><p>The <strong>go/no-go task</strong> adds one operation: <strong>stimulus identification</strong>. The participant must work out whether the light is the left one before deciding to respond or withhold. There is still only one possible response, so no response has to be selected.</p><p>The <strong>choice task</strong> adds a further operation: <strong>response selection</strong>. The participant must identify the light and then choose which of two keys to press.</p><p>The tasks are built as a ladder, each containing everything in the one below plus one extra stage, because that is what allows subtraction to isolate a single operation. If two tasks differed in more than one way, the difference in their reaction times could not be attributed to any one stage.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">b) Using the means in the graph, estimate the duration of stimulus identification, the duration of response selection, and the total time Donders would have treated as the time taken to decide.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q2hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q2ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q2hint">
+          <div class="reveal-inner hint">
+            <p>Each estimate is a subtraction between two adjacent tasks, or between the first and last. Decide which pair of tasks differs only in the stage you want.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q2ans">
+          <div class="reveal-inner answer">
+            <p><strong>Stimulus identification</strong> = go/no-go &minus; simple = 280 &minus; 220 = <strong>60 ms</strong>.</p><p><strong>Response selection</strong> = choice &minus; go/no-go = 320 &minus; 280 = <strong>40 ms</strong>.</p><p><strong>Decision time</strong> (identification plus selection) = choice &minus; simple = 320 &minus; 220 = <strong>100 ms</strong>, which matches the order of magnitude Donders reported. Note that the two component estimates add up to the total, which is exactly what the method assumes they should do.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">c) The subtractive method rests on the assumption of <em>pure insertion</em>. State the assumption, and describe one way it could fail in this experiment. What would a failure do to the estimates?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q3hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q3ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q3hint">
+          <div class="reveal-inner hint">
+            <p>Pure insertion is a claim about what happens to the other stages when you add a new one. Think about whether having to choose between two keys might change how a person detects the light or prepares the movement, not just add a stage on top.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q3ans">
+          <div class="reveal-inner answer">
+            <p>Pure insertion is the assumption that <strong>adding a stage leaves all the other stages unchanged</strong>, so that the components of a task simply add up. The subtraction then measures the inserted stage and nothing else.</p><p>It could fail if inserting an operation changes how the shared stages run. For example, in the simple task participants can prepare the single movement in advance and launch it the moment anything appears; in the choice task they cannot prepare a specific movement until they know which key is needed, so the motor stage itself may be slower, not just preceded by an extra decision. Equally, knowing that the light must be identified might lead participants to wait for a clearer sensory signal before responding.</p><p>If the shared stages change, the difference in reaction times mixes the duration of the inserted stage with the change in the others. The 40 ms and 60 ms estimates could then be too large or too small, and there would be no way to tell from the reaction times alone.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">d) Every participant completed the tasks in the same order (simple, go/no-go, choice). Explain why this is a confound, how it could bias the stage estimates in each direction, and how the design should be changed.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q4hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q4ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q4hint">
+          <div class="reveal-inner hint">
+            <p>A confound is anything that varies alongside the variable you care about. What else, apart from task, changes between the first and third task in a fixed order? Consider both practice and fatigue.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q4ans">
+          <div class="reveal-inner answer">
+            <p>Task is perfectly confounded with <strong>order</strong>. Anything that changes with time in the session, rather than with the task itself, is mixed into the reaction-time differences.</p><p><strong>Practice</strong> makes people faster as the session goes on. Because the choice task always came last, practice would shorten its reaction time and <strong>underestimate</strong> the stage durations. <strong>Fatigue</strong> or boredom would do the opposite, lengthening later tasks and <strong>overestimating</strong> them. The researchers cannot know which influence dominated, so the 60 ms and 40 ms values may be biased in an unknown direction.</p><p>The fix is to <strong>counterbalance</strong> the order across participants (for example, each of the six possible orders used equally often), or to interleave short blocks of the three tasks, so that practice and fatigue are spread evenly across tasks rather than piled onto one of them.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty hard">Hard</div>
+        <div class="q-text">e) In a follow-up study, single TMS pulses were delivered during the choice task at different times after the light. Pulses over anterior premotor cortex slowed responses most at about 140 ms, over posterior premotor cortex at about 180 ms, and over sensorimotor cortex from about 220 ms. What does this approach reveal that Donders&rsquo; method cannot, and what are its main limitations?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q5hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q5ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q5hint">
+          <div class="reveal-inner hint">
+            <p>Donders estimates how long a stage lasts from behaviour alone. TMS intervenes in the brain at a chosen moment. Think about what kind of claim each method supports (correlational or causal) and what it says about the order and location of stages. Then list what TMS cannot reach or cannot specify.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q5ans">
+          <div class="reveal-inner answer">
+            <p>Donders&rsquo; method infers <strong>how long</strong> hidden stages take, but only from behaviour and only under the pure-insertion assumption. It says nothing about where in the brain each stage happens or whether a particular region is necessary for it.</p><p>Single-pulse TMS produces a brief, reversible <strong>virtual lesion</strong>. Because the pulse can be timed, the study shows <strong>when</strong> each region is doing necessary work: anterior premotor cortex around 140 ms, posterior premotor around 180 ms, sensorimotor cortex from 220 ms. This is <strong>causal chronometry</strong>: a processing cascade whose order is established by interrupting it rather than inferred, in healthy people serving as their own controls. It shows that these regions are not merely active during the task but necessary at particular moments.</p><p>The limitations are real. The depth and spread of stimulation cannot be specified precisely, so effects attributed to one site may reflect activity spreading to connected regions. Only surface cortex can be reached, so deep structures such as the basal ganglia are out of range. Stimulation can sometimes facilitate rather than disrupt performance. And repetitive TMS carries a seizure risk, which is why its use is governed by safety guidelines and ethics approval.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty applied">Applied</div>
+        <div class="q-text">f) A sports physician tests a footballer after a head knock. Her simple RT is 300 ms, go/no-go RT 365 ms and choice RT 410 ms; her pre-season values were close to the class means in the graph. Using the subtractive logic, where does her slowing appear to lie, and what caution should the physician attach to that conclusion?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q6hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q6ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q6hint">
+          <div class="reveal-inner hint">
+            <p>Compute her identification and selection times and compare them with the values you calculated in part b. Then ask which stage the extra time must be in, and remember the assumption from part c.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q6ans">
+          <div class="reveal-inner answer">
+            <p>Her stage estimates are: identification = 365 &minus; 300 = <strong>65 ms</strong> and response selection = 410 &minus; 365 = <strong>45 ms</strong>, very close to the 60 ms and 40 ms from the group data. Her decision time (110 ms) is therefore near normal. The slowing, about 80 ms, is already present in the <strong>simple</strong> task and carries through unchanged to the other two.</p><p>On the subtractive logic, the delay lies in the stages shared by all three tasks, <strong>detecting the stimulus or executing the movement</strong>, rather than in identifying the light or choosing a response. That points the physician towards sensory or motor processing rather than decision-making.</p><p>The caution is pure insertion. The conclusion holds only if her injury has not changed how the stages interact, for example by making her more cautious in every task. A single test session is also noisy, so the physician should repeat the testing, compare against her own baseline, and combine it with other clinical measures before drawing conclusions about her readiness to return to play.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== SCENARIO 2 ==================== -->
+  <div class="scenario" id="scenario2">
+    <div class="scenario-label">Scenario 2</div>
+    <div class="scenario-title">Dissociations, Imaging and TMS: Localising Language</div>
+
+    <div class="applied-box">
+      <div class="applied-box-label">Why this matters for psychologists</div>
+      <p>Clinical neuropsychologists assess people after stroke or injury and must decide which functions are impaired and why. The logic of dissociations determines what a pattern of test scores can and cannot tell them, and the strengths and limits of imaging and stimulation methods determine how far brain scans and research findings can be trusted when advising patients, families and courts.</p>
+    </div>
+
+    <div class="scenario-stem">
+      <p>A neuropsychology clinic assessed three patients after left-hemisphere strokes, together with 20 age-matched controls. Everyone completed two tasks:</p>
+      <ul>
+        <li><strong>Production:</strong> describing pictures in full sentences (percentage of sentences that were grammatically complete and fluent).</li>
+        <li><strong>Comprehension:</strong> matching spoken sentences to the correct picture from a set of four (percentage correct).</li>
+      </ul>
+      <p><strong>Patient A</strong> had damage to the left inferior frontal lobe. <strong>Patient B</strong> had damage to the left posterior temporal lobe. <strong>Patient C</strong> had a large stroke affecting much of the left hemisphere. The graph shows each person&rsquo;s scores, with the control mean.</p>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Production and Comprehension Scores (%) by Group</div>
+      <div class="chart-wrapper">
+        <canvas id="chart2"></canvas>
+      </div>
+      <div class="chart-note">Illustrative data, consistent with the pattern described in &sect;1.5.</div>
+    </div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">a) Define a single dissociation and a double dissociation. Which patients in this data set together form a double dissociation?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q1hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q1ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q1hint">
+          <div class="reveal-inner hint">
+            <p>A dissociation compares two functions within the same person. Look for one patient who is impaired on one task but not the other, and a second patient who shows the mirror image.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q1ans">
+          <div class="reveal-inner answer">
+            <p>A <strong>single dissociation</strong> is when damage impairs one function (A) while leaving another (B) intact in the same person. A <strong>double dissociation</strong> is a pair of complementary findings: damage in one place impairs A but spares B, while damage elsewhere impairs B but spares A.</p><p><strong>Patients A and B</strong> form a double dissociation. Patient A is poor at production (41%) but near normal at comprehension (90%). Patient B shows the reverse: near-normal production (88%) but very poor comprehension (37%).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">b) Which classic aphasia does each of Patients A and B resemble? Describe what you would expect their everyday speech to sound like.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q2hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q2ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q2hint">
+          <div class="reveal-inner hint">
+            <p>Think about where Broca&rsquo;s and Wernicke&rsquo;s areas are, and which function is lost after damage to each.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q2ans">
+          <div class="reveal-inner answer">
+            <p><strong>Patient A</strong> resembles <strong>Broca&rsquo;s aphasia</strong>. The damage is in the left frontal lobe, where Broca&rsquo;s area lies, and production is impaired while comprehension of everyday language is largely preserved. Their speech would be halting and effortful, with short, simplified utterances, even though they understand much of what is said to them.</p><p><strong>Patient B</strong> resembles <strong>Wernicke&rsquo;s aphasia</strong>. The damage is in the left temporal lobe, where Wernicke&rsquo;s area lies, and comprehension is impaired while speech remains fluent. Their speech would flow easily and sound grammatical but carry little meaning, and they would have difficulty understanding others.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">c) Suppose the clinic had seen only Patient A. Why would that single case be weak evidence that production and comprehension depend on separate brain regions? What does Patient C add, or fail to add, to the argument?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q3hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q3ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q3hint">
+          <div class="reveal-inner hint">
+            <p>Ask what else, apart from separate mechanisms, could make one task suffer more than the other after brain damage. Then look at whether Patient C&rsquo;s pattern is a selective deficit at all.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q3ans">
+          <div class="reveal-inner answer">
+            <p>A single dissociation shows only that one ability can be lost while another survives. That could happen because the two abilities rely on one shared mechanism and the impaired task is simply <strong>harder or more fragile</strong>: any damage might hit the more demanding task first. Patient A alone cannot rule this out, because we never see the other task fail while production survives.</p><p>The double dissociation with Patient B removes that explanation. If production were just the harder task, no patient should lose comprehension while keeping production, yet Patient B does exactly that. Each ability can be lost while the other is spared, so they cannot be one function riding on one mechanism.</p><p><strong>Patient C</strong> adds little to the localisation argument. Both scores are low, so the pattern is a general impairment rather than a selective one, which is what a large lesion affecting many regions would be expected to produce. A case like C is consistent with both separate and shared mechanisms, so it cannot discriminate between them. It is a useful reminder that general damage is the default explanation the double dissociation has to defeat.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">d) An fMRI study of healthy participants finds that both the left inferior frontal region and the left posterior temporal region are active during the comprehension task. A student concludes that &ldquo;the lesion evidence must be wrong, because both areas do comprehension&rdquo;. Evaluate this conclusion.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q4hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q4ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q4hint">
+          <div class="reveal-inner hint">
+            <p>Two separate points are needed. First, what kind of evidence is fMRI activation: correlational or causal? Second, does &ldquo;one region is necessary for a function&rdquo; conflict with &ldquo;many regions are active during it&rdquo;? Think about networks.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q4ans">
+          <div class="reveal-inner answer">
+            <p>The conclusion does not follow, for two reasons.</p><p>First, fMRI is <strong>correlational</strong>. It shows that a region is active while a task is performed, measured indirectly through the BOLD signal, but not that the region is necessary for the task. The frontal region could be active during comprehension because it is involved in something that accompanies comprehension (for example, preparing a possible response or inner speech) without being required for understanding. The lesion evidence asks a different question, what is lost when a region is damaged, and Patient A shows that comprehension largely survives frontal damage.</p><p>Second, localisation and distributed processing are <strong>complementary</strong>, not rival, claims. Most functions are carried out by networks of interconnected regions, so it is expected that several areas will be active during comprehension. A function can depend critically on one region and still be realised across a network that includes others. The imaging and lesion results are therefore answers to different questions, and both can be true.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty hard">Hard</div>
+        <div class="q-text">e) Design a TMS experiment in healthy participants to test whether the left inferior frontal region is necessary for sentence production. Specify the conditions and controls, state the result that would support necessity, and identify two limitations of the inference.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q5hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q5ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q5hint">
+          <div class="reveal-inner hint">
+            <p>A good design needs a comparison that rules out non-specific effects of stimulation (noise, discomfort, distraction) and shows that the effect is specific to one function. Think about sham stimulation, a control site and the comprehension task as a control task.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q5ans">
+          <div class="reveal-inner answer">
+            <p>Healthy participants would perform both the production and comprehension tasks while receiving TMS in separate, counterbalanced sessions to (1) the <strong>left inferior frontal region</strong>, (2) a <strong>control site</strong> such as the left posterior temporal region or a region not involved in language, and (3) <strong>sham stimulation</strong>, which mimics the sound and sensation of TMS without inducing a current in the cortex. Each participant serves as their own control.</p><p>Necessity would be supported by a <strong>selective</strong> result: frontal TMS impairs production (slower or less fluent sentences) relative to sham and to the control site, while leaving comprehension largely unaffected. Ideally temporal TMS would show the reverse, reproducing the double dissociation in healthy brains. A general slowing on both tasks after any active stimulation would point instead to non-specific effects.</p><p>Limitations: the spatial spread and depth of the induced current are not precisely known, so an effect attributed to the frontal site might reflect disruption spreading to connected regions. TMS reaches only surface cortex, so it cannot test deeper contributors. Stimulation can sometimes facilitate rather than impair, which complicates interpretation. Repetitive TMS also carries a small seizure risk, so the protocol would need safety screening and ethics approval specifying intensity and train duration.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty applied">Applied</div>
+        <div class="q-text">f) A news headline reads: &ldquo;Scans show people with a larger Broca&rsquo;s area are more persuasive speakers.&rdquo; As a psychologist asked to comment on the radio, explain what kind of study this almost certainly was and give at least two reasons why it does not show that a larger Broca&rsquo;s area makes people more persuasive.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q6hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q6ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q6hint">
+          <div class="reveal-inner hint">
+            <p>Nobody can randomly assign people to have larger or smaller brain regions. What does that make the design? Then consider the direction of the relationship and whether a third variable could produce both.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q6ans">
+          <div class="reveal-inner answer">
+            <p>The study is almost certainly <strong>correlational</strong>: researchers measured the size of a brain region and a speaking measure in the same people and found that they go together. Nobody manipulated the size of Broca&rsquo;s area, so random assignment was impossible.</p><p>At least three reasons block the causal reading. <strong>Direction</strong>: the relationship could run the other way. On Hebb&rsquo;s principle, repeatedly used connections strengthen, so years of public speaking might change the region rather than the region producing the speaker. <strong>Third variables</strong>: education, practice, profession or general verbal ability could make people both better speakers and different in brain structure. <strong>Measurement</strong>: &ldquo;persuasive&rdquo; is a complex social outcome depending on far more than speech production, and the size of a region is not the same as how well it functions within a network.</p><p>A fair summary for listeners would be that the finding is interesting and could guide further research, but it shows an association, not that changing the brain region would change anyone&rsquo;s persuasiveness.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    BIOL3005 Cognition · Curtin University · School of Population Health
+  </div>
+</div>
+
+<script>
+// ============ Navigation ============
+let currentScenario = 1;
+const totalScenarios = 2;
+
+function navigate(dir) {
+  const newScenario = currentScenario + dir;
+  if (newScenario < 1 || newScenario > totalScenarios) return;
+  document.getElementById('scenario' + currentScenario).classList.remove('active');
+  currentScenario = newScenario;
+  document.getElementById('scenario' + currentScenario).classList.add('active');
+  document.getElementById('currentNum').textContent = currentScenario;
+  document.getElementById('prevBtn').disabled = currentScenario === 1;
+  document.getElementById('nextBtn').disabled = currentScenario === totalScenarios;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============ Reveal Toggle ============
+function toggle(btn, targetId) {
+  const content = document.getElementById(targetId);
+  const isOpen = content.classList.contains('open');
+  if (isOpen) {
+    content.classList.remove('open');
+    btn.classList.remove('active');
+    btn.textContent = btn.textContent.replace('Hide', 'Show');
+  } else {
+    content.classList.add('open');
+    btn.classList.add('active');
+    btn.textContent = btn.textContent.replace('Show', 'Hide');
+  }
+}
+
+// ============ Charts ============
+const chartFont = { family: "'Segoe UI', system-ui, -apple-system, Arial, sans-serif", size: 12 };
+
+// --- Chart 1: Mean Reaction Time (ms) by Task ---
+new Chart(document.getElementById('chart1'), {
+  type: 'bar',
+  data: { labels: ["Simple", "Go/no-go", "Choice"], datasets: [{"label": "Mean RT", "data": [220, 280, 320], "backgroundColor": ["#8a8a8a", "#c07b1a", "#b04a32"], "borderColor": ["#8a8a8a", "#c07b1a", "#b04a32"], "borderWidth": 1.5, "borderRadius": 4, "barPercentage": 0.7, "categoryPercentage": 0.75}] },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: {
+      legend: { display: false, position: 'bottom', labels: { font: chartFont, padding: 14, usePointStyle: true, pointStyle: 'rectRounded' } },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y} ms` } }
+    },
+    scales: {
+      x: { title: { display: true, text: "Task", font: { ...chartFont, weight: '600' } }, ticks: { font: chartFont }, grid: { display: false } },
+      y: { title: { display: true, text: "Mean Reaction Time (ms)", font: { ...chartFont, weight: '600' } }, min: 0, max: 400, ticks: { font: chartFont, stepSize: 50 }, grid: { color: '#e8e4de' } }
+    }
+  }
+});
+
+// --- Chart 2: Production and Comprehension Scores (%) by Group ---
+new Chart(document.getElementById('chart2'), {
+  type: 'bar',
+  data: { labels: ["Controls", "Patient A (frontal)", "Patient B (temporal)", "Patient C (large)"], datasets: [{"label": "Production", "data": [96, 41, 88, 58], "backgroundColor": "#3a7d5e", "borderColor": "#3a7d5e", "borderWidth": 1.5, "borderRadius": 4, "barPercentage": 0.7, "categoryPercentage": 0.75}, {"label": "Comprehension", "data": [97, 90, 37, 44], "backgroundColor": "#b04a32", "borderColor": "#b04a32", "borderWidth": 1.5, "borderRadius": 4, "barPercentage": 0.7, "categoryPercentage": 0.75}] },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: {
+      legend: { display: true, position: 'bottom', labels: { font: chartFont, padding: 14, usePointStyle: true, pointStyle: 'rectRounded' } },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}%` } }
+    },
+    scales: {
+      x: { title: { display: true, text: "Group", font: { ...chartFont, weight: '600' } }, ticks: { font: chartFont }, grid: { display: false } },
+      y: { title: { display: true, text: "Score (%)", font: { ...chartFont, weight: '600' } }, min: 0, max: 100, ticks: { font: chartFont, stepSize: 20 }, grid: { color: '#e8e4de' } }
+    }
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIOL3005 Cognition: Attention practice problems</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #f6f4f0;
+    --surface: #ffffff;
+    --surface-alt: #f0ede8;
+    --border: #d6d0c6;
+    --text: #2c2a26;
+    --text-muted: #6b6660;
+    --accent: #b04a32;
+    --accent-light: #e8d5cf;
+    --accent-dark: #8c3926;
+    --easy: #3a7d5e;
+    --easy-bg: #e8f3ec;
+    --easy-border: #b0d6bf;
+    --medium: #c07b1a;
+    --medium-bg: #fdf3e0;
+    --medium-border: #e4c67a;
+    --hard: #9b2e4e;
+    --hard-bg: #f6e3ea;
+    --hard-border: #d4a0b3;
+    --hint-bg: #f0f4f8;
+    --hint-border: #a8bdd4;
+    --answer-bg: #f0ede8;
+    --answer-border: #c4bdb2;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; min-height: 100vh; }
+
+  .header { background: var(--text); color: var(--bg); padding: 28px 0 24px; text-align: center; }
+  .header-inner { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+  .header .unit-code { font-size: 0.8rem; letter-spacing: 2.5px; text-transform: uppercase; opacity: 0.6; margin-bottom: 6px; }
+  .header h1 { font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 1.75rem; line-height: 1.3; }
+  .header .subtitle { font-size: 0.9rem; opacity: 0.55; margin-top: 6px; }
+
+  .nav-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 0; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+  .nav-inner { max-width: 880px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-indicator { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+  .nav-indicator span { color: var(--text); font-weight: 700; }
+  .nav-buttons { display: flex; gap: 10px; }
+  .nav-btn { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; padding: 8px 20px; border-radius: var(--radius); border: 1.5px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .main { max-width: 880px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  .scenario { display: none; }
+  .scenario.active { display: block; }
+
+  .scenario-label { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 8px; }
+  .scenario-title { font-family: 'Source Serif 4', serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 16px; line-height: 1.35; }
+
+  .scenario-stem { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 28px; box-shadow: var(--shadow); font-size: 0.95rem; }
+  .scenario-stem p { margin-bottom: 12px; }
+  .scenario-stem p:last-child { margin-bottom: 0; }
+  .scenario-stem ul { margin: 8px 0 12px 20px; }
+  .scenario-stem li { margin-bottom: 6px; }
+  .scenario-stem strong { font-weight: 600; }
+
+  .chart-container { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 32px; box-shadow: var(--shadow); }
+  .chart-title { font-weight: 600; font-size: 0.9rem; text-align: center; margin-bottom: 12px; color: var(--text); }
+  .chart-wrapper { position: relative; max-width: 680px; margin: 0 auto; }
+
+  .questions-section { margin-top: 8px; }
+  .question-block { margin-bottom: 24px; }
+
+  .q-difficulty { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 4px; margin-bottom: 8px; }
+  .q-difficulty.easy { background: var(--easy-bg); color: var(--easy); border: 1px solid var(--easy-border); }
+  .q-difficulty.medium { background: var(--medium-bg); color: var(--medium); border: 1px solid var(--medium-border); }
+  .q-difficulty.hard { background: var(--hard-bg); color: var(--hard); border: 1px solid var(--hard-border); }
+  .q-difficulty.applied { background: #eef3f8; color: #4a7faa; border: 1px solid #b3c8de; }
+
+  .q-text { font-family: 'Source Serif 4', serif; font-size: 1.05rem; font-weight: 400; line-height: 1.55; margin-bottom: 12px; }
+
+  .reveal-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+  .reveal-btn { font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 600; padding: 6px 16px; border-radius: 6px; border: 1.5px solid; cursor: pointer; transition: all 0.15s ease; background: transparent; }
+  .reveal-btn.hint-btn { border-color: var(--hint-border); color: #4a6b8a; }
+  .reveal-btn.hint-btn:hover { background: var(--hint-bg); }
+  .reveal-btn.answer-btn { border-color: var(--answer-border); color: var(--text-muted); }
+  .reveal-btn.answer-btn:hover { background: var(--answer-bg); }
+  .reveal-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+  .reveal-content { overflow: hidden; max-height: 0; opacity: 0; transition: max-height 0.35s ease, opacity 0.25s ease, margin 0.25s ease; margin-top: 0; }
+  .reveal-content.open { max-height: 1000px; opacity: 1; margin-top: 10px; }
+  .reveal-inner { padding: 16px 20px; border-radius: var(--radius); font-size: 0.9rem; line-height: 1.6; }
+  .reveal-inner.hint { background: var(--hint-bg); border: 1px solid var(--hint-border); color: #3a5a78; }
+  .reveal-inner.answer { background: var(--answer-bg); border: 1px solid var(--answer-border); color: var(--text); }
+  .reveal-inner p { margin-bottom: 8px; }
+  .reveal-inner p:last-child { margin-bottom: 0; }
+
+  .q-divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  .instructions { background: var(--accent-light); border: 1px solid #d4b0a3; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 28px; font-size: 0.85rem; color: var(--accent-dark); line-height: 1.55; }
+  .instructions strong { font-weight: 700; }
+
+  .applied-box { background: #eef3f8; border: 1px solid #b3c8de; border-left: 4px solid #4a7faa; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 24px; font-size: 0.88rem; line-height: 1.6; color: #2a4560; }
+  .applied-box-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #4a7faa; margin-bottom: 6px; }
+  .applied-box p { margin-bottom: 8px; }
+  .applied-box p:last-child { margin-bottom: 0; }
+
+  .footer { text-align: center; padding: 24px; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 40px; }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 1.35rem; }
+    .scenario-title { font-size: 1.2rem; }
+    .nav-inner { flex-direction: column; gap: 10px; }
+  }
+  .chart-note { font-size: 0.8rem; color: #6b665e; margin-top: 8px; text-align: center; }
+
+/* Site theme, matching the textbook */
+:root{--bg:#FFFFFF;--surface:#FFFFFF;--surface-alt:#F6F2F8;--border:#E3DAE7;--text:#2B142D;--text-muted:#6B5A70;--accent:#663366;--accent-light:#F6F2F8;--accent-dark:#663366;--answer-bg:#F6F2F8;--answer-border:#D9CDE0}
+body,.nav-btn,.reveal-btn{font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif}
+.scenario-stem,.q-text,.reveal-inner,.applied-box p{font-family:Charter,"Bitstream Charter","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif}
+.header{background:#fff;color:var(--text);text-align:left;border-bottom:1px solid var(--border);padding:26px 0 20px}
+.header .unit-code{opacity:1;color:#E07B00;font-weight:700;letter-spacing:.04em;font-size:.85rem}
+.header h1{font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;color:#663366;font-size:2rem;line-height:1.2;margin-top:4px}
+.header .subtitle{opacity:1;color:var(--text-muted);font-size:.95rem}
+.scenario-title{font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;color:#663366}
+.instructions{border-color:var(--border);color:var(--text)}
+.reveal-btn.active{background:#663366;border-color:#663366;color:#fff}
+.nav-btn:hover:not(:disabled){background:#663366;border-color:#663366;color:#fff}
+
+/* Site bar shared with the textbook */
+.cbar{background:#2B142D;font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;line-height:1.4}
+.cbar .cbar-in{max-width:880px;margin:0 auto;padding:10px 24px;display:flex;justify-content:space-between;align-items:center;gap:8px 16px;flex-wrap:wrap}
+.cbar a{text-decoration:none;border:0;background:none;padding:0}
+.cbar .cbar-brand{color:#fff;font-weight:700;font-size:1.05rem}
+.cbar .cbar-links a{color:#fff;margin-left:16px;font-size:.92rem;opacity:.9}
+.cbar .cbar-links a:first-child{margin-left:0}
+.cbar .cbar-links a:hover{opacity:1;text-decoration:underline}
+.cbar a:focus-visible{outline:3px solid #E07B00;outline-offset:2px}
+.cbar-week{background:#F6F2F8;border-bottom:1px solid #E3DAE7}
+.cbar-week .cbar-in{justify-content:flex-start;padding:8px 24px}
+.weeknav{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:.88rem;line-height:1.3}
+.weeknav .wl{font-weight:700;color:#E07B00;margin-right:4px}
+.weeknav a{text-decoration:none;border:1px solid #D9CDE0;border-radius:999px;padding:4px 12px;color:#663366;background:#fff;font-weight:600}
+.weeknav a:hover{background:#F6F2F8}
+.weeknav a[aria-current]{background:#663366;color:#fff;border-color:#663366}
+.weeknav a:focus-visible{outline:3px solid #E07B00;outline-offset:2px}
+.weeknav .na{color:#6B5A70;padding:4px 2px}
+@media print{.cbar{display:none}}
+</style>
+</head>
+<body>
+<div class="cbar" role="navigation" aria-label="Site">
+  <div class="cbar-in"><a class="cbar-brand" href="index.html">BIOL3005 Cognition</a><span class="cbar-links"><a href="index.html">Home</a><a href="textbook/index.html">Textbook</a><a href="answers/index.html">Answers</a></span></div>
+  <div class="cbar-week"><div class="cbar-in weeknav" aria-label="This week"><span class="wl">Week 2</span><a href="textbook/ch02.html">Chapter 2</a><a href="week02.html">Tutorial tools</a><a href="practice02.html" aria-current="page">Practice problems</a><a href="answers/ch02.html">Answers</a></div></div>
+</div>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="unit-code">Week 2</div>
+    <h1>Practice problems: Attention</h1>
+    <div class="subtitle">Exam-style scenarios on Textbook Chapter 2, with hints and model answers.</div>
+  </div>
+</div>
+
+<div class="nav-bar">
+  <div class="nav-inner">
+    <div class="nav-indicator">Scenario <span id="currentNum">1</span> of <span>2</span></div>
+    <div class="nav-buttons">
+      <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Back</button>
+      <button class="nav-btn" id="nextBtn" onclick="navigate(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="instructions">
+    <strong>How to use this page:</strong> Read each scenario and try to answer the questions on your own first, as you would in an exam. If you get stuck, click <em>Show Hint</em> for guidance. Use <em>Show Answer</em> only after you have given the question a genuine attempt.
+  </div>
+
+    <!-- ==================== SCENARIO 1 ==================== -->
+  <div class="scenario active" id="scenario1">
+    <div class="scenario-label">Scenario 1</div>
+    <div class="scenario-title">Two Kinds of Load: When a Harder Task Helps and When It Hurts</div>
+
+    <div class="applied-box">
+      <div class="applied-box-label">Why this matters for psychologists</div>
+      <p>Psychologists who design workplaces, vehicles and learning environments are constantly asked whether people can ignore distractions. Load theory gives a precise answer that runs against intuition: it depends on which resource the main task uses. Getting this wrong leads to poor advice, for example assuming that a demanding task always protects people from distraction, when for some kinds of demand it does the opposite.</p>
+    </div>
+
+    <div class="scenario-stem">
+      <p>Researchers ran two experiments using a <strong>response-competition</strong> task. On each trial participants searched a central display for a target letter (X or N) and pressed the matching key. A larger distractor letter appeared in the periphery. It was either <strong>compatible</strong> (the same as the target) or <strong>incompatible</strong> (the other response letter). Distractor interference was measured as incompatible RT minus compatible RT.</p>
+      <ul>
+        <li><strong>Experiment 1 (perceptual load):</strong> under <em>low load</em> the target appeared alone; under <em>high load</em> it appeared among five similar non-target letters. A third condition used the low-load display but <em>degraded</em> it severely (very low contrast), so that the target was hard to see.</li>
+        <li><strong>Experiment 2 (cognitive load):</strong> the search display was always low load, but before each trial participants memorised either <em>one digit</em> (low memory load) or <em>six digits in a new order</em> (high memory load), reporting them after the search response.</li>
+      </ul>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Distractor Interference (Incompatible &minus; Compatible RT, ms)</div>
+      <div class="chart-wrapper">
+        <canvas id="chart1"></canvas>
+      </div>
+      <div class="chart-note">Illustrative data, consistent with the findings described in &sect;2.3.</div>
+    </div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">a) State the central claim of load theory about perceptual capacity, and use it to predict the result of the low-load and high-load conditions in Experiment 1.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q1hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q1ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q1hint">
+          <div class="reveal-inner hint">
+            <p>Load theory says two things about perceptual capacity: it is limited, and it is spent automatically. Ask where the leftover capacity goes when the target is easy to find.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q1ans">
+          <div class="reveal-inner answer">
+            <p>Load theory (Lavie) proposes that perceptual capacity is <strong>limited</strong> and is spent <strong>involuntarily</strong>: whatever capacity the relevant task does not use spills over onto whatever else is present, whether or not the person intends to process it.</p><p>Under <strong>low load</strong> the lone target uses little capacity, so the spare capacity spills onto the peripheral distractor, which is processed and produces response competition. Interference should be large. Under <strong>high load</strong> searching among similar letters uses up the capacity, nothing is left for the distractor, and interference should be small or absent. The data match: 58 ms under low load and 9 ms under high load.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">b) How does load theory reframe the debate between early and late selection? Use Experiment 1 to illustrate your answer.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q2hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q2ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q2hint">
+          <div class="reveal-inner hint">
+            <p>In Chapter 2 the early-versus-late debate was about where in the processing stream unattended information is filtered out. What would each side have predicted about the distractor, and does the answer turn out to depend on something?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q2ans">
+          <div class="reveal-inner answer">
+            <p>Early-selection models hold that unattended information is filtered out before its meaning or identity is processed; late-selection models hold that everything is identified and selection happens only at awareness or response. Both treat the locus of selection as fixed.</p><p>Load theory says the locus depends on <strong>perceptual load</strong>. Under low load the distractor was processed far enough to activate its response, which looks like <strong>late selection</strong>. Under high load the distractor had almost no effect, which looks like <strong>early selection</strong>. Early and late selection are therefore two ends of a continuum, and load sets where a given task sits on it, which is why decades of argument produced evidence for both.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">c) Why did the researchers include the degraded low-load condition? Explain what the result (52 ms) shows and why it matters for the theory.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q3hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q3ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q3hint">
+          <div class="reveal-inner hint">
+            <p>The obvious objection to load theory is that &ldquo;high load&rdquo; simply means &ldquo;hard&rdquo;. The degraded condition makes the task hard in a different way. Did interference fall?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q3ans">
+          <div class="reveal-inner answer">
+            <p>The degraded condition tests the objection that <strong>high load is just another word for difficulty</strong>. Severely degrading the display makes the task hard (performance falls), but the difficulty is sensory: the target is barely visible, and spending more capacity cannot make it clearer.</p><p>Interference stayed large (52 ms, close to the 58 ms of the ordinary low-load condition). So difficulty on its own <strong>does not</strong> reduce distractor processing. What reduces it is a task that <strong>consumes perceptual capacity</strong>, such as searching among many similar items. This mirrors Lavie and de Fockert&rsquo;s (2003) finding and is important because it shows load theory is making a specific claim about capacity rather than a vague claim that hard tasks are absorbing.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">d) Experiment 2 produced the opposite pattern: more interference under high memory load. Explain why, using the distinction between perceptual load and cognitive load.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q4hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q4ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q4hint">
+          <div class="reveal-inner hint">
+            <p>Ask which resource the six-digit memory task uses up. Is it perceptual capacity, or the executive control that keeps track of what is relevant?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q4ans">
+          <div class="reveal-inner answer">
+            <p>Load theory distinguishes two resources. <strong>Perceptual load</strong> consumes perceptual capacity and so shuts distractors out. <strong>Cognitive load</strong> taxes the executive control processes that maintain the current priorities, that is, which letters count as targets and which should be ignored.</p><p>Holding six digits in a changing order occupies working memory and executive control. The search display itself was low load, so spare perceptual capacity was still available and the distractor was perceived as usual. With control weakened, the system was less able to keep the distractor from competing for the response, so interference increased (32 ms with one digit, 71 ms with six). This is the pattern of the sandwich task (Lavie et al., 2004; de Fockert et al., 2001). The lesson is that &ldquo;a harder task protects you from distraction&rdquo; is wrong as a general statement: it depends on which resource the extra demand uses.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty hard">Hard</div>
+        <div class="q-text">e) A critic argues that the high-load display in Experiment 1 contained six letters, so the distractor&rsquo;s influence was simply <em>diluted</em> by the extra letters, not blocked by exhausted capacity. Explain the dilution argument and the reply to it, then describe a design that would avoid the confound. Finally, explain why load theory is sometimes said to be circular.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q5hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q5ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q5hint">
+          <div class="reveal-inner hint">
+            <p>Tsal and Benoni raised dilution. Lavie and Torralbo replied. Then think about a load manipulation that keeps the display completely constant and changes only the judgement. For circularity, ask whether perceptual load can be measured independently of its effect on distractors.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q5ans">
+          <div class="reveal-inner answer">
+            <p><strong>Dilution</strong> (Tsal &amp; Benoni, 2010): adding non-target letters raises load but also gives the distractor more items to compete with, which might reduce its influence regardless of capacity. They showed that when the number of items was held constant and the target made to pop out (low load, high dilution), interference still disappeared. <strong>Reply</strong> (Lavie &amp; Torralbo, 2010): spillover is involuntary, so under low load the spare capacity still goes somewhere, in dilution displays to the neutral letters near the target; those nearby letters, not the peripheral distractor, produced response competition. The current common view is a hybrid in which both dilution and load operate through competition between stimuli for neural representation.</p><p>A cleaner design holds the <strong>display constant</strong> and varies only the task, as in the <strong>cross task</strong> (Cartwright-Finch &amp; Lavie, 2007): on an identical cross, low load means reporting which arm is green and high load means judging which arm is longer. Because nothing about the stimulation differs, dilution cannot explain a load effect.</p><p><strong>Circularity</strong>: there is no independent measure of perceptual load. High load is defined as load sufficient to prevent distractor processing, and the evidence for the theory is that high load prevents distractor processing. If interference appears under supposedly high load, it is hard to tell whether the theory failed or the manipulation was too weak, which makes clean refutation difficult.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty applied">Applied</div>
+        <div class="q-text">f) A transport safety agency asks you whether drivers in dense city traffic are more or less likely to notice a child stepping towards the road, and whether a hands-free phone conversation is a safe way to stay alert on an empty country road. Use load theory to advise them.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q6hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q6ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q6hint">
+          <div class="reveal-inner hint">
+            <p>Classify each situation by the kind of load it adds. Dense traffic: perceptual or cognitive? A phone conversation: perceptual or cognitive? Then apply what the theory predicts for awareness of task-irrelevant but critical events and for intrusion by irrelevant ones.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q6ans">
+          <div class="reveal-inner answer">
+            <p><strong>Dense city traffic</strong> raises <strong>perceptual load</strong>: many moving vehicles, signs and pedestrians must be monitored. Load theory predicts that high perceptual load reduces awareness of anything outside the current focus, so a child approaching from the side is <em>more likely</em> to be missed. This is inattentional blindness: Cartwright-Finch and Lavie (2007) found that high load substantially increased failures to notice an unexpected shape, and Simons and Jensen (2009) found noticing fell from about 71% to 32% under harder tracking. The prediction is alarming rather than reassuring, and it implies that design measures (slower speed limits near schools, clear crossings, kerbside barriers) are needed because driver vigilance cannot be relied on.</p><p>A <strong>phone conversation</strong> adds mainly <strong>cognitive load</strong>, taxing executive control rather than perceptual capacity. The theory gives no reason to think this protects the driver. If anything, weakened control makes irrelevant items harder to keep out of the way of the main task, so attention is more easily captured by irrelevant things. The agency should not treat a phone call as a way to &ldquo;stay alert&rdquo;: it occupies the very control processes that keep driving priorities straight. The broader message is that the type of demand, not just its amount, determines what drivers will notice.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== SCENARIO 2 ==================== -->
+  <div class="scenario" id="scenario2">
+    <div class="scenario-label">Scenario 2</div>
+    <div class="scenario-title">What Gets Through? Dichotic Listening and the Locus of Selection</div>
+
+    <div class="applied-box">
+      <div class="applied-box-label">Why this matters for psychologists</div>
+      <p>Air traffic controllers, emergency clinicians and pilots must monitor one stream of information while remaining responsive to warnings arriving through another. Understanding what unattended information is processed, and how far, guides the design of alarms, the structuring of communication protocols, and the training of people who work in noisy, multitasking environments.</p>
+    </div>
+
+    <div class="scenario-stem">
+      <p>Sixty participants took part in a dichotic listening study. Through headphones, one message played to each ear, and participants <strong>shadowed</strong> (repeated aloud) the message in the right ear. During the session, one of several events occurred in the unattended left ear. Afterwards, participants were asked what, if anything, they had noticed in that ear.</p>
+      <ul>
+        <li>The voice changed from male to female.</li>
+        <li>A pure tone was inserted.</li>
+        <li>The message switched from English to German.</li>
+        <li>The same word was repeated 35 times.</li>
+        <li>The participant&rsquo;s own name was spoken.</li>
+      </ul>
+      <p>The graph shows the percentage of participants who reported noticing each event.</p>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Participants Noticing Each Event in the Unattended Ear (%)</div>
+      <div class="chart-wrapper">
+        <canvas id="chart2"></canvas>
+      </div>
+      <div class="chart-note">Illustrative data, consistent with the findings described in &sect;2.2.</div>
+    </div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">a) Describe the shadowing procedure and explain why it was useful for studying selective attention.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q1hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q1ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q1hint">
+          <div class="reveal-inner hint">
+            <p>What does repeating one message aloud force the participant to do with the other message? And what does it let the experimenter check?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q1ans">
+          <div class="reveal-inner answer">
+            <p>In <strong>dichotic listening with shadowing</strong> (Cherry, 1953; Moray, 1959), a different message is played to each ear and the participant repeats one of them aloud as it arrives. Shadowing forces attention onto one channel and gives the experimenter a continuous check that the participant is actually attending to it.</p><p>This makes it possible to ask, in a controlled way, what happens to information that is <strong>not</strong> attended. By varying what occurs in the unattended ear and asking afterwards what was noticed, researchers can work out how far unattended input is processed before selection: only its physical features, or also its meaning.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">b) Which results fit Broadbent&rsquo;s early-selection filter model, and why?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q2hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q2ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q2hint">
+          <div class="reveal-inner hint">
+            <p>Broadbent&rsquo;s filter selects by physical features and blocks the rest before meaning is analysed. Which events can be detected from physical features alone, and which require knowing what the words mean?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q2ans">
+          <div class="reveal-inner answer">
+            <p>Broadbent&rsquo;s model proposes an <strong>early, all-or-nothing filter</strong> that selects one channel on the basis of physical features (ear, voice, pitch) and blocks the other before meaning is analysed.</p><p>The <strong>voice change</strong> (88%) and <strong>pure tone</strong> (82%) are physical changes, detectable without analysing meaning, and most participants noticed them. The <strong>language switch</strong> (9%) and the <strong>repeated word</strong> (4%) can only be detected by processing language and meaning, and almost nobody noticed them. That combination, good detection of physical features and almost none of meaning, is exactly what an early filter predicts.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">c) About a third of participants heard their own name. Why is this a problem for Broadbent, and how does Treisman&rsquo;s attenuation model explain both the detection and the fact that only a third, not everyone, noticed it?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q3hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q3ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q3hint">
+          <div class="reveal-inner hint">
+            <p>Detecting a name requires recognising a word. For Treisman, the unattended message is turned down rather than blocked, and words have recognition thresholds. What is special about the threshold for your own name?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q3ans">
+          <div class="reveal-inner answer">
+            <p>Recognising your own name requires processing the <strong>identity of a word</strong>, which an early, all-or-nothing filter should block. If anyone hears their name in the unattended ear, meaning-level information must sometimes be getting through.</p><p><strong>Treisman&rsquo;s attenuation model</strong> keeps selection early but makes it leaky. The unattended message is <strong>attenuated</strong>, turned down rather than switched off, and what survives reaches a <strong>dictionary unit</strong> in which each word has a recognition threshold. Common or personally important words have low thresholds, and your own name has a permanently low one, so even an attenuated signal can exceed it.</p><p>Because the signal is weakened, whether it crosses the threshold on a given occasion depends on how strongly it arrives and how fully attention is engaged by the shadowed message. Sometimes it crosses, sometimes not, so a proportion of participants (here a third) notice their name rather than all of them. The model predicts breakthrough that is possible but unreliable, which is what the data show.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">d) In a follow-up, participants shadowed an ambiguous sentence (&ldquo;They threw stones at the bank&rdquo;) while the word &ldquo;river&rdquo; or &ldquo;money&rdquo; played once in the unattended ear. No participant could report the unattended word, yet 72% of the &ldquo;river&rdquo; group and 27% of the &ldquo;money&rdquo; group later chose the riverbank meaning. What does this show, and why is it stronger evidence than the own-name result?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q4hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q4ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q4hint">
+          <div class="reveal-inner hint">
+            <p>This is MacKay&rsquo;s (1973) design. If people could not report the word, how could it change their interpretation? And unlike the name, does this result depend on anyone becoming aware of the word?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q4ans">
+          <div class="reveal-inner answer">
+            <p>The unattended word biased the interpretation of the shadowed sentence towards its own meaning, so it must have been processed <strong>all the way to meaning</strong>, even though no participant could report it. This is what <strong>late-selection</strong> models predict (Deutsch &amp; Deutsch, 1963) and what an early filter forbids.</p><p>It is stronger than the own-name result for two reasons. First, it does not rely on awareness. The name finding involves a word breaking through into conscious report, which Treisman can explain by a low threshold for a special word. MacKay&rsquo;s bias shows semantic processing of an ordinary word that never reached awareness at all. Second, the measure is indirect and objective: participants were not asked what they heard but how they understood the sentence, so the result cannot be attributed to guessing or to reporting biases. It shows that unattended meaning can influence behaviour without being noticed.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty hard">Hard</div>
+        <div class="q-text">e) Neither pure early nor pure late selection fits all these data. Explain how the multimode model and load theory resolve the conflict. Then predict what would happen to own-name detection and to the &ldquo;bank&rdquo; bias if the shadowing task were made much more demanding (a faster message in a voice similar to the unattended one).</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q5hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q5ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q5hint">
+          <div class="reveal-inner hint">
+            <p>The multimode model makes the locus of selection flexible. Load theory says what sets it. Is a fast message in a similar voice a high or low perceptual-load task? What happens to processing of the unattended channel when load is high?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q5ans">
+          <div class="reveal-inner answer">
+            <p>The <strong>multimode model</strong> (Johnston &amp; Heinz, 1978) makes the locus of selection flexible: people select early, on physical features, when that is easy and sufficient, and late, on meaning, when the task demands it, at a cost in effort. <strong>Load theory</strong> explains what sets the locus: when the attended task leaves spare perceptual capacity, it spills over and unattended material is processed further (selection looks late); when the task consumes capacity, unattended material is processed little (selection looks early). Both models treat early and late selection as two ends of a continuum rather than rival theories.</p><p>Making shadowing faster and making the two voices similar increases <strong>perceptual load</strong>: more must be processed per second, and the channels are harder to tell apart, so separating the target demands more capacity. Load theory predicts that less capacity is left for the unattended ear. <strong>Own-name detection should fall</strong> below a third, and the <strong>&ldquo;bank&rdquo; bias should shrink</strong>, because the unattended word is now less likely to be processed to meaning. An easier shadowing task should have the opposite effects. This prediction is testable, and it shows how load theory turns the old debate into an empirical question about capacity.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty applied">Applied</div>
+        <div class="q-text">f) A hospital is redesigning the alarms on an intensive care unit, where nurses are often absorbed in demanding tasks and alarms must be noticed without being shadowed. Using this scenario, recommend three properties of an effective alarm and justify each with the attention research.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q6hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q6ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q6hint">
+          <div class="reveal-inner hint">
+            <p>Which properties of unattended input were reliably detected even by participants focused on another message? Which personally relevant information can break through? And what does load theory say about how much gets through when the nurse&rsquo;s current task is perceptually demanding?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q6ans">
+          <div class="reveal-inner answer">
+            <p><strong>1. Make the alarm physically distinct from the background.</strong> Physical changes in the unattended channel (a change of voice, a tone) were noticed by most participants even while shadowing. Alarms that differ clearly in pitch, timbre or rhythm from ordinary ward sounds and speech can be detected on physical features alone, which survive even early selection.</p><p><strong>2. Use personally relevant cues where possible.</strong> Personally significant words, especially a person&rsquo;s name, have low recognition thresholds and can break through attenuation. A system that announces the responsible nurse&rsquo;s name, or the bed number of their own patient, exploits this. Because breakthrough was only partial (about a third), this should supplement rather than replace physical salience.</p><p><strong>3. Do not rely on alarms that must be understood to be noticed.</strong> Meaning-level changes (a language switch) were almost never detected, and load theory predicts that when the nurse&rsquo;s current task carries high perceptual load, even less of the unattended channel is processed. An alarm whose urgency can only be judged by interpreting its content may be missed precisely when the nurse is busiest. The alarm should signal urgency through its physical form, with the details available once attention has been drawn to it.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    BIOL3005 Cognition · Curtin University · School of Population Health
+  </div>
+</div>
+
+<script>
+// ============ Navigation ============
+let currentScenario = 1;
+const totalScenarios = 2;
+
+function navigate(dir) {
+  const newScenario = currentScenario + dir;
+  if (newScenario < 1 || newScenario > totalScenarios) return;
+  document.getElementById('scenario' + currentScenario).classList.remove('active');
+  currentScenario = newScenario;
+  document.getElementById('scenario' + currentScenario).classList.add('active');
+  document.getElementById('currentNum').textContent = currentScenario;
+  document.getElementById('prevBtn').disabled = currentScenario === 1;
+  document.getElementById('nextBtn').disabled = currentScenario === totalScenarios;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============ Reveal Toggle ============
+function toggle(btn, targetId) {
+  const content = document.getElementById(targetId);
+  const isOpen = content.classList.contains('open');
+  if (isOpen) {
+    content.classList.remove('open');
+    btn.classList.remove('active');
+    btn.textContent = btn.textContent.replace('Hide', 'Show');
+  } else {
+    content.classList.add('open');
+    btn.classList.add('active');
+    btn.textContent = btn.textContent.replace('Show', 'Hide');
+  }
+}
+
+// ============ Charts ============
+const chartFont = { family: "'Segoe UI', system-ui, -apple-system, Arial, sans-serif", size: 12 };
+
+// --- Chart 1: Distractor Interference (Incompatible &minus; Compatible RT, ms) ---
+new Chart(document.getElementById('chart1'), {
+  type: 'bar',
+  data: { labels: ["Exp 1: Low load", "Exp 1: High load", "Exp 1: Low load, degraded", "Exp 2: 1 digit", "Exp 2: 6 digits"], datasets: [{"label": "Interference", "data": [58, 9, 52, 32, 71], "backgroundColor": ["#3a7d5e", "#3a7d5e", "#3a7d5e", "#c07b1a", "#c07b1a"], "borderColor": ["#3a7d5e", "#3a7d5e", "#3a7d5e", "#c07b1a", "#c07b1a"], "borderWidth": 1.5, "borderRadius": 4, "barPercentage": 0.7, "categoryPercentage": 0.75}] },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: {
+      legend: { display: false, position: 'bottom', labels: { font: chartFont, padding: 14, usePointStyle: true, pointStyle: 'rectRounded' } },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y} ms` } }
+    },
+    scales: {
+      x: { title: { display: true, text: "Condition", font: { ...chartFont, weight: '600' } }, ticks: { font: chartFont }, grid: { display: false } },
+      y: { title: { display: true, text: "Interference (ms)", font: { ...chartFont, weight: '600' } }, min: 0, max: 80, ticks: { font: chartFont, stepSize: 10 }, grid: { color: '#e8e4de' } }
+    }
+  }
+});
+
+// --- Chart 2: Participants Noticing Each Event in the Unattended Ear (%) ---
+new Chart(document.getElementById('chart2'), {
+  type: 'bar',
+  data: { labels: ["Voice change", "Pure tone", "English to German", "Repeated word", "Own name"], datasets: [{"label": "Noticed", "data": [88, 82, 9, 4, 34], "backgroundColor": ["#3a7d5e", "#3a7d5e", "#b04a32", "#b04a32", "#c07b1a"], "borderColor": ["#3a7d5e", "#3a7d5e", "#b04a32", "#b04a32", "#c07b1a"], "borderWidth": 1.5, "borderRadius": 4, "barPercentage": 0.7, "categoryPercentage": 0.75}] },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: {
+      legend: { display: false, position: 'bottom', labels: { font: chartFont, padding: 14, usePointStyle: true, pointStyle: 'rectRounded' } },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}%` } }
+    },
+    scales: {
+      x: { title: { display: true, text: "Event in the unattended ear", font: { ...chartFont, weight: '600' } }, ticks: { font: chartFont }, grid: { display: false } },
+      y: { title: { display: true, text: "Participants noticing (%)", font: { ...chartFont, weight: '600' } }, min: 0, max: 100, ticks: { font: chartFont, stepSize: 20 }, grid: { color: '#e8e4de' } }
+    }
+  }
+});
+</script>
+</body>
+</html>

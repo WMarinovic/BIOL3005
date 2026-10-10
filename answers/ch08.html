@@ -70,13 +70,21 @@ details.ans .body{background:var(--tint);border-left:5px solid var(--purple);bor
 details.ans .body p:last-child{margin-bottom:.2rem}
 .chcard .q{display:block;font-size:.8rem;color:var(--muted);font-weight:400;margin-top:.3rem}
 @media print{details.ans .body{background:none;border-left:3px solid var(--purple)}details.ans>summary,.tools{display:none}}
+.weeknav{margin:-.4rem 0 1.2rem}
+.weeknav{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:.88rem;line-height:1.3}
+.weeknav .wl{font-weight:700;color:#E07B00;margin-right:4px}
+.weeknav a{text-decoration:none;border:1px solid #D9CDE0;border-radius:999px;padding:4px 12px;color:#663366;background:#fff;font-weight:600}
+.weeknav a:hover{background:#F6F2F8}
+.weeknav a[aria-current]{background:#663366;color:#fff;border-color:#663366}
+.weeknav a:focus-visible{outline:3px solid #E07B00;outline-offset:2px}
+.weeknav .na{color:#6B5A70;padding:4px 2px}
 </style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="top"><div class="topin">
   <a class="brand" href="index.html">Cognition <span>Answers to the self-check questions</span></a>
-  <nav class="toplinks"><a href="index.html">Answers</a><a href="../textbook/index.html">Textbook</a><a href="BIOL3005_Cognition_Answers.pdf">PDF</a><a href="../index.html">Tutorials</a></nav>
+  <nav class="toplinks"><a href="../index.html">Home</a><a href="../textbook/index.html">Textbook</a><a href="index.html">Answers</a></nav>
 </div></header>
 <div class="layout">
 <aside class="side"><details open><summary>Questions in this chapter</summary><ol class="sectoc"><li><a class="qlink" href="#q1"><b>1</b><span>Distinguish visual from spatial imagery, and explain …</span></a></li><li><a class="qlink" href="#q2"><b>2</b><span>Why does the distinction between visual and …</span></a></li><li><a class="qlink" href="#q3"><b>3</b><span>Explain Paivio's conceptual-peg account, and say why …</span></a></li><li><a class="qlink" href="#q4"><b>4</b><span>Shepard and Metzler found reaction time rose …</span></a></li><li><a class="qlink" href="#q5"><b>5</b><span>Why does a propositional list of facts …</span></a></li><li><a class="qlink" href="#q6"><b>6</b><span>State Pylyshyn's tacit-knowledge critique and explain why …</span></a></li><li><a class="qlink" href="#q7"><b>7</b><span>Give one respect in which imagery resembles …</span></a></li><li><a class="qlink" href="#q8"><b>8</b><span>Explain how the TMS result of Kosslyn …</span></a></li><li><a class="qlink" href="#q9"><b>9</b><span>What does it mean to say early …</span></a></li><li><a class="qlink" href="#q10"><b>10</b><span>Patient M.G.S. could mentally approach a horse …</span></a></li><li><a class="qlink" href="#q11"><b>11</b><span>R.M. could draw an object in front …</span></a></li><li><a class="qlink" href="#q12"><b>12</b><span>In Bisiach and Luzzatti's patients, the side …</span></a></li><li><a class="qlink" href="#q13"><b>13</b><span>What is aphantasia, and why is it …</span></a></li><li><a class="qlink" href="#q14"><b>14</b><span>Milton and colleagues found that aphantasic, mid-range …</span></a></li><li><a class="qlink" href="#q15"><b>15</b><span>Why is a three-group design comparing both …</span></a></li><li><a class="qlink" href="#q16"><b>16</b><span>Classic mental-rotation and scanning tasks discriminate poorly …</span></a></li><li><a class="qlink" href="#q17"><b>17</b><span>Milton and colleagues measured connectivity at rest; …</span></a></li><li><a class="qlink" href="#q18"><b>18</b><span>In aphantasia, visual areas are active during …</span></a></li><li><a class="qlink" href="#q19"><b>19</b><span>How can the pupil be used as …</span></a></li><li><a class="qlink" href="#q20"><b>20</b><span>In Kay and colleagues' task an eight-second …</span></a></li><li><a class="qlink" href="#q21"><b>21</b><span>The imagery pupil response is several times …</span></a></li><li><a class="qlink" href="#q22"><b>22</b><span>The pupil response tracked trial-by-trial vividness ratings …</span></a></li><li><a class="qlink" href="#q23"><b>23</b><span>Aphantasic participants showed no imagery pupil response …</span></a></li><li><a class="qlink" href="#q24"><b>24</b><span>Explain what motor imagery adds to the …</span></a></li><li><a class="qlink" href="#q25"><b>25</b><span>Pearson and Kosslyn say the imagery debate …</span></a></li><li><a class="qlink" href="#q26"><b>26</b><span>Explain why the method of loci works, …</span></a></li><li><a class="qlink" href="#q27"><b>27</b><span>Why must a pegword image be interactive …</span></a></li><li><a class="qlink" href="#q28"><b>28</b><span>The place-based technique studied by Reser and …</span></a></li></ol></details>
@@ -84,8 +92,9 @@ details.ans .body p:last-child{margin-bottom:.2rem}
 <main id="main">
 <p class="chnum">Chapter 8 answers</p>
 <h1>Visual Imagery</h1>
+<nav class="weeknav" aria-label="This week"><span class="wl">Week 8</span><a href="../textbook/ch08.html">Chapter 8</a><a href="../week08.html">Tutorial tools</a><a href="../practice08.html">Practice problems</a><a href="../answers/ch08.html" aria-current="page">Answers</a></nav>
 <p class="lede">Model answers to the 28 self-check questions at the end of Chapter 8. Try each question yourself before you open its answer.</p>
-<div class="tools"><a href="../textbook/ch08.html#self-check-questions-7">Questions in the textbook</a><a href="../textbook/ch08.html">Read Chapter 8</a><button type="button" id="toggleAll">Show all answers</button></div>
+<div class="tools"><a href="../textbook/ch08.html#self-check-questions-7">Questions in the textbook</a><button type="button" id="toggleAll">Show all answers</button></div>
 <section class="qa" id="q1"><p class="qnum">Question 1</p><p class="qtext">Distinguish visual from spatial imagery, and explain why a
 congenitally blind person is the clearest evidence that the two are
 separable.</p><details class="ans"><summary><span class="show">Show the answer</span><span class="hide">Hide the answer</span></summary><div class="body"><p>Visual imagery represents how something looks: its shape, colour and

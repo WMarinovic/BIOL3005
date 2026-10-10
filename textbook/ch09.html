@@ -54,13 +54,21 @@ footer{margin-top:2rem;font-size:.8rem;color:var(--muted)}
 .chcard p{font-size:.8rem;color:var(--muted);margin:.4rem 0 0;line-height:1.4}
 @media (max-width:900px){.layout{grid-template-columns:1fr;gap:0}.side{position:static;max-height:none;padding:12px 0 0;border-bottom:1px solid var(--line)}.side details{margin-bottom:6px}body{font-size:17px}h1{font-size:1.9rem}.brand span{display:none}}
 @media print{.top,.side,.pager{display:none}.layout{display:block}main{max-width:none}body{font-size:11pt}}
+.weeknav{margin:-.4rem 0 1.6rem}
+.weeknav{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:.88rem;line-height:1.3}
+.weeknav .wl{font-weight:700;color:#E07B00;margin-right:4px}
+.weeknav a{text-decoration:none;border:1px solid #D9CDE0;border-radius:999px;padding:4px 12px;color:#663366;background:#fff;font-weight:600}
+.weeknav a:hover{background:#F6F2F8}
+.weeknav a[aria-current]{background:#663366;color:#fff;border-color:#663366}
+.weeknav a:focus-visible{outline:3px solid #E07B00;outline-offset:2px}
+.weeknav .na{color:#6B5A70;padding:4px 2px}
 </style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="top"><div class="topin">
   <a class="brand" href="index.html">Cognition <span>An open textbook for BIOL3005</span></a>
-  <nav class="toplinks"><a href="index.html">Contents</a><a href="BIOL3005_Cognition_textbook.pdf">PDF</a><a href="../answers/index.html">Answers</a><a href="../index.html">Tutorials</a></nav>
+  <nav class="toplinks"><a href="../index.html">Home</a><a href="index.html">Contents</a><a href="../answers/index.html">Answers</a></nav>
 </div></header>
 <div class="layout">
 <aside class="side"><details open><summary>In this chapter</summary><ol class="sectoc"><li><a href="#what-makes-human-language-special">9.1 What makes human language special</a></li><li><a href="#the-processing-of-language">9.2 The processing of language</a></li><li><a href="#understanding-words">9.3 Understanding words</a></li><li><a href="#understanding-sentences">9.4 Understanding sentences</a></li><li><a href="#understanding-text-and-stories">9.5 Understanding text and stories</a></li><li><a href="#producing-language-conversation">9.6 Producing language: conversation</a></li><li><a href="#bilingualism-and-language-in-society">9.7 Bilingualism and language in society</a></li><li><a href="#chapter-summary-8">Chapter summary</a></li><li><a href="#self-check-questions-8">Self-check questions</a></li><li><a href="#attribution-and-licence-8">Attribution and licence</a></li><li><a href="#references-8">References</a></li></ol></details>
@@ -68,6 +76,7 @@ footer{margin-top:2rem;font-size:.8rem;color:var(--muted)}
 <main id="main">
 <p class="chnum">Chapter 9</p>
 <h1>Language</h1>
+<nav class="weeknav" aria-label="This week"><span class="wl">Week 9</span><a href="../textbook/ch09.html" aria-current="page">Chapter 9</a><a href="../week09.html">Tutorial tools</a><a href="../practice09.html">Practice problems</a><a href="../answers/ch09.html">Answers</a></nav>
 <h3 id="where-this-chapter-sits-8">Where this chapter sits</h3>
 <p>Every chapter so far has studied one mind at a time. Attention
 selected, memory stored, concepts organised and imagery simulated, all

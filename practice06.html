@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIOL3005 Cognition: Everyday memory and memory errors practice problems</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #f6f4f0;
+    --surface: #ffffff;
+    --surface-alt: #f0ede8;
+    --border: #d6d0c6;
+    --text: #2c2a26;
+    --text-muted: #6b6660;
+    --accent: #b04a32;
+    --accent-light: #e8d5cf;
+    --accent-dark: #8c3926;
+    --easy: #3a7d5e;
+    --easy-bg: #e8f3ec;
+    --easy-border: #b0d6bf;
+    --medium: #c07b1a;
+    --medium-bg: #fdf3e0;
+    --medium-border: #e4c67a;
+    --hard: #9b2e4e;
+    --hard-bg: #f6e3ea;
+    --hard-border: #d4a0b3;
+    --hint-bg: #f0f4f8;
+    --hint-border: #a8bdd4;
+    --answer-bg: #f0ede8;
+    --answer-border: #c4bdb2;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; min-height: 100vh; }
+
+  .header { background: var(--text); color: var(--bg); padding: 28px 0 24px; text-align: center; }
+  .header-inner { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+  .header .unit-code { font-size: 0.8rem; letter-spacing: 2.5px; text-transform: uppercase; opacity: 0.6; margin-bottom: 6px; }
+  .header h1 { font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 1.75rem; line-height: 1.3; }
+  .header .subtitle { font-size: 0.9rem; opacity: 0.55; margin-top: 6px; }
+
+  .nav-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 0; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+  .nav-inner { max-width: 880px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-indicator { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+  .nav-indicator span { color: var(--text); font-weight: 700; }
+  .nav-buttons { display: flex; gap: 10px; }
+  .nav-btn { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; padding: 8px 20px; border-radius: var(--radius); border: 1.5px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .main { max-width: 880px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  .scenario { display: none; }
+  .scenario.active { display: block; }
+
+  .scenario-label { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 8px; }
+  .scenario-title { font-family: 'Source Serif 4', serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 16px; line-height: 1.35; }
+
+  .scenario-stem { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 28px; box-shadow: var(--shadow); font-size: 0.95rem; }
+  .scenario-stem p { margin-bottom: 12px; }
+  .scenario-stem p:last-child { margin-bottom: 0; }
+  .scenario-stem ul { margin: 8px 0 12px 20px; }
+  .scenario-stem li { margin-bottom: 6px; }
+  .scenario-stem strong { font-weight: 600; }
+
+  .chart-container { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 32px; box-shadow: var(--shadow); }
+  .chart-title { font-weight: 600; font-size: 0.9rem; text-align: center; margin-bottom: 12px; color: var(--text); }
+  .chart-wrapper { position: relative; max-width: 680px; margin: 0 auto; }
+
+  .questions-section { margin-top: 8px; }
+  .question-block { margin-bottom: 24px; }
+
+  .q-difficulty { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 4px; margin-bottom: 8px; }
+  .q-difficulty.easy { background: var(--easy-bg); color: var(--easy); border: 1px solid var(--easy-border); }
+  .q-difficulty.medium { background: var(--medium-bg); color: var(--medium); border: 1px solid var(--medium-border); }
+  .q-difficulty.hard { background: var(--hard-bg); color: var(--hard); border: 1px solid var(--hard-border); }
+  .q-difficulty.applied { background: #eef3f8; color: #4a7faa; border: 1px solid #b3c8de; }
+
+  .q-text { font-family: 'Source Serif 4', serif; font-size: 1.05rem; font-weight: 400; line-height: 1.55; margin-bottom: 12px; }
+
+  .reveal-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+  .reveal-btn { font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 600; padding: 6px 16px; border-radius: 6px; border: 1.5px solid; cursor: pointer; transition: all 0.15s ease; background: transparent; }
+  .reveal-btn.hint-btn { border-color: var(--hint-border); color: #4a6b8a; }
+  .reveal-btn.hint-btn:hover { background: var(--hint-bg); }
+  .reveal-btn.answer-btn { border-color: var(--answer-border); color: var(--text-muted); }
+  .reveal-btn.answer-btn:hover { background: var(--answer-bg); }
+  .reveal-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+  .reveal-content { overflow: hidden; max-height: 0; opacity: 0; transition: max-height 0.35s ease, opacity 0.25s ease, margin 0.25s ease; margin-top: 0; }
+  .reveal-content.open { max-height: 1000px; opacity: 1; margin-top: 10px; }
+  .reveal-inner { padding: 16px 20px; border-radius: var(--radius); font-size: 0.9rem; line-height: 1.6; }
+  .reveal-inner.hint { background: var(--hint-bg); border: 1px solid var(--hint-border); color: #3a5a78; }
+  .reveal-inner.answer { background: var(--answer-bg); border: 1px solid var(--answer-border); color: var(--text); }
+  .reveal-inner p { margin-bottom: 8px; }
+  .reveal-inner p:last-child { margin-bottom: 0; }
+
+  .q-divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  .instructions { background: var(--accent-light); border: 1px solid #d4b0a3; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 28px; font-size: 0.85rem; color: var(--accent-dark); line-height: 1.55; }
+  .instructions strong { font-weight: 700; }
+
+  .applied-box { background: #eef3f8; border: 1px solid #b3c8de; border-left: 4px solid #4a7faa; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 24px; font-size: 0.88rem; line-height: 1.6; color: #2a4560; }
+  .applied-box-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #4a7faa; margin-bottom: 6px; }
+  .applied-box p { margin-bottom: 8px; }
+  .applied-box p:last-child { margin-bottom: 0; }
+
+  .footer { text-align: center; padding: 24px; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 40px; }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 1.35rem; }
+    .scenario-title { font-size: 1.2rem; }
+    .nav-inner { flex-direction: column; gap: 10px; }
+  }
+  .chart-note { font-size: 0.8rem; color: #6b665e; margin-top: 8px; text-align: center; }
+
+/* Site theme, matching the textbook */
+:root{--bg:#FFFFFF;--surface:#FFFFFF;--surface-alt:#F6F2F8;--border:#E3DAE7;--text:#2B142D;--text-muted:#6B5A70;--accent:#663366;--accent-light:#F6F2F8;--accent-dark:#663366;--answer-bg:#F6F2F8;--answer-border:#D9CDE0}
+body,.nav-btn,.reveal-btn{font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif}
+.scenario-stem,.q-text,.reveal-inner,.applied-box p{font-family:Charter,"Bitstream Charter","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif}
+.header{background:#fff;color:var(--text);text-align:left;border-bottom:1px solid var(--border);padding:26px 0 20px}
+.header .unit-code{opacity:1;color:#E07B00;font-weight:700;letter-spacing:.04em;font-size:.85rem}
+.header h1{font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;color:#663366;font-size:2rem;line-height:1.2;margin-top:4px}
+.header .subtitle{opacity:1;color:var(--text-muted);font-size:.95rem}
+.scenario-title{font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;color:#663366}
+.instructions{border-color:var(--border);color:var(--text)}
+.reveal-btn.active{background:#663366;border-color:#663366;color:#fff}
+.nav-btn:hover:not(:disabled){background:#663366;border-color:#663366;color:#fff}
+
+/* Site bar shared with the textbook */
+.cbar{background:#2B142D;font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;line-height:1.4}
+.cbar .cbar-in{max-width:880px;margin:0 auto;padding:10px 24px;display:flex;justify-content:space-between;align-items:center;gap:8px 16px;flex-wrap:wrap}
+.cbar a{text-decoration:none;border:0;background:none;padding:0}
+.cbar .cbar-brand{color:#fff;font-weight:700;font-size:1.05rem}
+.cbar .cbar-links a{color:#fff;margin-left:16px;font-size:.92rem;opacity:.9}
+.cbar .cbar-links a:first-child{margin-left:0}
+.cbar .cbar-links a:hover{opacity:1;text-decoration:underline}
+.cbar a:focus-visible{outline:3px solid #E07B00;outline-offset:2px}
+.cbar-week{background:#F6F2F8;border-bottom:1px solid #E3DAE7}
+.cbar-week .cbar-in{justify-content:flex-start;padding:8px 24px}
+.weeknav{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:.88rem;line-height:1.3}
+.weeknav .wl{font-weight:700;color:#E07B00;margin-right:4px}
+.weeknav a{text-decoration:none;border:1px solid #D9CDE0;border-radius:999px;padding:4px 12px;color:#663366;background:#fff;font-weight:600}
+.weeknav a:hover{background:#F6F2F8}
+.weeknav a[aria-current]{background:#663366;color:#fff;border-color:#663366}
+.weeknav a:focus-visible{outline:3px solid #E07B00;outline-offset:2px}
+.weeknav .na{color:#6B5A70;padding:4px 2px}
+@media print{.cbar{display:none}}
+</style>
+</head>
+<body>
+<div class="cbar" role="navigation" aria-label="Site">
+  <div class="cbar-in"><a class="cbar-brand" href="index.html">BIOL3005 Cognition</a><span class="cbar-links"><a href="index.html">Home</a><a href="textbook/index.html">Textbook</a><a href="answers/index.html">Answers</a></span></div>
+  <div class="cbar-week"><div class="cbar-in weeknav" aria-label="This week"><span class="wl">Week 6</span><a href="textbook/ch06.html">Chapter 6</a><a href="week06.html">Tutorial tools</a><a href="practice06.html" aria-current="page">Practice problems</a><a href="answers/ch06.html">Answers</a></div></div>
+</div>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="unit-code">Week 6</div>
+    <h1>Practice problems: Everyday memory and memory errors</h1>
+    <div class="subtitle">Exam-style scenarios on Textbook Chapter 6, with hints and model answers.</div>
+  </div>
+</div>
+
+<div class="nav-bar">
+  <div class="nav-inner">
+    <div class="nav-indicator">Scenario <span id="currentNum">1</span> of <span>2</span></div>
+    <div class="nav-buttons">
+      <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Back</button>
+      <button class="nav-btn" id="nextBtn" onclick="navigate(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="instructions">
+    <strong>How to use this page:</strong> Read each scenario and try to answer the questions on your own first, as you would in an exam. If you get stuck, click <em>Show Hint</em> for guidance. Use <em>Show Answer</em> only after you have given the question a genuine attempt.
+  </div>
+
+    <!-- ==================== SCENARIO 1 ==================== -->
+  <div class="scenario active" id="scenario1">
+    <div class="scenario-label">Scenario 1</div>
+    <div class="scenario-title">Vivid but Not Accurate: Tracking Flashbulb Memories</div>
+
+    <div class="applied-box">
+      <div class="applied-box-label">Why this matters for psychologists</div>
+      <p>People treat vivid, confident memories as reliable, and so do juries, journalists and clinicians. Forensic and clinical psychologists need to know that the feeling of certainty is not a guarantee of accuracy, both when evaluating testimony about dramatic events and when helping people make sense of memories of significant moments in their own lives.</p>
+    </div>
+
+    <div class="scenario-stem">
+      <p>The day after a shocking national event, researchers asked 90 students to write a detailed account of how they heard the news (where they were, who they were with, what they were doing). Each student also described an ordinary event from the days just before, such as a party or a lecture. Each student was then retested <strong>once</strong>, after 1, 6 or 32 weeks (30 students per interval), describing both memories again.</p>
+      <p>Two measures were taken at retest: <strong>consistency</strong> (the percentage of details that matched the original account) and <strong>confidence</strong> (how strongly students believed their memory was accurate, rated from 1 to 7).</p>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Consistency with the Original Account (%)</div>
+      <div class="chart-wrapper">
+        <canvas id="chart1"></canvas>
+      </div>
+      <div class="chart-note">Illustrative data, consistent with the pattern described in &sect;6.3.</div>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Confidence in Accuracy (1&ndash;7)</div>
+      <div class="chart-wrapper">
+        <canvas id="chart2"></canvas>
+      </div>
+      <div class="chart-note">Illustrative data, consistent with the pattern described in &sect;6.3.</div>
+    </div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">a) What is a flashbulb memory, and which two mechanisms are proposed to make these memories so vivid?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q1hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q1ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q1hint">
+          <div class="reveal-inner hint">
+            <p>Note what the memory is of: the event itself, or how you heard about it? One mechanism involves the amygdala; the other involves what people do with the story afterwards.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q1ans">
+          <div class="reveal-inner answer">
+            <p>A <strong>flashbulb memory</strong> (Brown &amp; Kulik, 1977) is a vivid, detailed memory of the circumstances in which a person learned about a shocking, emotional and personally significant event: where they were, who they were with and what they were doing. It is a memory of hearing the news rather than of the event itself.</p><p>Two mechanisms are proposed. <strong>Emotional modulation of consolidation:</strong> the amygdala does not store the memory so much as tune how strongly it is consolidated elsewhere, stamping in the surrounding detail. <strong>Narrative rehearsal:</strong> people tell and retell the story of a shocking event, and each retelling acts as a rehearsal that consolidates it further.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">b) Describe the results shown in the two graphs.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q2hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q2ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q2hint">
+          <div class="reveal-inner hint">
+            <p>Compare the slopes of the two lines in each graph. Which measure separates the two kinds of memory and which does not?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q2ans">
+          <div class="reveal-inner answer">
+            <p><strong>Consistency</strong> declined over time at almost exactly the <strong>same rate</strong> for both kinds of memory: from about 80% to 58% for the flashbulb memory and from 78% to 57% for the everyday memory. By 32 weeks, roughly 40% of the details had changed in both.</p><p><strong>Confidence</strong> behaved very differently. For the flashbulb memory it stayed high and almost flat (6.2 to 6.0), while for the everyday memory it fell steadily (5.6 to 3.9). Flashbulb memories are therefore distinguished by <strong>confidence, not accuracy</strong>: they are no more consistent than ordinary memories, but they feel far more reliable.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">c) Explain the purpose of two features of the design: recording an everyday memory at the same time, and retesting each student only once.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q3hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q3ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q3hint">
+          <div class="reveal-inner hint">
+            <p>Without the everyday memory, what would you compare the flashbulb memory against? For the second feature, think about what retelling a memory does to it, and what repeated testing would add.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q3ans">
+          <div class="reveal-inner answer">
+            <p><strong>The everyday memory</strong> gives the flashbulb memory a <strong>matched comparison</strong>. Both were recorded on the same day by the same people and tested on the same schedule, so any difference between them must come from the kind of memory rather than from the timing, the testing or the individuals. Without it, a decline in consistency could not be judged: we would only be comparing the flashbulb memory with our intuition that it should be perfect.</p><p><strong>Testing each student once</strong> avoids the problem that each test is itself a retelling. If the same students were tested at 1, 6 and 32 weeks, later accounts might match their own earlier retest accounts rather than the original event, and the repeated retrieval could change the memory. Using separate groups for each interval means that every retest measures the memory after only the one initial account, giving a cleaner picture of how it changes over time.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">d) Narrative rehearsal is supposed to make flashbulb memories stronger. Explain how retelling could instead help to explain why they become less consistent while remaining confident.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q4hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q4ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q4hint">
+          <div class="reveal-inner hint">
+            <p>Chapter 5 describes reconsolidation: retrieving a memory can make it changeable again. What happens if each retelling re-stores the version just told? And what does repeated retelling do to how familiar and fluent the story feels?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q4ans">
+          <div class="reveal-inner answer">
+            <p>Each retelling is a retrieval, and on the <strong>reconsolidation</strong> account retrieval can reopen a memory and re-store the version just produced. If a retelling includes a small error or an inference (who was there, what time it was), that version may be what is stored and retold next time. Over many retellings the account can drift from what happened, so consistency declines, as it does for everyday memories.</p><p>At the same time, every retelling makes the story more <strong>familiar and fluent</strong>, and fluency feels like accuracy. A frequently rehearsed story is vivid and easy to produce, so confidence stays high even as the content changes. Rehearsal can therefore strengthen the <strong>feeling</strong> of remembering without protecting the <strong>accuracy</strong>. The textbook notes that this is a plausible mechanism rather than a demonstrated one, but it fits the pattern in the data: drift with no loss of certainty.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty hard">Hard</div>
+        <div class="q-text">e) Chapter 4 says the amygdala enhances the consolidation of emotionally arousing memories, and amygdala damage removes the usual memory advantage for emotional material. Does the flashbulb result contradict this? Construct a reconciliation, and propose a measure that could test it.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q5hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q5ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q5hint">
+          <div class="reveal-inner hint">
+            <p>What exactly is a flashbulb memory a memory of? Is the emotional arousal attached to the news itself, or to the incidental details of where you were when you heard it? Think also about which aspects of a memory amygdala modulation might strengthen.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q5ans">
+          <div class="reveal-inner answer">
+            <p>Not necessarily. The flashbulb result shows that the <strong>incidental circumstances of hearing the news</strong> (where you were, who told you) are no more consistently remembered than an ordinary event. The amygdala research concerns memory for <strong>emotionally arousing material</strong>. These are not the same thing: the emotion attaches mainly to the news itself, while the reception context is peripheral to it.</p><p>A reconciliation is that emotional arousal strengthens memory for the <strong>central, emotional content</strong> (what happened, its significance) and produces a strong sense of <strong>vividness</strong>, but does not protect the peripheral details of the reception context, which are then filled in and reshaped by reconstruction and retelling. Confidence may rise with vividness and with the importance of the central event, even though the surrounding details drift.</p><p>To test this, the researchers could score consistency separately for <strong>central details</strong> (facts about the event itself) and <strong>peripheral details</strong> (the setting in which the news was heard), and compare both with the everyday memory. The reconciliation predicts better retention of central details for the emotional event, with peripheral details declining at the everyday rate.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty applied">Applied</div>
+        <div class="q-text">f) A journalist is writing an anniversary piece on the event and plans to rely on the vivid, confident recollections of people interviewed decades later. Using this scenario, advise the journalist on how to treat these accounts.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q6hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q6ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q6hint">
+          <div class="reveal-inner hint">
+            <p>What did the confidence and consistency data show? What kinds of independent evidence could check the accounts? Should the journalist accuse people of lying?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q6ans">
+          <div class="reveal-inner answer">
+            <p>The journalist should treat the accounts as <strong>sincere but not necessarily accurate</strong>. The data show that flashbulb memories change at the same rate as ordinary memories while confidence stays high, so a vivid, certain recollection decades later is likely to contain details that have drifted, been inferred or absorbed from later retellings and media coverage. Confidence is not a guide to accuracy here.</p><p>In practice, the journalist should <strong>check details against independent records</strong> (contemporary news reports, diaries, photographs, accounts written at the time), present recollections as what people remember rather than as fact, and avoid building the story on a single memorable detail that cannot be verified. Asking neutral, open questions rather than suggesting details also matters, because post-event information can reshape memory. None of this implies dishonesty: the point of the research is that people can be confident and wrong at the same time, which is worth explaining to readers.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== SCENARIO 2 ==================== -->
+  <div class="scenario" id="scenario2">
+    <div class="scenario-label">Scenario 2</div>
+    <div class="scenario-title">The Familiar Face in the Lineup: Eyewitness Errors and Safeguards</div>
+
+    <div class="applied-box">
+      <div class="applied-box-label">Why this matters for psychologists</div>
+      <p>Mistaken eyewitness identification is a leading cause of wrongful convictions. Forensic psychologists advise police and courts on how lineups and interviews should be run, and they are often called on to explain why a sincere, confident witness can be wrong. The research turns the mechanisms of memory into specific, testable procedures.</p>
+    </div>
+
+    <div class="scenario-stem">
+      <p>Participants watched a film of a robbery. For half of them, an innocent man appeared earlier in the film reading to a group of students (<strong>bystander seen</strong>); for the other half he did not appear (<strong>bystander not seen</strong>). Later, all participants saw a photo lineup in which the real robber was <strong>absent</strong> but the innocent man was <strong>present</strong>.</p>
+      <p>Before viewing the lineup, half the participants in each group were <strong>warned</strong> that the perpetrator might not be in the lineup; the other half received no warning. The graph shows the percentage who identified the innocent man as the robber.</p>
+      <p>In a separate set of participants shown a lineup that <strong>did</strong> contain the real robber, the robber was correctly identified by <strong>68%</strong> of unwarned and <strong>61%</strong> of warned witnesses.</p>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Witnesses Identifying the Innocent Bystander (%) in a Culprit-Absent Lineup</div>
+      <div class="chart-wrapper">
+        <canvas id="chart3"></canvas>
+      </div>
+      <div class="chart-note">Illustrative data, consistent with the findings described in &sect;6.6 and &sect;6.7.</div>
+    </div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">a) Describe the effect of having seen the bystander earlier, and explain it in terms of source monitoring.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q1hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q1ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q1hint">
+          <div class="reveal-inner hint">
+            <p>Compare the two bars within the &ldquo;no warning&rdquo; condition. What do witnesses who saw him earlier have that the others lack? What have they lost?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q1ans">
+          <div class="reveal-inner answer">
+            <p>Among unwarned witnesses, those who had seen the innocent man earlier chose him <strong>61%</strong> of the time, compared with <strong>19%</strong> for those who had never seen him: more than three times as often. This replicates the pattern reported by Ross and colleagues (1994).</p><p>The explanation is a <strong>source-monitoring</strong> failure. Seeing the man earlier made his face <strong>familiar</strong>, and that familiarity survives. What is lost is the <strong>source</strong> of the familiarity: that he was the man reading to students, not the robber. Faced with a lineup and no correct answer, witnesses attribute the familiarity to the most plausible source available, the crime. The memory is intact; it is the label that has gone, just as in the becoming-famous-overnight effect.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">b) What effect did the warning have on choices of the innocent bystander? Why would a warning be expected to help?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q2hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q2ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q2hint">
+          <div class="reveal-inner hint">
+            <p>Compare warned and unwarned witnesses in each group. How do witnesses tend to treat a lineup if they assume the culprit must be in it?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q2ans">
+          <div class="reveal-inner answer">
+            <p>The warning reduced false identifications of the bystander in both groups: from <strong>61% to 33%</strong> when he had been seen earlier, and from <strong>19% to 8%</strong> when he had not.</p><p>Without a warning, witnesses tend to treat the lineup as a <strong>multiple-choice test</strong> with a correct answer present, and pick whoever best matches their memory, even when the culprit is absent. Telling them the perpetrator may not be there makes &ldquo;not present&rdquo; a legitimate answer, so they are less likely to choose someone simply because he is the best available match, or merely familiar.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">c) Does the warning improve witnesses&rsquo; memory? Use the culprit-present data to argue your answer, and relate it to the debate about sequential lineups.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q3hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q3ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q3hint">
+          <div class="reveal-inner hint">
+            <p>A change that makes witnesses choose less often will reduce false identifications, but what will it do to correct identifications? Distinguish discriminability (telling guilty from innocent faces apart) from response bias (willingness to choose at all).</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q3ans">
+          <div class="reveal-inner answer">
+            <p>The warning reduced <strong>false identifications</strong>, but it also slightly reduced <strong>correct identifications</strong> when the robber was present (68% to 61%). Both changes follow from the same thing: warned witnesses are more <strong>reluctant to choose</strong>. That is a change in <strong>response bias</strong> (a more conservative decision criterion), not necessarily an improvement in memory. A genuine improvement in memory would be a change in <strong>discriminability</strong>, the ability to tell the guilty face from an innocent one.</p><p>The data are consistent with a large reduction in false identifications for a small cost in correct ones, which can be very worthwhile in practice, because a false identification may convict an innocent person. But the reduction in false choices alone does not show that witnesses remember better. Deciding whether discriminability changed requires analysing hits and false identifications together, as signal-detection analyses do. This is the same issue as the <strong>sequential lineup</strong> debate: sequential lineups make witnesses more conservative but produce little or no improvement in discriminability (Kaesler et al., 2020), so the reform rested on a misread result.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">d) In a follow-up, witnesses rated their confidence (0&ndash;100) immediately after making an identification: the mean was 62 in all groups. Some were then told &ldquo;Good, you identified the suspect.&rdquo; A week later, those who received this feedback rated their original confidence at 84; those who received no feedback rated it at 63. Accuracy did not differ between the groups. Interpret these results and give two recommendations.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q4hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q4ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q4hint">
+          <div class="reveal-inner hint">
+            <p>This is the post-identification feedback effect. Did the feedback change accuracy, or only confidence? Which confidence rating should a court rely on? Who should run the lineup?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q4ans">
+          <div class="reveal-inner answer">
+            <p>This is the <strong>post-identification feedback effect</strong> (Wells &amp; Bradfield, 1998). Confirming feedback inflated witnesses&rsquo; <strong>retrospective confidence</strong> from 62 to 84 without any change in <strong>accuracy</strong>. Witnesses misremembered how sure they had been, so the confidence they would express months later in court was partly manufactured after the identification, by the very people whose case it supports. Jurors treat confidence as a sign of accuracy, so inflated confidence can make a mistaken identification far more persuasive.</p><p><strong>Recommendation 1:</strong> record the witness&rsquo;s confidence <strong>immediately</strong>, in their own words, before anyone reacts. That initial rating is uncontaminated and is the one a court should weigh. <strong>Recommendation 2:</strong> use a <strong>double-blind administrator</strong>, someone who does not know which person is the suspect, so that confirming feedback cannot be given, even unintentionally.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty hard">Hard</div>
+        <div class="q-text">e) Two witnesses to the same robbery travelled to the police station together and discussed what they had seen. Using the misinformation research and Lindsay&rsquo;s (1990) findings, explain the risk this creates and why it is particularly hard for the witnesses to detect. What procedure would reduce it?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q5hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q5ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q5hint">
+          <div class="reveal-inner hint">
+            <p>Think about co-witness contamination (Garry et al., 2008). Then consider Lindsay&rsquo;s finding about when misinformation does most damage: when its source is easy or hard to tell apart from the original event.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q5ans">
+          <div class="reveal-inner answer">
+            <p>Discussing the event allows each witness to <strong>implant details</strong> into the other&rsquo;s memory, a form of the misinformation effect. In one co-witness study, accuracy was about 79% for details the pair had not discussed but only about 34% for details they had (Garry et al., 2008). A detail one witness supplies, such as a colour, a weapon or a direction of escape, may be absorbed by the other and later reported as something they saw.</p><p>It is hard to detect because of <strong>source monitoring</strong>. Lindsay (1990) showed that misinformation does most damage when its source is hard to distinguish from the original event, close in time and similar in conditions. A conversation minutes after the robbery, about the robbery, among people who were there, is about as hard to separate from the original experience as any source could be. The borrowed detail feels like part of the memory, the witness is sincere, and the two witnesses may also become more confident because their accounts now agree, which jurors may wrongly take as independent corroboration.</p><p>The procedure: <strong>separate witnesses</strong> as soon as possible, ask them not to discuss the event, take each account independently and early using non-leading questions, and record whether any discussion took place, so that agreement between witnesses can be weighted appropriately.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty applied">Applied</div>
+        <div class="q-text">f) A police service asks you to recommend how it should conduct lineups and witness interviews. Using this scenario and &sect;6.7, recommend at least four procedures, linking each to the mechanism it targets. Also name one intuitive remedy that would not help.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q6hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q6ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q6hint">
+          <div class="reveal-inner hint">
+            <p>Each safeguard in &sect;6.7 targets a particular mechanism: choosing a familiar or best-matching face, steering and feedback, suggestion, and the loss of context. Then think about whether asking witnesses to try harder addresses any of these mechanisms.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q6ans">
+          <div class="reveal-inner answer">
+            <p><strong>Warn witnesses</strong> that the perpetrator may not be present, which targets the tendency to treat the lineup as multiple choice and pick a familiar or best-matching face (as in the bystander effect). <strong>Use fair lineups</strong> with fillers who match the witness&rsquo;s description, so the suspect does not stand out for being different. <strong>Use a double-blind administrator</strong>, which prevents steering and confirming feedback, and <strong>record confidence immediately</strong>, before anyone reacts, which protects against the post-identification feedback effect. <strong>Separate witnesses</strong> and interview them early to limit co-witness contamination. <strong>Use the cognitive interview</strong> (Fisher &amp; Geiselman, 1992), which reinstates the context of the event and avoids leading questions, applying encoding specificity to draw out accurate detail without suggestion.</p><p>An intuitive remedy that would <strong>not</strong> help is urging witnesses to <strong>try harder</strong> or to be careful. The errors arise from how memory normally works: familiarity without a source, absorption of post-event information, and confidence shaped after the fact. These processes do not announce themselves, so effort and sincerity cannot correct them. The remedies must be procedural, changing the conditions under which memory is tested rather than relying on witnesses to see through their own memories.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    BIOL3005 Cognition · Curtin University · School of Population Health
+  </div>
+</div>
+
+<script>
+// ============ Navigation ============
+let currentScenario = 1;
+const totalScenarios = 2;
+
+function navigate(dir) {
+  const newScenario = currentScenario + dir;
+  if (newScenario < 1 || newScenario > totalScenarios) return;
+  document.getElementById('scenario' + currentScenario).classList.remove('active');
+  currentScenario = newScenario;
+  document.getElementById('scenario' + currentScenario).classList.add('active');
+  document.getElementById('currentNum').textContent = currentScenario;
+  document.getElementById('prevBtn').disabled = currentScenario === 1;
+  document.getElementById('nextBtn').disabled = currentScenario === totalScenarios;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============ Reveal Toggle ============
+function toggle(btn, targetId) {
+  const content = document.getElementById(targetId);
+  const isOpen = content.classList.contains('open');
+  if (isOpen) {
+    content.classList.remove('open');
+    btn.classList.remove('active');
+    btn.textContent = btn.textContent.replace('Hide', 'Show');
+  } else {
+    content.classList.add('open');
+    btn.classList.add('active');
+    btn.textContent = btn.textContent.replace('Show', 'Hide');
+  }
+}
+
+// ============ Charts ============
+const chartFont = { family: "'Segoe UI', system-ui, -apple-system, Arial, sans-serif", size: 12 };
+
+// --- Chart 1: Consistency with the Original Account (%) ---
+new Chart(document.getElementById('chart1'), {
+  type: 'line',
+  data: { labels: ["1 week", "6 weeks", "32 weeks"], datasets: [{"label": "Flashbulb memory", "data": [80, 68, 58], "borderColor": "#b04a32", "backgroundColor": "#b04a32", "pointRadius": 5, "pointHoverRadius": 7, "borderWidth": 2.5, "tension": 0.05}, {"label": "Everyday memory", "data": [78, 66, 57], "borderColor": "#8a8a8a", "backgroundColor": "#8a8a8a", "pointRadius": 5, "pointHoverRadius": 7, "borderWidth": 2.5, "tension": 0.05}] },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: {
+      legend: { display: true, position: 'bottom', labels: { font: chartFont, padding: 14, usePointStyle: true, pointStyle: 'circle' } },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}%` } }
+    },
+    scales: {
+      x: { title: { display: true, text: "Retest interval", font: { ...chartFont, weight: '600' } }, ticks: { font: chartFont }, grid: { display: false } },
+      y: { title: { display: true, text: "Consistent details (%)", font: { ...chartFont, weight: '600' } }, min: 0, max: 100, ticks: { font: chartFont, stepSize: 20 }, grid: { color: '#e8e4de' } }
+    }
+  }
+});
+
+// --- Chart 2: Confidence in Accuracy (1&ndash;7) ---
+new Chart(document.getElementById('chart2'), {
+  type: 'line',
+  data: { labels: ["1 week", "6 weeks", "32 weeks"], datasets: [{"label": "Flashbulb memory", "data": [6.2, 6.1, 6.0], "borderColor": "#b04a32", "backgroundColor": "#b04a32", "pointRadius": 5, "pointHoverRadius": 7, "borderWidth": 2.5, "tension": 0.05}, {"label": "Everyday memory", "data": [5.6, 4.6, 3.9], "borderColor": "#8a8a8a", "backgroundColor": "#8a8a8a", "pointRadius": 5, "pointHoverRadius": 7, "borderWidth": 2.5, "tension": 0.05}] },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: {
+      legend: { display: true, position: 'bottom', labels: { font: chartFont, padding: 14, usePointStyle: true, pointStyle: 'circle' } },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}` } }
+    },
+    scales: {
+      x: { title: { display: true, text: "Retest interval", font: { ...chartFont, weight: '600' } }, ticks: { font: chartFont }, grid: { display: false } },
+      y: { title: { display: true, text: "Confidence rating", font: { ...chartFont, weight: '600' } }, min: 1, max: 7, ticks: { font: chartFont, stepSize: 1 }, grid: { color: '#e8e4de' } }
+    }
+  }
+});
+
+// --- Chart 3: Witnesses Identifying the Innocent Bystander (%) in a Culprit-Absent Lineup ---
+new Chart(document.getElementById('chart3'), {
+  type: 'bar',
+  data: { labels: ["No warning", "Warned"], datasets: [{"label": "Bystander seen earlier", "data": [61, 33], "backgroundColor": "#b04a32", "borderColor": "#b04a32", "borderWidth": 1.5, "borderRadius": 4, "barPercentage": 0.7, "categoryPercentage": 0.75}, {"label": "Bystander not seen", "data": [19, 8], "backgroundColor": "#8a8a8a", "borderColor": "#8a8a8a", "borderWidth": 1.5, "borderRadius": 4, "barPercentage": 0.7, "categoryPercentage": 0.75}] },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: {
+      legend: { display: true, position: 'bottom', labels: { font: chartFont, padding: 14, usePointStyle: true, pointStyle: 'rectRounded' } },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}%` } }
+    },
+    scales: {
+      x: { title: { display: true, text: "Instruction before the lineup", font: { ...chartFont, weight: '600' } }, ticks: { font: chartFont }, grid: { display: false } },
+      y: { title: { display: true, text: "Chose the innocent bystander (%)", font: { ...chartFont, weight: '600' } }, min: 0, max: 100, ticks: { font: chartFont, stepSize: 20 }, grid: { color: '#e8e4de' } }
+    }
+  }
+});
+</script>
+</body>
+</html>

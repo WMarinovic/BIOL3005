@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIOL3005 Cognition: Long-term memory: structure practice problems</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #f6f4f0;
+    --surface: #ffffff;
+    --surface-alt: #f0ede8;
+    --border: #d6d0c6;
+    --text: #2c2a26;
+    --text-muted: #6b6660;
+    --accent: #b04a32;
+    --accent-light: #e8d5cf;
+    --accent-dark: #8c3926;
+    --easy: #3a7d5e;
+    --easy-bg: #e8f3ec;
+    --easy-border: #b0d6bf;
+    --medium: #c07b1a;
+    --medium-bg: #fdf3e0;
+    --medium-border: #e4c67a;
+    --hard: #9b2e4e;
+    --hard-bg: #f6e3ea;
+    --hard-border: #d4a0b3;
+    --hint-bg: #f0f4f8;
+    --hint-border: #a8bdd4;
+    --answer-bg: #f0ede8;
+    --answer-border: #c4bdb2;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; min-height: 100vh; }
+
+  .header { background: var(--text); color: var(--bg); padding: 28px 0 24px; text-align: center; }
+  .header-inner { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+  .header .unit-code { font-size: 0.8rem; letter-spacing: 2.5px; text-transform: uppercase; opacity: 0.6; margin-bottom: 6px; }
+  .header h1 { font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 1.75rem; line-height: 1.3; }
+  .header .subtitle { font-size: 0.9rem; opacity: 0.55; margin-top: 6px; }
+
+  .nav-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 0; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+  .nav-inner { max-width: 880px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-indicator { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+  .nav-indicator span { color: var(--text); font-weight: 700; }
+  .nav-buttons { display: flex; gap: 10px; }
+  .nav-btn { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; padding: 8px 20px; border-radius: var(--radius); border: 1.5px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .main { max-width: 880px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  .scenario { display: none; }
+  .scenario.active { display: block; }
+
+  .scenario-label { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 8px; }
+  .scenario-title { font-family: 'Source Serif 4', serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 16px; line-height: 1.35; }
+
+  .scenario-stem { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 28px; box-shadow: var(--shadow); font-size: 0.95rem; }
+  .scenario-stem p { margin-bottom: 12px; }
+  .scenario-stem p:last-child { margin-bottom: 0; }
+  .scenario-stem ul { margin: 8px 0 12px 20px; }
+  .scenario-stem li { margin-bottom: 6px; }
+  .scenario-stem strong { font-weight: 600; }
+
+  .chart-container { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 32px; box-shadow: var(--shadow); }
+  .chart-title { font-weight: 600; font-size: 0.9rem; text-align: center; margin-bottom: 12px; color: var(--text); }
+  .chart-wrapper { position: relative; max-width: 680px; margin: 0 auto; }
+
+  .questions-section { margin-top: 8px; }
+  .question-block { margin-bottom: 24px; }
+
+  .q-difficulty { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 4px; margin-bottom: 8px; }
+  .q-difficulty.easy { background: var(--easy-bg); color: var(--easy); border: 1px solid var(--easy-border); }
+  .q-difficulty.medium { background: var(--medium-bg); color: var(--medium); border: 1px solid var(--medium-border); }
+  .q-difficulty.hard { background: var(--hard-bg); color: var(--hard); border: 1px solid var(--hard-border); }
+  .q-difficulty.applied { background: #eef3f8; color: #4a7faa; border: 1px solid #b3c8de; }
+
+  .q-text { font-family: 'Source Serif 4', serif; font-size: 1.05rem; font-weight: 400; line-height: 1.55; margin-bottom: 12px; }
+
+  .reveal-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+  .reveal-btn { font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 600; padding: 6px 16px; border-radius: 6px; border: 1.5px solid; cursor: pointer; transition: all 0.15s ease; background: transparent; }
+  .reveal-btn.hint-btn { border-color: var(--hint-border); color: #4a6b8a; }
+  .reveal-btn.hint-btn:hover { background: var(--hint-bg); }
+  .reveal-btn.answer-btn { border-color: var(--answer-border); color: var(--text-muted); }
+  .reveal-btn.answer-btn:hover { background: var(--answer-bg); }
+  .reveal-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+  .reveal-content { overflow: hidden; max-height: 0; opacity: 0; transition: max-height 0.35s ease, opacity 0.25s ease, margin 0.25s ease; margin-top: 0; }
+  .reveal-content.open { max-height: 1000px; opacity: 1; margin-top: 10px; }
+  .reveal-inner { padding: 16px 20px; border-radius: var(--radius); font-size: 0.9rem; line-height: 1.6; }
+  .reveal-inner.hint { background: var(--hint-bg); border: 1px solid var(--hint-border); color: #3a5a78; }
+  .reveal-inner.answer { background: var(--answer-bg); border: 1px solid var(--answer-border); color: var(--text); }
+  .reveal-inner p { margin-bottom: 8px; }
+  .reveal-inner p:last-child { margin-bottom: 0; }
+
+  .q-divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  .instructions { background: var(--accent-light); border: 1px solid #d4b0a3; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 28px; font-size: 0.85rem; color: var(--accent-dark); line-height: 1.55; }
+  .instructions strong { font-weight: 700; }
+
+  .applied-box { background: #eef3f8; border: 1px solid #b3c8de; border-left: 4px solid #4a7faa; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 24px; font-size: 0.88rem; line-height: 1.6; color: #2a4560; }
+  .applied-box-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #4a7faa; margin-bottom: 6px; }
+  .applied-box p { margin-bottom: 8px; }
+  .applied-box p:last-child { margin-bottom: 0; }
+
+  .footer { text-align: center; padding: 24px; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 40px; }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 1.35rem; }
+    .scenario-title { font-size: 1.2rem; }
+    .nav-inner { flex-direction: column; gap: 10px; }
+  }
+  .chart-note { font-size: 0.8rem; color: #6b665e; margin-top: 8px; text-align: center; }
+
+/* Site theme, matching the textbook */
+:root{--bg:#FFFFFF;--surface:#FFFFFF;--surface-alt:#F6F2F8;--border:#E3DAE7;--text:#2B142D;--text-muted:#6B5A70;--accent:#663366;--accent-light:#F6F2F8;--accent-dark:#663366;--answer-bg:#F6F2F8;--answer-border:#D9CDE0}
+body,.nav-btn,.reveal-btn{font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif}
+.scenario-stem,.q-text,.reveal-inner,.applied-box p{font-family:Charter,"Bitstream Charter","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif}
+.header{background:#fff;color:var(--text);text-align:left;border-bottom:1px solid var(--border);padding:26px 0 20px}
+.header .unit-code{opacity:1;color:#E07B00;font-weight:700;letter-spacing:.04em;font-size:.85rem}
+.header h1{font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;color:#663366;font-size:2rem;line-height:1.2;margin-top:4px}
+.header .subtitle{opacity:1;color:var(--text-muted);font-size:.95rem}
+.scenario-title{font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;color:#663366}
+.instructions{border-color:var(--border);color:var(--text)}
+.reveal-btn.active{background:#663366;border-color:#663366;color:#fff}
+.nav-btn:hover:not(:disabled){background:#663366;border-color:#663366;color:#fff}
+
+/* Site bar shared with the textbook */
+.cbar{background:#2B142D;font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;line-height:1.4}
+.cbar .cbar-in{max-width:880px;margin:0 auto;padding:10px 24px;display:flex;justify-content:space-between;align-items:center;gap:8px 16px;flex-wrap:wrap}
+.cbar a{text-decoration:none;border:0;background:none;padding:0}
+.cbar .cbar-brand{color:#fff;font-weight:700;font-size:1.05rem}
+.cbar .cbar-links a{color:#fff;margin-left:16px;font-size:.92rem;opacity:.9}
+.cbar .cbar-links a:first-child{margin-left:0}
+.cbar .cbar-links a:hover{opacity:1;text-decoration:underline}
+.cbar a:focus-visible{outline:3px solid #E07B00;outline-offset:2px}
+.cbar-week{background:#F6F2F8;border-bottom:1px solid #E3DAE7}
+.cbar-week .cbar-in{justify-content:flex-start;padding:8px 24px}
+.weeknav{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:.88rem;line-height:1.3}
+.weeknav .wl{font-weight:700;color:#E07B00;margin-right:4px}
+.weeknav a{text-decoration:none;border:1px solid #D9CDE0;border-radius:999px;padding:4px 12px;color:#663366;background:#fff;font-weight:600}
+.weeknav a:hover{background:#F6F2F8}
+.weeknav a[aria-current]{background:#663366;color:#fff;border-color:#663366}
+.weeknav a:focus-visible{outline:3px solid #E07B00;outline-offset:2px}
+.weeknav .na{color:#6B5A70;padding:4px 2px}
+@media print{.cbar{display:none}}
+</style>
+</head>
+<body>
+<div class="cbar" role="navigation" aria-label="Site">
+  <div class="cbar-in"><a class="cbar-brand" href="index.html">BIOL3005 Cognition</a><span class="cbar-links"><a href="index.html">Home</a><a href="textbook/index.html">Textbook</a><a href="answers/index.html">Answers</a></span></div>
+  <div class="cbar-week"><div class="cbar-in weeknav" aria-label="This week"><span class="wl">Week 4</span><a href="textbook/ch04.html">Chapter 4</a><a href="week04.html">Tutorial tools</a><a href="practice04.html" aria-current="page">Practice problems</a><a href="answers/ch04.html">Answers</a></div></div>
+</div>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="unit-code">Week 4</div>
+    <h1>Practice problems: Long-term memory: structure</h1>
+    <div class="subtitle">Exam-style scenarios on Textbook Chapter 4, with hints and model answers.</div>
+  </div>
+</div>
+
+<div class="nav-bar">
+  <div class="nav-inner">
+    <div class="nav-indicator">Scenario <span id="currentNum">1</span> of <span>2</span></div>
+    <div class="nav-buttons">
+      <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Back</button>
+      <button class="nav-btn" id="nextBtn" onclick="navigate(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="instructions">
+    <strong>How to use this page:</strong> Read each scenario and try to answer the questions on your own first, as you would in an exam. If you get stuck, click <em>Show Hint</em> for guidance. Use <em>Show Answer</em> only after you have given the question a genuine attempt.
+  </div>
+
+    <!-- ==================== SCENARIO 1 ==================== -->
+  <div class="scenario active" id="scenario1">
+    <div class="scenario-label">Scenario 1</div>
+    <div class="scenario-title">One Curve, Two Systems? The Serial Position Effect</div>
+
+    <div class="applied-box">
+      <div class="applied-box-label">Why this matters for psychologists</div>
+      <p>The serial position curve is one of the most reliable results in psychology and a staple of neuropsychological assessment. Clinicians use list-learning tests to separate problems in holding information briefly from problems in laying down durable memories, which point to different kinds of damage. The same principles shape how health professionals, teachers and lawyers should present important information so that it is remembered.</p>
+    </div>
+
+    <div class="scenario-stem">
+      <p>Participants heard lists of 15 unrelated words, presented one every two seconds, and recalled as many words as they could in any order (free recall). There were three groups:</p>
+      <ul>
+        <li><strong>Controls, immediate recall:</strong> recall began as soon as the last word was heard.</li>
+        <li><strong>Controls, delayed recall:</strong> participants counted backwards aloud for 30 seconds before recall.</li>
+        <li><strong>Patient group, immediate recall:</strong> people with bilateral damage to the medial temporal lobes, with intact intelligence and a normal digit span.</li>
+      </ul>
+      <p>The graph shows the percentage of participants recalling the word at each list position.</p>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Free Recall (%) by Serial Position</div>
+      <div class="chart-wrapper">
+        <canvas id="chart1"></canvas>
+      </div>
+      <div class="chart-note">Illustrative data, consistent with the pattern described in &sect;4.1.</div>
+    </div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">a) Identify the primacy and recency effects in the immediate-recall curve for controls, and give the standard explanation of each.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q1hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q1ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q1hint">
+          <div class="reveal-inner hint">
+            <p>Look at the two ends of the green curve. Why might early items get more of something that helps them reach long-term memory? Where are the last few items at the moment recall begins?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q1ans">
+          <div class="reveal-inner answer">
+            <p>The <strong>primacy effect</strong> is the advantage for the first few items (70% at position 1, falling to the mid-thirties by position 5). The standard explanation is that early items arrive when there is little else to rehearse, so they receive more rehearsal and are encoded into <strong>long-term memory</strong>.</p><p>The <strong>recency effect</strong> is the advantage for the last few items (rising to 86% at position 15). The standard explanation is that these items are still held in <strong>short-term memory</strong> when recall begins, so they can be read out directly. The middle items have had neither advantage and are recalled least well.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">b) What did the 30-second filled delay do to the curve? Why is this selective effect important evidence, rather than just another description of the curve?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q2hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q2ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q2hint">
+          <div class="reveal-inner hint">
+            <p>Compare the dashed line with the green line at each end. A curve on its own can be explained in more than one way; what does a manipulation that affects only one end add?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q2ans">
+          <div class="reveal-inner answer">
+            <p>The filled delay <strong>abolished the recency effect</strong> (the last items fell from 86% to 37%) while leaving <strong>primacy essentially untouched</strong> (70% versus 68% at position 1). This replicates Glanzer and Cunitz (1966).</p><p>It matters because the curve alone is just a shape, and a single-store account could in principle produce it. The two-store explanation becomes evidence only when a manipulation affects one end and not the other. Counting for 30 seconds empties a fragile short-term store but cannot reach a durable long-term one, so a <strong>selective</strong> effect on recency is exactly what two separate stores predict, and hard to explain if both ends came from one process.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">c) Interpret the patient group&rsquo;s curve in terms of the two stores. Which famous patient does this resemble, and what pattern would you predict for a patient like K.F.?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q3hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q3ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q3hint">
+          <div class="reveal-inner hint">
+            <p>Compare the patients with controls at the start of the list and at the end. Which store appears damaged and which intact? K.F. had the opposite profile to H.M.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q3ans">
+          <div class="reveal-inner answer">
+            <p>The patients show a <strong>greatly reduced primacy effect</strong> (32% versus 70% at position 1) and generally poor recall for early and middle items, but a <strong>near-normal recency effect</strong> (83% versus 86% at position 15). On the two-store account, their short-term memory is intact (consistent with their normal digit span) but they cannot transfer rehearsed items into long-term memory. This resembles <strong>H.M.</strong>, whose medial temporal lobe removal left immediate memory normal while preventing the formation of new long-term explicit memories.</p><p>A patient like <strong>K.F.</strong>, with severely impaired short-term memory (a span of one or two items) but largely intact long-term learning, should show the reverse: a <strong>reduced recency effect</strong> with relatively preserved <strong>primacy</strong>. Together the two profiles would form a double dissociation between the two ends of the curve, mirroring the double dissociation between the patients themselves.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">d) People also show a recency advantage when recalling events spread over months, such as rugby matches attended over several seasons. Explain why this complicates the rule &ldquo;recency equals short-term memory&rdquo;, and whether it undermines the Glanzer and Cunitz result.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q4hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q4ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q4hint">
+          <div class="reveal-inner hint">
+            <p>Can matches attended months ago still be in a store that lasts 15 to 30 seconds? If not, a recency advantage can arise without a short-term store. Does that mean the selective effect of the delay no longer needs explaining?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q4ans">
+          <div class="reveal-inner answer">
+            <p>Recency over months (<strong>long-term recency</strong>) cannot be due to a short-term store, which holds information for seconds. So a recency advantage on its own does not prove that a short-term store is responsible; recent items may also be advantaged because they are more <strong>distinctive</strong> or because their context is closer to the context at recall. Some theorists take this to suggest that both ends of the curve could reflect one retrieval process.</p><p>It does not undermine the Glanzer and Cunitz result, though. That result is not just that recency exists, but that a 30-second filled delay <strong>removes recency while sparing primacy</strong>. That selective effect still needs explaining, and two stores explain it naturally. The honest conclusion is that &ldquo;recency equals short-term memory&rdquo; is a <strong>serviceable rule rather than a law</strong>, and temporal-context models (§4.6) offer one way of explaining both kinds of recency.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty hard">Hard</div>
+        <div class="q-text">e) Propose a manipulation that, on the two-store account, should affect primacy but not recency in controls. Then predict how the patient group would respond to the same manipulation, and explain what the prediction would test.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q5hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q5ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q5hint">
+          <div class="reveal-inner hint">
+            <p>Primacy depends on rehearsal into long-term memory. What simple change to the presentation would give people more time to rehearse each word? Would extra rehearsal help someone who cannot transfer rehearsed material into long-term memory?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q5ans">
+          <div class="reveal-inner answer">
+            <p>Slow the <strong>presentation rate</strong>, for example from one word every 2 seconds to one every 5 seconds. On the two-store account, extra time between words allows <strong>more rehearsal</strong>, which strengthens transfer into long-term memory, so primacy and recall of early and middle items should improve. Recency should be largely unaffected, because the last few items are recalled from short-term memory whatever the rate. This is the mirror image of the filled-delay manipulation: one affects only the long-term end, the other only the short-term end.</p><p>For the <strong>patient group</strong>, the two-store account predicts little or no benefit. Their difficulty lies in converting rehearsed material into durable storage, so extra rehearsal time has nowhere to go. Their recency effect should stay near normal and their primacy should remain flat.</p><p>The prediction tests whether the patients&rsquo; deficit lies specifically in long-term encoding. If slowing the rate improved their primacy as much as controls&rsquo;, it would suggest their problem lay elsewhere, for example in the rehearsal process itself, rather than in the medial temporal transfer to long-term memory.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty applied">Applied</div>
+        <div class="q-text">f) A general practitioner gives patients five pieces of advice at the end of each consultation, then immediately asks whether they have any questions about their bill or next appointment. Using this scenario, explain which pieces of advice are most at risk and suggest how the GP should change the routine.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q6hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q6ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q6hint">
+          <div class="reveal-inner hint">
+            <p>Which list positions are protected by rehearsal into long-term memory, and which only by being in short-term memory at the end? What does a conversation about bills do to short-term memory?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q6ans">
+          <div class="reveal-inner answer">
+            <p>The advice forms a short list. The <strong>first item</strong> benefits from primacy and is likely to reach long-term memory. The <strong>last item or two</strong> would normally benefit from recency, but only while they remain in short-term memory. The immediate conversation about bills and appointments acts like the filled delay: it empties short-term memory, so the <strong>final items</strong> lose their advantage and join the poorly recalled middle items. The middle items are at risk in any case.</p><p>The GP should <strong>put the most important advice first</strong>, <strong>give less at once</strong> (or group items into meaningful chunks, such as &ldquo;two things about the medication&rdquo;), and <strong>ask the patient to repeat the advice back</strong> before moving on, which gives a retrieval opportunity and checks understanding. Most importantly, the advice should be <strong>written down</strong> so that the patient does not depend on memory at all. If administrative questions must be handled, the key advice should be repeated at the very end of the consultation.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== SCENARIO 2 ==================== -->
+  <div class="scenario" id="scenario2">
+    <div class="scenario-label">Scenario 2</div>
+    <div class="scenario-title">Remembering Without Knowing It: Implicit Memory in Amnesia</div>
+
+    <div class="applied-box">
+      <div class="applied-box-label">Why this matters for psychologists</div>
+      <p>Amnesia does not wipe out all learning. Rehabilitation psychologists rely on the spared implicit systems to teach people with memory impairment new skills and routines, even when they cannot remember the training sessions. The same distinction explains why repeated messages shape belief in everyone, a central concern for health communication and for anyone trying to correct misinformation.</p>
+    </div>
+
+    <div class="scenario-stem">
+      <p>Twelve patients with amnesia following medial temporal lobe damage and twelve matched controls studied a list of 24 common words (for example, MARKET, GARDEN), rating how much they liked each word. Twenty minutes later they completed four tests on different words from the list:</p>
+      <ul>
+        <li><strong>Free recall:</strong> write down as many of the studied words as possible.</li>
+        <li><strong>Recognition:</strong> pick the studied word from pairs of one old and one new word (chance = 50%).</li>
+        <li><strong>Stem-cued recall:</strong> see three-letter stems (MAR___) and use them to <em>recall</em> words from the list.</li>
+        <li><strong>Stem completion:</strong> see the same kind of stems and complete each with <em>the first word that comes to mind</em>, with no mention of the list. Completions with studied words were compared with a baseline from stems whose words had not been studied.</li>
+      </ul>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Performance (%) on Four Memory Tests</div>
+      <div class="chart-wrapper">
+        <canvas id="chart2"></canvas>
+      </div>
+      <div class="chart-note">Illustrative data, consistent with the account of implicit memory in &sect;4.5.</div>
+    </div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">a) Define explicit and implicit memory, and classify each of the four tests.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q1hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q1ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q1hint">
+          <div class="reveal-inner hint">
+            <p>Ask of each test whether the participant is asked to remember the list deliberately, or whether memory is revealed only in how they perform an apparently unrelated task.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q1ans">
+          <div class="reveal-inner answer">
+            <p><strong>Explicit (declarative) memory</strong> is memory that can be consciously brought to mind and reported. <strong>Implicit (non-declarative) memory</strong> is shown in changed performance without any accompanying sense of remembering.</p><p><strong>Free recall</strong>, <strong>recognition</strong> and <strong>stem-cued recall</strong> are explicit tests: each asks the participant to remember the studied words deliberately. <strong>Stem completion</strong> is an implicit test: participants are not asked to remember anything, and the influence of the study list appears only as a tendency to complete stems with studied words, a form of <strong>repetition priming</strong>.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">b) Calculate the priming effect for each group on the stem-completion test and describe the overall pattern of results.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q2hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q2ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q2hint">
+          <div class="reveal-inner hint">
+            <p>Priming is the increase in completions with a word when it has been studied, relative to the baseline for unstudied words.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q2ans">
+          <div class="reveal-inner answer">
+            <p>Priming = studied completions &minus; baseline. <strong>Controls:</strong> 46 &minus; 12 = <strong>34 percentage points</strong>. <strong>Patients:</strong> 44 &minus; 13 = <strong>31 percentage points</strong>. Priming is essentially <strong>normal</strong> in the amnesic group.</p><p>On all three explicit tests the patients are severely impaired: free recall 11% versus 42%, recognition 61% (only a little above the 50% chance level) versus 87%, and stem-cued recall 21% versus 54%. So the patients cannot consciously retrieve the words, yet the words still change how they complete stems. Explicit memory is impaired; implicit memory is spared.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">c) Why is the stem-cued recall condition the crucial control in this design? What alternative explanation does it rule out?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q3hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q3ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q3hint">
+          <div class="reveal-inner hint">
+            <p>Compare stem-cued recall and stem completion. What is the same about them, and what is the only thing that differs? Without stem-cued recall, someone could argue that stem completion is simply an easier test.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q3ans">
+          <div class="reveal-inner answer">
+            <p>Stem-cued recall and stem completion use <strong>the same stems</strong>, so the retrieval cue is identical. The only difference is the <strong>instruction</strong>: use the stem to remember the list, or simply write the first word that comes to mind.</p><p>Without this condition, a sceptic could argue that the patients are spared on stem completion merely because it is an easier or more cue-rich test than free recall or recognition. Stem-cued recall rules that out. With exactly the same cues, the patients are badly impaired when asked to remember deliberately (21% versus 54%) but normal when the memory is expressed implicitly. The dissociation therefore depends on the <strong>kind of memory</strong> the test draws on, not on the difficulty of the test or the information in the cue. This is the same logic as holding the display constant in the cross task: change only the demand, and any difference must come from the demand.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">d) Explain the pattern using what Chapter 4 says about the role of the medial temporal lobe, and relate it to H.M.&rsquo;s motor learning.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q4hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q4ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q4hint">
+          <div class="reveal-inner hint">
+            <p>What does the hippocampus and medial temporal lobe do for new explicit memories? Which kinds of memory are described as surviving in H.M. and Clive Wearing?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q4ans">
+          <div class="reveal-inner answer">
+            <p>The hippocampus and surrounding medial temporal lobe are essential for <strong>forming new explicit (declarative) memories</strong>, consolidating a fragile new experience into a durable trace. Damage to these structures blocks new explicit learning, which is why the patients cannot recall or recognise the words they studied twenty minutes earlier.</p><p>Implicit memory depends on <strong>other systems</strong>, so it can survive medial temporal damage. H.M. improved at a new motor skill across days of practice while having no recollection of any of the practice sessions, and Clive Wearing kept skills such as playing the piano. Priming in this experiment is the same kind of dissociation in a different form: the study episode left a trace that changed later processing, but the patients had no access to it as a memory. The result supports the claim that explicit and implicit memory are separate systems rather than strong and weak versions of one memory.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty hard">Hard</div>
+        <div class="q-text">e) Strictly, this experiment shows a single dissociation between explicit and implicit memory. Explain why, describe what evidence would complete a double dissociation, and identify a finding from Chapter 4 that provides this kind of evidence for one form of implicit memory.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q5hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q5ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q5hint">
+          <div class="reveal-inner hint">
+            <p>In this experiment, which group is impaired on which kind of test? Is there any group that is impaired on the implicit test but normal on the explicit tests? Look at what Chapter 4 says about the striatum and the T-maze.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q5ans">
+          <div class="reveal-inner answer">
+            <p>This is a <strong>single dissociation</strong>: medial temporal damage impairs explicit memory but spares implicit memory. A sceptic could argue that implicit tests are simply less sensitive to any brain damage, so they look spared whatever the injury. The data alone cannot rule that out.</p><p>A <strong>double dissociation</strong> would require the mirror-image case: damage elsewhere that impairs implicit memory while leaving explicit memory intact. If such a case exists, implicit tests are not merely insensitive, and the two kinds of memory must depend on at least partly separate machinery.</p><p>Chapter 4 describes this evidence for <strong>procedural memory</strong>. In rodents, damage to the <strong>striatum</strong> impairs habit learning in the T-maze while leaving hippocampus-dependent tasks intact, and hippocampal damage does the reverse. That is a double dissociation between the declarative and procedural systems, established by lesion rather than by accidents of injury. The same logic would need to be applied to priming specifically before the explicit&ndash;priming distinction is as secure.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty applied">Applied</div>
+        <div class="q-text">f) A public-health team plans to fight a viral myth (&ldquo;vaccines contain microchips&rdquo;) with posters that repeat the myth in large letters with &ldquo;FALSE&rdquo; stamped across it. Using the implicit memory research, explain the risk in this plan and recommend a better approach.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q6hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q6ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q6hint">
+          <div class="reveal-inner hint">
+            <p>The propaganda effect is a form of priming. Does it depend on remembering where you saw a claim, or on familiarity? What survives better over time, the familiarity of the claim or the memory of the &ldquo;FALSE&rdquo; label?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q6ans">
+          <div class="reveal-inner answer">
+            <p>The plan risks strengthening the very belief it aims to correct. The <strong>propaganda effect</strong> is the finding that mere repetition makes a claim feel more likely to be true, even when the claim is false and even when people have been warned. It operates through <strong>familiarity</strong>, an implicit process: repetition makes the statement easier to process, ease feels like recognition, and recognition feels like truth. The judgement arrives as a feeling about the claim rather than as a memory of where it was encountered.</p><p>Printing the myth in large letters gives it another exposure. The experiment shows that implicit effects of exposure can survive when explicit memory for the episode is weak. Over time, people may retain the familiarity of &ldquo;vaccines contain microchips&rdquo; while losing the explicit memory of the &ldquo;FALSE&rdquo; label.</p><p>A better approach is to <strong>repeat the accurate message</strong> rather than the myth (for example, &ldquo;Vaccines contain only these ingredients&rdquo;), make the true statement simple and easy to process, and, where the myth must be mentioned, mention it once and briefly, sandwiched between clear statements of the facts. Repetition should work for the correct claim, not against it.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    BIOL3005 Cognition · Curtin University · School of Population Health
+  </div>
+</div>
+
+<script>
+// ============ Navigation ============
+let currentScenario = 1;
+const totalScenarios = 2;
+
+function navigate(dir) {
+  const newScenario = currentScenario + dir;
+  if (newScenario < 1 || newScenario > totalScenarios) return;
+  document.getElementById('scenario' + currentScenario).classList.remove('active');
+  currentScenario = newScenario;
+  document.getElementById('scenario' + currentScenario).classList.add('active');
+  document.getElementById('currentNum').textContent = currentScenario;
+  document.getElementById('prevBtn').disabled = currentScenario === 1;
+  document.getElementById('nextBtn').disabled = currentScenario === totalScenarios;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============ Reveal Toggle ============
+function toggle(btn, targetId) {
+  const content = document.getElementById(targetId);
+  const isOpen = content.classList.contains('open');
+  if (isOpen) {
+    content.classList.remove('open');
+    btn.classList.remove('active');
+    btn.textContent = btn.textContent.replace('Hide', 'Show');
+  } else {
+    content.classList.add('open');
+    btn.classList.add('active');
+    btn.textContent = btn.textContent.replace('Show', 'Hide');
+  }
+}
+
+// ============ Charts ============
+const chartFont = { family: "'Segoe UI', system-ui, -apple-system, Arial, sans-serif", size: 12 };
+
+// --- Chart 1: Free Recall (%) by Serial Position ---
+new Chart(document.getElementById('chart1'), {
+  type: 'line',
+  data: { labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"], datasets: [{"label": "Controls, immediate", "data": [70, 58, 48, 41, 36, 34, 33, 32, 33, 35, 39, 46, 58, 72, 86], "borderColor": "#3a7d5e", "backgroundColor": "#3a7d5e", "pointRadius": 5, "pointHoverRadius": 7, "borderWidth": 2.5, "tension": 0.05}, {"label": "Controls, 30 s filled delay", "data": [68, 56, 46, 40, 35, 33, 32, 31, 31, 32, 33, 34, 35, 36, 37], "borderColor": "#c07b1a", "backgroundColor": "#c07b1a", "pointRadius": 5, "pointHoverRadius": 7, "borderWidth": 2.5, "tension": 0.05, "borderDash": [6, 4]}, {"label": "Patient group, immediate", "data": [32, 27, 24, 22, 21, 20, 20, 20, 21, 23, 27, 36, 52, 69, 83], "borderColor": "#b04a32", "backgroundColor": "#b04a32", "pointRadius": 5, "pointHoverRadius": 7, "borderWidth": 2.5, "tension": 0.05}] },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: {
+      legend: { display: true, position: 'bottom', labels: { font: chartFont, padding: 14, usePointStyle: true, pointStyle: 'circle' } },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}%` } }
+    },
+    scales: {
+      x: { title: { display: true, text: "Serial position", font: { ...chartFont, weight: '600' } }, ticks: { font: chartFont }, grid: { display: false } },
+      y: { title: { display: true, text: "Words recalled (%)", font: { ...chartFont, weight: '600' } }, min: 0, max: 100, ticks: { font: chartFont, stepSize: 20 }, grid: { color: '#e8e4de' } }
+    }
+  }
+});
+
+// --- Chart 2: Performance (%) on Four Memory Tests ---
+new Chart(document.getElementById('chart2'), {
+  type: 'bar',
+  data: { labels: ["Free recall", "Recognition", "Stem-cued recall", "Stem completion: studied", "Stem completion: baseline"], datasets: [{"label": "Controls", "data": [42, 87, 54, 46, 12], "backgroundColor": "#3a7d5e", "borderColor": "#3a7d5e", "borderWidth": 1.5, "borderRadius": 4, "barPercentage": 0.7, "categoryPercentage": 0.75}, {"label": "Amnesic patients", "data": [11, 61, 21, 44, 13], "backgroundColor": "#b04a32", "borderColor": "#b04a32", "borderWidth": 1.5, "borderRadius": 4, "barPercentage": 0.7, "categoryPercentage": 0.75}] },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: {
+      legend: { display: true, position: 'bottom', labels: { font: chartFont, padding: 14, usePointStyle: true, pointStyle: 'rectRounded' } },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}%` } }
+    },
+    scales: {
+      x: { title: { display: true, text: "Test", font: { ...chartFont, weight: '600' } }, ticks: { font: chartFont }, grid: { display: false } },
+      y: { title: { display: true, text: "Performance (%)", font: { ...chartFont, weight: '600' } }, min: 0, max: 100, ticks: { font: chartFont, stepSize: 20 }, grid: { color: '#e8e4de' } }
+    }
+  }
+});
+</script>
+</body>
+</html>

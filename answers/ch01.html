@@ -70,13 +70,21 @@ details.ans .body{background:var(--tint);border-left:5px solid var(--purple);bor
 details.ans .body p:last-child{margin-bottom:.2rem}
 .chcard .q{display:block;font-size:.8rem;color:var(--muted);font-weight:400;margin-top:.3rem}
 @media print{details.ans .body{background:none;border-left:3px solid var(--purple)}details.ans>summary,.tools{display:none}}
+.weeknav{margin:-.4rem 0 1.2rem}
+.weeknav{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:.88rem;line-height:1.3}
+.weeknav .wl{font-weight:700;color:#E07B00;margin-right:4px}
+.weeknav a{text-decoration:none;border:1px solid #D9CDE0;border-radius:999px;padding:4px 12px;color:#663366;background:#fff;font-weight:600}
+.weeknav a:hover{background:#F6F2F8}
+.weeknav a[aria-current]{background:#663366;color:#fff;border-color:#663366}
+.weeknav a:focus-visible{outline:3px solid #E07B00;outline-offset:2px}
+.weeknav .na{color:#6B5A70;padding:4px 2px}
 </style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="top"><div class="topin">
   <a class="brand" href="index.html">Cognition <span>Answers to the self-check questions</span></a>
-  <nav class="toplinks"><a href="index.html">Answers</a><a href="../textbook/index.html">Textbook</a><a href="BIOL3005_Cognition_Answers.pdf">PDF</a><a href="../index.html">Tutorials</a></nav>
+  <nav class="toplinks"><a href="../index.html">Home</a><a href="../textbook/index.html">Textbook</a><a href="index.html">Answers</a></nav>
 </div></header>
 <div class="layout">
 <aside class="side"><details open><summary>Questions in this chapter</summary><ol class="sectoc"><li><a class="qlink" href="#q1"><b>1</b><span>Explain how Donders used the difference between …</span></a></li><li><a class="qlink" href="#q2"><b>2</b><span>Why did introspection fail as a method, …</span></a></li><li><a class="qlink" href="#q3"><b>3</b><span>What is a double dissociation, and why …</span></a></li><li><a class="qlink" href="#q4"><b>4</b><span>A split-brain patient cannot name an object …</span></a></li><li><a class="qlink" href="#q5"><b>5</b><span>Distinguish episodic, semantic, and procedural memory, and …</span></a></li><li><a class="qlink" href="#q6"><b>6</b><span>Why does random assignment license a causal …</span></a></li><li><a class="qlink" href="#q7"><b>7</b><span>Cherry found that separating two spoken messages …</span></a></li><li><a class="qlink" href="#q8"><b>8</b><span>Why should a computer program that proved …</span></a></li><li><a class="qlink" href="#q9"><b>9</b><span>Distinguish specificity, population, and sparse coding. Why …</span></a></li><li><a class="qlink" href="#q10"><b>10</b><span>Two brain regions show strongly correlated activity, …</span></a></li><li><a class="qlink" href="#q11"><b>11</b><span>A study reports that two regions are …</span></a></li></ol></details>
@@ -84,8 +92,9 @@ details.ans .body p:last-child{margin-bottom:.2rem}
 <main id="main">
 <p class="chnum">Chapter 1 answers</p>
 <h1>Introduction &amp; Cognitive Neuroscience</h1>
+<nav class="weeknav" aria-label="This week"><span class="wl">Week 1</span><a href="../textbook/ch01.html">Chapter 1</a><a href="../week01.html">Tutorial tools</a><a href="../practice01.html">Practice problems</a><a href="../answers/ch01.html" aria-current="page">Answers</a></nav>
 <p class="lede">Model answers to the 11 self-check questions at the end of Chapter 1. Try each question yourself before you open its answer.</p>
-<div class="tools"><a href="../textbook/ch01.html#self-check-questions">Questions in the textbook</a><a href="../textbook/ch01.html">Read Chapter 1</a><button type="button" id="toggleAll">Show all answers</button></div>
+<div class="tools"><a href="../textbook/ch01.html#self-check-questions">Questions in the textbook</a><button type="button" id="toggleAll">Show all answers</button></div>
 <section class="qa" id="q1"><p class="qnum">Question 1</p><p class="qtext">Explain how Donders used the difference between choice and
 simple reaction time to estimate the duration of a decision. What
 assumption does the subtractive method rely on?</p><details class="ans"><summary><span class="show">Show the answer</span><span class="hide">Hide the answer</span></summary><div class="body"><p>Donders measured simple reaction time (press one button when a light

@@ -70,13 +70,21 @@ details.ans .body{background:var(--tint);border-left:5px solid var(--purple);bor
 details.ans .body p:last-child{margin-bottom:.2rem}
 .chcard .q{display:block;font-size:.8rem;color:var(--muted);font-weight:400;margin-top:.3rem}
 @media print{details.ans .body{background:none;border-left:3px solid var(--purple)}details.ans>summary,.tools{display:none}}
+.weeknav{margin:-.4rem 0 1.2rem}
+.weeknav{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:.88rem;line-height:1.3}
+.weeknav .wl{font-weight:700;color:#E07B00;margin-right:4px}
+.weeknav a{text-decoration:none;border:1px solid #D9CDE0;border-radius:999px;padding:4px 12px;color:#663366;background:#fff;font-weight:600}
+.weeknav a:hover{background:#F6F2F8}
+.weeknav a[aria-current]{background:#663366;color:#fff;border-color:#663366}
+.weeknav a:focus-visible{outline:3px solid #E07B00;outline-offset:2px}
+.weeknav .na{color:#6B5A70;padding:4px 2px}
 </style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="top"><div class="topin">
   <a class="brand" href="index.html">Cognition <span>Answers to the self-check questions</span></a>
-  <nav class="toplinks"><a href="index.html">Answers</a><a href="../textbook/index.html">Textbook</a><a href="BIOL3005_Cognition_Answers.pdf">PDF</a><a href="../index.html">Tutorials</a></nav>
+  <nav class="toplinks"><a href="../index.html">Home</a><a href="../textbook/index.html">Textbook</a><a href="index.html">Answers</a></nav>
 </div></header>
 <div class="layout">
 <aside class="side"><details open><summary>Questions in this chapter</summary><ol class="sectoc"><li><a class="qlink" href="#q1"><b>1</b><span>A study finds that habitual coffee drinkers …</span></a></li><li><a class="qlink" href="#q2"><b>2</b><span>Explain the difference between an agonist, an …</span></a></li><li><a class="qlink" href="#q3"><b>3</b><span>Why does regular caffeine use lead to …</span></a></li><li><a class="qlink" href="#q4"><b>4</b><span>Using the inverted U, explain why a …</span></a></li><li><a class="qlink" href="#q5"><b>5</b><span>Bowman and colleagues (2023) found that “smart …</span></a></li><li><a class="qlink" href="#q6"><b>6</b><span>According to the alcohol myopia account, why …</span></a></li><li><a class="qlink" href="#q7"><b>7</b><span>Why can a person in an alcohol-related …</span></a></li><li><a class="qlink" href="#q8"><b>8</b><span>What would a confound have to look …</span></a></li><li><a class="qlink" href="#q9"><b>9</b><span>Jackson and colleagues (2016) found no greater …</span></a></li><li><a class="qlink" href="#q10"><b>10</b><span>What does the REBUS model propose that …</span></a></li><li><a class="qlink" href="#q11"><b>11</b><span>Why is it so hard to run …</span></a></li><li><a class="qlink" href="#q12"><b>12</b><span>Lim and Dinges (2010) found that simple …</span></a></li><li><a class="qlink" href="#q13"><b>13</b><span>What does general anaesthesia suggest about the …</span></a></li><li><a class="qlink" href="#q14"><b>14</b><span>Compare the memory impairment typical of Alzheimer's …</span></a></li><li><a class="qlink" href="#q15"><b>15</b><span>L-dopa improved task switching but impaired reversal …</span></a></li><li><a class="qlink" href="#q16"><b>16</b><span>Distinguish “wanting” from “liking”. How does the …</span></a></li><li><a class="qlink" href="#q17"><b>17</b><span>Why might a dose that a person …</span></a></li><li><a class="qlink" href="#q18"><b>18</b><span>Szigeti and colleagues (2021) had microdosers blind …</span></a></li></ol></details>
@@ -84,8 +92,9 @@ details.ans .body p:last-child{margin-bottom:.2rem}
 <main id="main">
 <p class="chnum">Chapter 12 answers</p>
 <h1>Drugs, Disorders and the Cognitive Brain</h1>
+<nav class="weeknav" aria-label="This week"><span class="wl">Week 12</span><a href="../textbook/ch12.html">Chapter 12</a><a href="../answers/ch12.html" aria-current="page">Answers</a><span class="na">Tutorial: TMS laboratory visit</span></nav>
 <p class="lede">Model answers to the 18 self-check questions at the end of Chapter 12. Try each question yourself before you open its answer.</p>
-<div class="tools"><a href="../textbook/ch12.html#self-check-questions-11">Questions in the textbook</a><a href="../textbook/ch12.html">Read Chapter 12</a><button type="button" id="toggleAll">Show all answers</button></div>
+<div class="tools"><a href="../textbook/ch12.html#self-check-questions-11">Questions in the textbook</a><button type="button" id="toggleAll">Show all answers</button></div>
 <section class="qa" id="q1"><p class="qnum">Question 1</p><p class="qtext">A study finds that habitual coffee drinkers perform better
 after caffeine than after placebo. Why is that not yet evidence that
 caffeine enhances cognition, and what design would make it

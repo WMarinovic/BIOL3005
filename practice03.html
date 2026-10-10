@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIOL3005 Cognition: Short-term and working memory practice problems</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #f6f4f0;
+    --surface: #ffffff;
+    --surface-alt: #f0ede8;
+    --border: #d6d0c6;
+    --text: #2c2a26;
+    --text-muted: #6b6660;
+    --accent: #b04a32;
+    --accent-light: #e8d5cf;
+    --accent-dark: #8c3926;
+    --easy: #3a7d5e;
+    --easy-bg: #e8f3ec;
+    --easy-border: #b0d6bf;
+    --medium: #c07b1a;
+    --medium-bg: #fdf3e0;
+    --medium-border: #e4c67a;
+    --hard: #9b2e4e;
+    --hard-bg: #f6e3ea;
+    --hard-border: #d4a0b3;
+    --hint-bg: #f0f4f8;
+    --hint-border: #a8bdd4;
+    --answer-bg: #f0ede8;
+    --answer-border: #c4bdb2;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; min-height: 100vh; }
+
+  .header { background: var(--text); color: var(--bg); padding: 28px 0 24px; text-align: center; }
+  .header-inner { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+  .header .unit-code { font-size: 0.8rem; letter-spacing: 2.5px; text-transform: uppercase; opacity: 0.6; margin-bottom: 6px; }
+  .header h1 { font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 1.75rem; line-height: 1.3; }
+  .header .subtitle { font-size: 0.9rem; opacity: 0.55; margin-top: 6px; }
+
+  .nav-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 0; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+  .nav-inner { max-width: 880px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-indicator { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+  .nav-indicator span { color: var(--text); font-weight: 700; }
+  .nav-buttons { display: flex; gap: 10px; }
+  .nav-btn { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; padding: 8px 20px; border-radius: var(--radius); border: 1.5px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; transition: all 0.15s ease; }
+  .nav-btn:hover:not(:disabled) { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .main { max-width: 880px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  .scenario { display: none; }
+  .scenario.active { display: block; }
+
+  .scenario-label { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 8px; }
+  .scenario-title { font-family: 'Source Serif 4', serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 16px; line-height: 1.35; }
+
+  .scenario-stem { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 28px; box-shadow: var(--shadow); font-size: 0.95rem; }
+  .scenario-stem p { margin-bottom: 12px; }
+  .scenario-stem p:last-child { margin-bottom: 0; }
+  .scenario-stem ul { margin: 8px 0 12px 20px; }
+  .scenario-stem li { margin-bottom: 6px; }
+  .scenario-stem strong { font-weight: 600; }
+
+  .chart-container { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 32px; box-shadow: var(--shadow); }
+  .chart-title { font-weight: 600; font-size: 0.9rem; text-align: center; margin-bottom: 12px; color: var(--text); }
+  .chart-wrapper { position: relative; max-width: 680px; margin: 0 auto; }
+
+  .questions-section { margin-top: 8px; }
+  .question-block { margin-bottom: 24px; }
+
+  .q-difficulty { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 4px; margin-bottom: 8px; }
+  .q-difficulty.easy { background: var(--easy-bg); color: var(--easy); border: 1px solid var(--easy-border); }
+  .q-difficulty.medium { background: var(--medium-bg); color: var(--medium); border: 1px solid var(--medium-border); }
+  .q-difficulty.hard { background: var(--hard-bg); color: var(--hard); border: 1px solid var(--hard-border); }
+  .q-difficulty.applied { background: #eef3f8; color: #4a7faa; border: 1px solid #b3c8de; }
+
+  .q-text { font-family: 'Source Serif 4', serif; font-size: 1.05rem; font-weight: 400; line-height: 1.55; margin-bottom: 12px; }
+
+  .reveal-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+  .reveal-btn { font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 600; padding: 6px 16px; border-radius: 6px; border: 1.5px solid; cursor: pointer; transition: all 0.15s ease; background: transparent; }
+  .reveal-btn.hint-btn { border-color: var(--hint-border); color: #4a6b8a; }
+  .reveal-btn.hint-btn:hover { background: var(--hint-bg); }
+  .reveal-btn.answer-btn { border-color: var(--answer-border); color: var(--text-muted); }
+  .reveal-btn.answer-btn:hover { background: var(--answer-bg); }
+  .reveal-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+  .reveal-content { overflow: hidden; max-height: 0; opacity: 0; transition: max-height 0.35s ease, opacity 0.25s ease, margin 0.25s ease; margin-top: 0; }
+  .reveal-content.open { max-height: 1000px; opacity: 1; margin-top: 10px; }
+  .reveal-inner { padding: 16px 20px; border-radius: var(--radius); font-size: 0.9rem; line-height: 1.6; }
+  .reveal-inner.hint { background: var(--hint-bg); border: 1px solid var(--hint-border); color: #3a5a78; }
+  .reveal-inner.answer { background: var(--answer-bg); border: 1px solid var(--answer-border); color: var(--text); }
+  .reveal-inner p { margin-bottom: 8px; }
+  .reveal-inner p:last-child { margin-bottom: 0; }
+
+  .q-divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  .instructions { background: var(--accent-light); border: 1px solid #d4b0a3; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 28px; font-size: 0.85rem; color: var(--accent-dark); line-height: 1.55; }
+  .instructions strong { font-weight: 700; }
+
+  .applied-box { background: #eef3f8; border: 1px solid #b3c8de; border-left: 4px solid #4a7faa; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 24px; font-size: 0.88rem; line-height: 1.6; color: #2a4560; }
+  .applied-box-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #4a7faa; margin-bottom: 6px; }
+  .applied-box p { margin-bottom: 8px; }
+  .applied-box p:last-child { margin-bottom: 0; }
+
+  .footer { text-align: center; padding: 24px; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 40px; }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 1.35rem; }
+    .scenario-title { font-size: 1.2rem; }
+    .nav-inner { flex-direction: column; gap: 10px; }
+  }
+  .chart-note { font-size: 0.8rem; color: #6b665e; margin-top: 8px; text-align: center; }
+
+/* Site theme, matching the textbook */
+:root{--bg:#FFFFFF;--surface:#FFFFFF;--surface-alt:#F6F2F8;--border:#E3DAE7;--text:#2B142D;--text-muted:#6B5A70;--accent:#663366;--accent-light:#F6F2F8;--accent-dark:#663366;--answer-bg:#F6F2F8;--answer-border:#D9CDE0}
+body,.nav-btn,.reveal-btn{font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif}
+.scenario-stem,.q-text,.reveal-inner,.applied-box p{font-family:Charter,"Bitstream Charter","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif}
+.header{background:#fff;color:var(--text);text-align:left;border-bottom:1px solid var(--border);padding:26px 0 20px}
+.header .unit-code{opacity:1;color:#E07B00;font-weight:700;letter-spacing:.04em;font-size:.85rem}
+.header h1{font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;color:#663366;font-size:2rem;line-height:1.2;margin-top:4px}
+.header .subtitle{opacity:1;color:var(--text-muted);font-size:.95rem}
+.scenario-title{font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;color:#663366}
+.instructions{border-color:var(--border);color:var(--text)}
+.reveal-btn.active{background:#663366;border-color:#663366;color:#fff}
+.nav-btn:hover:not(:disabled){background:#663366;border-color:#663366;color:#fff}
+
+/* Site bar shared with the textbook */
+.cbar{background:#2B142D;font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;line-height:1.4}
+.cbar .cbar-in{max-width:880px;margin:0 auto;padding:10px 24px;display:flex;justify-content:space-between;align-items:center;gap:8px 16px;flex-wrap:wrap}
+.cbar a{text-decoration:none;border:0;background:none;padding:0}
+.cbar .cbar-brand{color:#fff;font-weight:700;font-size:1.05rem}
+.cbar .cbar-links a{color:#fff;margin-left:16px;font-size:.92rem;opacity:.9}
+.cbar .cbar-links a:first-child{margin-left:0}
+.cbar .cbar-links a:hover{opacity:1;text-decoration:underline}
+.cbar a:focus-visible{outline:3px solid #E07B00;outline-offset:2px}
+.cbar-week{background:#F6F2F8;border-bottom:1px solid #E3DAE7}
+.cbar-week .cbar-in{justify-content:flex-start;padding:8px 24px}
+.weeknav{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:.88rem;line-height:1.3}
+.weeknav .wl{font-weight:700;color:#E07B00;margin-right:4px}
+.weeknav a{text-decoration:none;border:1px solid #D9CDE0;border-radius:999px;padding:4px 12px;color:#663366;background:#fff;font-weight:600}
+.weeknav a:hover{background:#F6F2F8}
+.weeknav a[aria-current]{background:#663366;color:#fff;border-color:#663366}
+.weeknav a:focus-visible{outline:3px solid #E07B00;outline-offset:2px}
+.weeknav .na{color:#6B5A70;padding:4px 2px}
+@media print{.cbar{display:none}}
+</style>
+</head>
+<body>
+<div class="cbar" role="navigation" aria-label="Site">
+  <div class="cbar-in"><a class="cbar-brand" href="index.html">BIOL3005 Cognition</a><span class="cbar-links"><a href="index.html">Home</a><a href="textbook/index.html">Textbook</a><a href="answers/index.html">Answers</a></span></div>
+  <div class="cbar-week"><div class="cbar-in weeknav" aria-label="This week"><span class="wl">Week 3</span><a href="textbook/ch03.html">Chapter 3</a><a href="week03.html">Tutorial tools</a><a href="practice03.html" aria-current="page">Practice problems</a><a href="answers/ch03.html">Answers</a></div></div>
+</div>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="unit-code">Week 3</div>
+    <h1>Practice problems: Short-term and working memory</h1>
+    <div class="subtitle">Exam-style scenarios on Textbook Chapter 3, with hints and model answers.</div>
+  </div>
+</div>
+
+<div class="nav-bar">
+  <div class="nav-inner">
+    <div class="nav-indicator">Scenario <span id="currentNum">1</span> of <span>2</span></div>
+    <div class="nav-buttons">
+      <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>← Back</button>
+      <button class="nav-btn" id="nextBtn" onclick="navigate(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="instructions">
+    <strong>How to use this page:</strong> Read each scenario and try to answer the questions on your own first, as you would in an exam. If you get stuck, click <em>Show Hint</em> for guidance. Use <em>Show Answer</em> only after you have given the question a genuine attempt.
+  </div>
+
+    <!-- ==================== SCENARIO 1 ==================== -->
+  <div class="scenario active" id="scenario1">
+    <div class="scenario-label">Scenario 1</div>
+    <div class="scenario-title">Forgetting in Seconds: Decay or Interference?</div>
+
+    <div class="applied-box">
+      <div class="applied-box-label">Why this matters for psychologists</div>
+      <p>Many everyday and professional errors happen in the few seconds between reading something and using it: a pharmacist checking a dosage code, a nurse transcribing an order, a technician reading back a serial number. Whether short-term forgetting is caused by the passage of time or by interference from similar material changes what you would do to prevent those errors. Understanding the evidence also trains a key research skill, spotting a confound that nobody had named.</p>
+    </div>
+
+    <div class="scenario-stem">
+      <p>A class replicated the Brown&ndash;Peterson task. On each trial, participants saw a consonant trigram (for example, KBJ), then immediately counted backwards in threes from a three-digit number for a filled delay of 3, 9 or 18 seconds, and then tried to recall the trigram. Each participant completed six trials, with the delay varied across trials and counterbalanced across participants.</p>
+      <p>The researchers analysed recall separately for the <strong>first trial</strong>, the <strong>second trial</strong>, and the <strong>last two trials</strong> (trials 5 and 6), as shown in the graph.</p>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Trigram Recall (%) by Delay and Trial Position</div>
+      <div class="chart-wrapper">
+        <canvas id="chart1"></canvas>
+      </div>
+      <div class="chart-note">Illustrative data, consistent with the findings described in &sect;3.3.</div>
+    </div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">a) Why did participants count backwards in threes during the delay? What would happen to the results if they simply sat quietly instead?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q1hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q1ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q1hint">
+          <div class="reveal-inner hint">
+            <p>Think about what people normally do to keep a phone number in mind for a few seconds, and what counting backwards prevents.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q1ans">
+          <div class="reveal-inner answer">
+            <p>Counting backwards in threes occupies the participant&rsquo;s <strong>rehearsal</strong>. Without it, people would simply repeat the trigram to themselves throughout the delay, keeping it alive in short-term memory, and recall would stay near perfect at every delay.</p><p>The task is designed to measure how long information survives in short-term memory <strong>when it cannot be refreshed</strong>. If participants sat quietly, the results would reflect their ability to rehearse rather than the duration limit of the store.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">b) Describe the curve for trials 5 and 6. What duration limit for short-term memory would you infer if you looked only at these trials?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q2hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q2ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q2hint">
+          <div class="reveal-inner hint">
+            <p>Read the values at 3, 9 and 18 seconds for the red line. How much is left by the longest delay?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q2ans">
+          <div class="reveal-inner answer">
+            <p>For trials 5 and 6, recall falls steeply with the length of the filled delay, from 85% at 3 seconds to 55% at 9 seconds and only 37% at 18 seconds. Looking only at these trials, you would conclude that unrehearsed information is largely lost within <strong>about 15 to 30 seconds</strong>, the duration limit usually reported for short-term memory, and that the loss grows steadily with time.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">c) The Petersons interpreted forgetting on this task as decay. Explain why the trial 1 curve is a serious problem for that interpretation, and what explanation it supports instead.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q3hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q3ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q3hint">
+          <div class="reveal-inner hint">
+            <p>If forgetting were caused by time alone, would it matter whether a trial came first or fifth? What has accumulated by trial 5 that was not present on trial 1?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q3ans">
+          <div class="reveal-inner answer">
+            <p>On a <strong>decay</strong> account, the trace fades with time unless refreshed. The same delay should therefore produce the same forgetting whatever the trial number, because the same amount of time passes. Yet on <strong>trial 1</strong> recall is almost unaffected by delay (92% at 3 seconds, 88% at 18 seconds), while by trials 5 and 6 the same 18-second delay leaves only 37%.</p><p>What changes across trials is not time but the amount of <strong>similar material</strong> already encountered: by trial 5, several earlier trigrams have been learned. This supports <strong>proactive interference</strong>, in which earlier items compete with the current one at retrieval (Keppel &amp; Underwood, 1962). The duration limit is real, but its cause is better explained by interference than by decay, and &ldquo;information decays in about twenty seconds&rdquo; is a shorthand rather than an explanation.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">d) A student writes: &ldquo;This is the same thing as Sperling&rsquo;s finding that the trace fades within a second.&rdquo; Explain why the two findings concern different stores, and what each tells us.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q4hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q4ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q4hint">
+          <div class="reveal-inner hint">
+            <p>Compare the timescales, the tasks and whether the material had been attended. Which stage of the modal model does each experiment examine?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q4ans">
+          <div class="reveal-inner answer">
+            <p>They are different findings about <strong>different stores</strong>, established with different tasks and on different timescales.</p><p>Sperling&rsquo;s partial-report experiment concerns <strong>sensory (iconic) memory</strong>, the stage before attention has selected anything. It showed that nearly the whole display is briefly available, but the trace decays in <strong>under a second</strong>, so the partial-report advantage disappears when the cue is delayed.</p><p>The Brown&ndash;Peterson task concerns <strong>short-term memory</strong>, which holds material that has already been attended and admitted. Here the loss unfolds over <strong>15 to 30 seconds</strong> when rehearsal is blocked, and, as the trial effect shows, it is probably driven largely by interference rather than by decay. Two stores, two decay rates, two bodies of evidence, which is why they should be kept apart.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty hard">Hard</div>
+        <div class="q-text">e) On a seventh trial, the researchers switched from consonant trigrams to three-digit numbers, again with an 18-second delay. Predict recall on trial 7 under a decay account and under an interference account. What would a large recovery tell you about how short-term memory codes information?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q5hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q5ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q5hint">
+          <div class="reveal-inner hint">
+            <p>Under decay, does the type of material matter? Under interference, what happens when the new item is dissimilar to everything that came before? This is the logic of release from proactive interference, which Chapter 4 develops.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q5ans">
+          <div class="reveal-inner answer">
+            <p>Under a <strong>decay</strong> account, the type of material is irrelevant: an 18-second delay should produce about as much forgetting on trial 7 as on trials 5 and 6, so recall should stay near 37%.</p><p>Under an <strong>interference</strong> account, interference builds up between <strong>similar</strong> items. Digits are a different category from the consonants that filled trials 1 to 6, so the previous items should compete much less with the new one. Recall should <strong>recover sharply</strong>, towards the trial-1 level, even though the delay is the same.</p><p>A large recovery would show that the interfering system is sensitive to the <strong>category</strong> of the material, not just to time or to physical presentation, which is otherwise identical. This is <strong>release from proactive interference</strong> (Wickens et al., 1976), developed in Chapter 4. When the categories differ in meaning (for example, fruits then professions), the same logic shows that short-term memory can code meaning as well as sound, even over a few seconds.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty applied">Applied</div>
+        <div class="q-text">f) A hospital pharmacy finds that errors are most common when technicians check a series of similar medication codes one after another, often while being interrupted by questions. Using this scenario, explain why these conditions are especially risky and recommend changes to the workflow.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's1q6hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's1q6ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s1q6hint">
+          <div class="reveal-inner hint">
+            <p>Two ingredients from the experiment are present in the pharmacy: something that blocks rehearsal, and a series of similar items. Recommend changes that remove one or both.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s1q6ans">
+          <div class="reveal-inner answer">
+            <p>The pharmacy combines the two conditions that produced the most forgetting in the experiment. <strong>Interruptions</strong> act like counting backwards: they block rehearsal, so a code held in mind has to survive several seconds unrefreshed. <strong>Checking similar codes in succession</strong> builds proactive interference, so each new code is retrieved against competition from the previous ones. Late in a run, a short interruption is therefore much more dangerous than the same interruption at the start.</p><p>Recommended changes: <strong>avoid holding codes in short-term memory at all</strong>, by scanning barcodes or writing each code down immediately rather than carrying it across an interruption; <strong>protect the checking interval</strong>, for example with a &ldquo;do not interrupt&rdquo; zone or signal while checking is under way; and <strong>reduce similarity</strong> between successive items, for example by grouping work so that similar codes are not checked back to back, or by using codes that differ in format. Short breaks or task switching between long runs can also reduce the build-up of interference.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== SCENARIO 2 ==================== -->
+  <div class="scenario" id="scenario2">
+    <div class="scenario-label">Scenario 2</div>
+    <div class="scenario-title">Pointing, Speaking and the Structure of Working Memory</div>
+
+    <div class="applied-box">
+      <div class="applied-box-label">Why this matters for psychologists</div>
+      <p>Working memory limits shape how well people learn, follow instructions and perform complex tasks such as driving or surgery. Knowing that verbal and visuospatial information are held in partly separate subsystems lets psychologists predict which combinations of tasks will interfere, design instructions and interfaces that avoid overload, and interpret test results in clinical assessment.</p>
+    </div>
+
+    <div class="scenario-stem">
+      <p>A lab replicated Brooks&rsquo; (1968) study. Participants performed two kinds of task, each answered with a sequence of yes/no responses:</p>
+      <ul>
+        <li><strong>Letter task (spatial):</strong> imagine a block capital F and, working clockwise from the bottom-left corner, decide for each corner whether it lies on the extreme top or bottom of the letter.</li>
+        <li><strong>Sentence task (verbal):</strong> hold a sentence in mind (for example, &ldquo;A bird in the hand is not in the bush&rdquo;) and decide for each word in turn whether it is a noun.</li>
+      </ul>
+      <p>Participants gave their sequence of answers either by <strong>saying</strong> &ldquo;yes&rdquo; or &ldquo;no&rdquo; aloud, or by <strong>pointing</strong> to Y and N printed in a staggered pattern on a sheet. The graph shows the mean time to complete each task.</p>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Mean Time to Complete the Task (s) by Response Mode</div>
+      <div class="chart-wrapper">
+        <canvas id="chart2"></canvas>
+      </div>
+      <div class="chart-note">Illustrative data, consistent with the pattern described in &sect;3.4.</div>
+    </div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">a) Which component of Baddeley&rsquo;s working memory model does each primary task rely on? Which component does each response mode load?</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q1hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q1ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q1hint">
+          <div class="reveal-inner hint">
+            <p>Imagining the shape of a letter and holding a sentence in mind use different kinds of information. Pointing to scattered targets requires visual guidance of movements in space; speaking requires articulation.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q1ans">
+          <div class="reveal-inner answer">
+            <p>The <strong>letter task</strong> requires holding and inspecting a mental image of a shape, so it relies on the <strong>visuospatial sketchpad</strong>. The <strong>sentence task</strong> requires holding a sentence in verbal form and stepping through its words, so it relies on the <strong>phonological loop</strong>.</p><p><strong>Pointing</strong> to staggered targets requires visually guided movements through space, so it loads the <strong>visuospatial sketchpad</strong>. <strong>Speaking</strong> &ldquo;yes&rdquo; and &ldquo;no&rdquo; aloud uses the articulatory system, so it loads the <strong>phonological loop</strong> (much like articulatory suppression).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty easy">Easy</div>
+        <div class="q-text">b) Describe the pattern of results in the graph.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q2hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q2ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q2hint">
+          <div class="reveal-inner hint">
+            <p>Compare the two response modes within each task, then compare the direction of the difference across tasks.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q2ans">
+          <div class="reveal-inner answer">
+            <p>The results show a <strong>crossover interaction</strong>. For the <strong>letter task</strong>, pointing was much slower than speaking (24.8 s versus 11.2 s). For the <strong>sentence task</strong>, the pattern reversed: speaking was slower than pointing (13.6 s versus 9.9 s). In each case, performance suffered when the response mode used the same subsystem as the primary task, and was relatively unaffected when it used a different one.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">c) Explain why a crossover like this is much stronger evidence for separate subsystems than a finding that pointing slowed the letter task alone. Link your answer to the logic of the P.V. and E.L.D. cases.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q3hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q3ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q3hint">
+          <div class="reveal-inner hint">
+            <p>If only the letter task had been slowed by pointing, what boring explanation could account for it? Does that explanation survive the reversal in the sentence task?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q3ans">
+          <div class="reveal-inner answer">
+            <p>If pointing had slowed only the letter task, the result could simply mean that <strong>pointing is a harder or more distracting response</strong> than speaking, and harder secondary tasks slow everything. That is the same weakness as a single dissociation: it can be explained by general difficulty.</p><p>The crossover rules this out. Pointing was actually the <strong>faster</strong> response for the sentence task, so it cannot be generally harder. Instead, interference depends on the <strong>match</strong> between the primary task and the response: same subsystem, large interference; different subsystem, little interference. This is the behavioural equivalent of a <strong>double dissociation</strong>.</p><p>The clinical cases make the same argument from the brain. P.V. had very poor verbal span after a stroke but normal memory for spatial sequences, while E.L.D. showed the reverse. Either case alone could be explained by one kind of material being harder; together, with each ability lost in one patient and spared in the other, they show the verbal and visuospatial components are separable, just as H.M. and K.F. did for short-term and long-term memory.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty medium">Medium</div>
+        <div class="q-text">d) Cowan&rsquo;s embedded-processes model has no separate stores. Explain how it would account for the same results, and why the two models are hard to tell apart in this experiment.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q4hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q4ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q4hint">
+          <div class="reveal-inner hint">
+            <p>For Cowan, working memory is the activated part of long-term memory with a limited focus of attention. What, on that view, determines whether two activities interfere?</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q4ans">
+          <div class="reveal-inner answer">
+            <p>On <strong>Cowan&rsquo;s</strong> account, working memory is the currently activated portion of long-term memory, with a focus of attention holding about four chunks. Interference depends not on which store is occupied but on the <strong>similarity of the material</strong>: similar contents compete for the same activated representations regardless of modality.</p><p>Here, pointing involves spatial representations similar to those used in imagining the letter, while saying words involves verbal representations similar to those of the sentence. Similar material competes, so the same crossover is predicted. The two models therefore make the <strong>same prediction</strong> in this design, because the subsystem boundaries in Baddeley&rsquo;s model coincide with the boundaries of material similarity. Separating them would require tasks where similarity and subsystem come apart, for example two tasks in the same modality using very different material, or two tasks in different modalities using closely related content.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty hard">Hard</div>
+        <div class="q-text">e) A third group performed both tasks with both response modes while also generating a random sequence of digits aloud, one every second. Their times were about 5 seconds longer in every condition, but the crossover remained. Does this general slowing undermine the claim that the subsystems are separate? Explain using all components of Baddeley&rsquo;s model.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q5hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q5ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q5hint">
+          <div class="reveal-inner hint">
+            <p>Random generation is a classic executive task: it requires suppressing habitual sequences and monitoring what has been said. Which component of the model coordinates both storage systems? Separate stores can still share a controller.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q5ans">
+          <div class="reveal-inner answer">
+            <p>No. Generating a random sequence places a heavy load on the <strong>central executive</strong>, which must inhibit habitual sequences (such as counting), monitor what has already been said and update its plan. In Baddeley&rsquo;s model the executive directs attention and coordinates <strong>both</strong> storage subsystems, so loading it should slow every task, verbal and spatial alike. A uniform cost of about 5 seconds is exactly what a shared controller predicts.</p><p>What matters for the separate-subsystems claim is the <strong>specific</strong> interference pattern, and the crossover survives on top of the general slowing. Same-subsystem combinations remain much slower than different-subsystem combinations. The model therefore predicts two kinds of cost: a general cost from sharing the executive, and a specific cost from sharing a storage subsystem. The data show both. (Random generation is spoken, so it also loads the phonological loop to some extent; a fully clean version would use a non-verbal executive task, but the logic is the same.)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="q-difficulty applied">Applied</div>
+        <div class="q-text">f) A car manufacturer must decide whether its navigation system should give directions mainly as a moving map on a dashboard screen or mainly as spoken instructions. Driving is itself a demanding visuospatial task. Advise them, and identify one limit on your advice.</div>
+        <div class="reveal-row">
+          <button class="reveal-btn hint-btn" onclick="toggle(this, 's2q6hint')">Show Hint</button>
+          <button class="reveal-btn answer-btn" onclick="toggle(this, 's2q6ans')">Show Answer</button>
+        </div>
+        <div class="reveal-content" id="s2q6hint">
+          <div class="reveal-inner hint">
+            <p>Which subsystem does driving load? Which subsystem would each kind of direction load? Then think about what happens if the spoken instructions become long or complex.</p>
+          </div>
+        </div>
+        <div class="reveal-content" id="s2q6ans">
+          <div class="reveal-inner answer">
+            <p>Driving places heavy demands on the <strong>visuospatial sketchpad</strong>: tracking the road, other vehicles and the car&rsquo;s position in space. A dashboard map adds a second visuospatial task, and it also takes the eyes off the road, so it combines the condition that produced the most interference in the experiment (spatial task, spatial response) with a direct visual cost. <strong>Spoken directions</strong> load mainly the <strong>phonological loop</strong>, a different subsystem, so they should interfere less with the spatial demands of driving. The advice is to make spoken instructions the primary channel, with the map available for glances when the car is stationary or the route is complex.</p><p>The limit is that spoken directions are not free. They still draw on the <strong>central executive</strong>, which coordinates both subsystems, and long or complex instructions (&ldquo;in 400 metres, take the second exit, then keep left and merge&rdquo;) overload the time-limited loop and require holding and updating information. Instructions should therefore be short, given one step at a time and close to the point of action, so that they demand little storage and little executive control.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    BIOL3005 Cognition · Curtin University · School of Population Health
+  </div>
+</div>
+
+<script>
+// ============ Navigation ============
+let currentScenario = 1;
+const totalScenarios = 2;
+
+function navigate(dir) {
+  const newScenario = currentScenario + dir;
+  if (newScenario < 1 || newScenario > totalScenarios) return;
+  document.getElementById('scenario' + currentScenario).classList.remove('active');
+  currentScenario = newScenario;
+  document.getElementById('scenario' + currentScenario).classList.add('active');
+  document.getElementById('currentNum').textContent = currentScenario;
+  document.getElementById('prevBtn').disabled = currentScenario === 1;
+  document.getElementById('nextBtn').disabled = currentScenario === totalScenarios;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============ Reveal Toggle ============
+function toggle(btn, targetId) {
+  const content = document.getElementById(targetId);
+  const isOpen = content.classList.contains('open');
+  if (isOpen) {
+    content.classList.remove('open');
+    btn.classList.remove('active');
+    btn.textContent = btn.textContent.replace('Hide', 'Show');
+  } else {
+    content.classList.add('open');
+    btn.classList.add('active');
+    btn.textContent = btn.textContent.replace('Show', 'Hide');
+  }
+}
+
+// ============ Charts ============
+const chartFont = { family: "'Segoe UI', system-ui, -apple-system, Arial, sans-serif", size: 12 };
+
+// --- Chart 1: Trigram Recall (%) by Delay and Trial Position ---
+new Chart(document.getElementById('chart1'), {
+  type: 'line',
+  data: { labels: ["3 s", "9 s", "18 s"], datasets: [{"label": "Trial 1", "data": [92, 90, 88], "borderColor": "#3a7d5e", "backgroundColor": "#3a7d5e", "pointRadius": 5, "pointHoverRadius": 7, "borderWidth": 2.5, "tension": 0.05}, {"label": "Trial 2", "data": [88, 76, 67], "borderColor": "#c07b1a", "backgroundColor": "#c07b1a", "pointRadius": 5, "pointHoverRadius": 7, "borderWidth": 2.5, "tension": 0.05}, {"label": "Trials 5 and 6", "data": [85, 55, 37], "borderColor": "#b04a32", "backgroundColor": "#b04a32", "pointRadius": 5, "pointHoverRadius": 7, "borderWidth": 2.5, "tension": 0.05}] },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: {
+      legend: { display: true, position: 'bottom', labels: { font: chartFont, padding: 14, usePointStyle: true, pointStyle: 'circle' } },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}%` } }
+    },
+    scales: {
+      x: { title: { display: true, text: "Filled delay", font: { ...chartFont, weight: '600' } }, ticks: { font: chartFont }, grid: { display: false } },
+      y: { title: { display: true, text: "Trigrams recalled (%)", font: { ...chartFont, weight: '600' } }, min: 0, max: 100, ticks: { font: chartFont, stepSize: 20 }, grid: { color: '#e8e4de' } }
+    }
+  }
+});
+
+// --- Chart 2: Mean Time to Complete the Task (s) by Response Mode ---
+new Chart(document.getElementById('chart2'), {
+  type: 'bar',
+  data: { labels: ["Letter task (spatial)", "Sentence task (verbal)"], datasets: [{"label": "Say yes/no aloud", "data": [11.2, 13.6], "backgroundColor": "#3a7d5e", "borderColor": "#3a7d5e", "borderWidth": 1.5, "borderRadius": 4, "barPercentage": 0.7, "categoryPercentage": 0.75}, {"label": "Point to Y/N", "data": [24.8, 9.9], "backgroundColor": "#b04a32", "borderColor": "#b04a32", "borderWidth": 1.5, "borderRadius": 4, "barPercentage": 0.7, "categoryPercentage": 0.75}] },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: {
+      legend: { display: true, position: 'bottom', labels: { font: chartFont, padding: 14, usePointStyle: true, pointStyle: 'rectRounded' } },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y} s` } }
+    },
+    scales: {
+      x: { title: { display: true, text: "Primary task", font: { ...chartFont, weight: '600' } }, ticks: { font: chartFont }, grid: { display: false } },
+      y: { title: { display: true, text: "Mean completion time (s)", font: { ...chartFont, weight: '600' } }, min: 0, max: 30, ticks: { font: chartFont, stepSize: 5 }, grid: { color: '#e8e4de' } }
+    }
+  }
+});
+</script>
+</body>
+</html>

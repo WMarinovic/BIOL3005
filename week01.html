@@ -128,12 +128,35 @@
   .home:hover,.home:focus-visible{text-decoration:underline}
   .qleave{font:inherit;font-size:.9rem;font-weight:600;background:none;border:0;padding:0;margin-left:16px;color:var(--same);text-decoration:underline;cursor:pointer}
   .qleave:focus-visible{outline:3px solid var(--across);outline-offset:2px}
+
+/* Site bar shared with the textbook */
+.cbar{background:#2B142D;font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;line-height:1.4}
+.cbar .cbar-in{max-width:1040px;margin:0 auto;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;gap:8px 16px;flex-wrap:wrap}
+.cbar a{text-decoration:none;border:0;background:none;padding:0}
+.cbar .cbar-brand{color:#fff;font-weight:700;font-size:1.05rem}
+.cbar .cbar-links a{color:#fff;margin-left:16px;font-size:.92rem;opacity:.9}
+.cbar .cbar-links a:first-child{margin-left:0}
+.cbar .cbar-links a:hover{opacity:1;text-decoration:underline}
+.cbar a:focus-visible{outline:3px solid #E07B00;outline-offset:2px}
+.cbar-week{background:#F6F2F8;border-bottom:1px solid #E3DAE7}
+.cbar-week .cbar-in{justify-content:flex-start;padding:8px 20px}
+.weeknav{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:.88rem;line-height:1.3}
+.weeknav .wl{font-weight:700;color:#E07B00;margin-right:4px}
+.weeknav a{text-decoration:none;border:1px solid #D9CDE0;border-radius:999px;padding:4px 12px;color:#663366;background:#fff;font-weight:600}
+.weeknav a:hover{background:#F6F2F8}
+.weeknav a[aria-current]{background:#663366;color:#fff;border-color:#663366}
+.weeknav a:focus-visible{outline:3px solid #E07B00;outline-offset:2px}
+.weeknav .na{color:#6B5A70;padding:4px 2px}
+@media print{.cbar{display:none}}
 </style>
 </head>
 <body>
+<div class="cbar" role="navigation" aria-label="Site">
+  <div class="cbar-in"><a class="cbar-brand" href="index.html">BIOL3005 Cognition</a><span class="cbar-links"><a href="index.html">Home</a><a href="textbook/index.html">Textbook</a><a href="answers/index.html">Answers</a></span></div>
+  <div class="cbar-week"><div class="cbar-in weeknav" aria-label="This week"><span class="wl">Week 1</span><a href="textbook/ch01.html">Chapter 1</a><a href="week01.html" aria-current="page">Tutorial tools</a><a href="practice01.html">Practice problems</a><a href="answers/ch01.html">Answers</a></div></div>
+</div>
 <header class="mast">
   <div class="wrap">
-    <a class="home" href="index.html">Back to all weeks and the textbook</a>
     <p class="unit">BIOL3005 Cognition, Week 1 tutorial</p>
     <h1>Two hemispheres, one decision</h1>
     <p class="lede">Tools for the brain asymmetry lab, based on Patel and Hellige (2007). Textbook Chapter 1, §1.5 Localisation of function and §1.7 Methods for studying cognition.</p>
