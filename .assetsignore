@@ -1,0 +1,13 @@
+# Files that are part of the set-up, not the website. They are never served.
+.git
+.github
+.wrangler
+node_modules
+worker
+wrangler.jsonc
+.assetsignore
+.dev.vars
+netlify.toml
+generate-headers.js
+_headers
+*.md
