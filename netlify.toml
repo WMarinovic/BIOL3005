@@ -1,7 +1,0 @@
-# Netlify settings for the BIOL3005 Cognition site.
-# The site is plain HTML, so there is nothing to build. The one build step
-# writes the password rule (_headers) from the BASIC_AUTH_CREDENTIALS
-# environment variable, so the password never appears in the repository.
-[build]
-  publish = "."
-  command = "node generate-headers.js"
